@@ -12,17 +12,18 @@ TRIS = 'tris'
 MG = 'mg'
 DNTP = 'dntp'
 
-DEFAULT_REAGENT_CONCS = {NA: 0.05, K: 0, TRIS: 0, MG: 0.002, DNTP: 1e-7}
-
 
 class MeltingTempCalculator(object):
     '''Class to calculate melting temperatures.'''
-    def __init__(self, reagent_concs):
+    def __init__(self, reagent_concs=None):
         '''See von Ahsen N, Wittwer CT, Schutz E: Oligonucleotide melting
         temperatures under PCR conditions: deoxynucleotide Triphosphate and
         Dimethyl sulfoxide concentrations with comparison to alternative
         empirical formulas. Clin Chem 2001, 47:1956-1961.'''
         na_equivalence_parameter = 3.79
+
+        if reagent_concs is None:
+            reagent_concs = {NA: 0.05, K: 0, TRIS: 0, MG: 0.002, DNTP: 1e-7}
 
         na_equivalence = reagent_concs[NA] + reagent_concs[K] \
             + reagent_concs[TRIS] / 2 \
@@ -35,8 +36,8 @@ class MeltingTempCalculator(object):
             * math.log10(na_equivalence / (1.0 + 0.7 * na_equivalence))
 
     def get_melting_temp(self, dna1, dna2=None):
-        '''Calculates melting temperarure of DNA sequence against its complement,
-        or against second DNA sequence.'''
+        '''Calculates melting temperarure of DNA sequence against its
+        complement, or against second DNA sequence.'''
         if dna2 is None:
             dna_gc_content = len(re.findall('G|C', dna1.upper()))
             return self._get_melting_temp(dna_gc_content, 0, len(dna1))
@@ -50,15 +51,5 @@ class MeltingTempCalculator(object):
         mismatch_decrement = 100
         fixed_decrement = 500
         return self.base_melting_temp + \
-            ((gc_increment * dna_gc_content) - fixed_decrement -
-             (mismatch_decrement * mismatches)) / length
-
-
-def main():
-    '''COMMENT'''
-    melting_temp_calc = MeltingTempCalculator(DEFAULT_REAGENT_CONCS)
-    print melting_temp_calc.get_melting_temp('agcgcgcgggctttct')
-
-
-if __name__ == '__main__':
-    main()
+            ((gc_increment * dna_gc_content) - fixed_decrement
+             - (mismatch_decrement * mismatches)) / length
