@@ -6,11 +6,11 @@ Created on 10 Sep 2015
 import math
 import re
 
-NA = 'na'
-K = 'k'
-TRIS = 'tris'
-MG = 'mg'
-DNTP = 'dntp'
+NA = 'NA'
+K = 'K'
+TRIS = 'TRIS'
+MG = 'MG'
+DNTP = 'DNTP'
 
 
 def get_melting_temp(dna1, dna2=None, reagent_concs=None):
