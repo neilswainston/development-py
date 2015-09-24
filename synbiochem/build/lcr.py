@@ -10,7 +10,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import itertools
 import os
 import sys
-from synbiochem.build import melting_temp_utils
+from synbiochem.utils import sequence_utils as sequence_utils
 
 
 def get_bridging_oligos(target_melt_temp, sequences, plasmid_seq=None,
@@ -62,8 +62,8 @@ def _get_bridge_part(sequence, forward, target_melt_temp, reagent_concs=None):
     '''Gets half of bridging oligo.'''
     for i in range(len(sequence)):
         subsequence = sequence[:(i + 1)] if forward else sequence[-(i + 1):]
-        melting_temp = melting_temp_utils.get_melting_temp(subsequence, None,
-                                                           reagent_concs)
+        melting_temp = sequence_utils.get_melting_temp(subsequence, None,
+                                                       reagent_concs)
 
         if melting_temp > target_melt_temp:
             return subsequence, melting_temp
@@ -77,11 +77,11 @@ def _read_input_file(filename):
     sequences = []
     plasmid_seq = None
     shuffle = False
-    reagent_concs = {melting_temp_utils.NA: 0.05,
-                     melting_temp_utils.K: 0,
-                     melting_temp_utils.TRIS: 0,
-                     melting_temp_utils.MG: 0.002,
-                     melting_temp_utils.DNTP: 1e-7}
+    reagent_concs = {sequence_utils.NA: 0.05,
+                     sequence_utils.K: 0,
+                     sequence_utils.TRIS: 0,
+                     sequence_utils.MG: 0.002,
+                     sequence_utils.DNTP: 1e-7}
 
     in_plasmid = False
     seq = ''
@@ -93,19 +93,19 @@ def _read_input_file(filename):
             elif line.startswith('SHUFFLE:'):
                 shuffle = line.replace('SHUFFLE:', '').strip() == 'True'
             elif line.startswith('NA:'):
-                reagent_concs[melting_temp_utils.NA] = \
+                reagent_concs[sequence_utils.NA] = \
                     float(line.replace('NA:', '').strip())
             elif line.startswith('K:'):
-                reagent_concs[melting_temp_utils.K] = \
+                reagent_concs[sequence_utils.K] = \
                     float(line.replace('K:', '').strip())
             elif line.startswith('TRIS:'):
-                reagent_concs[melting_temp_utils.TRIS] = \
+                reagent_concs[sequence_utils.TRIS] = \
                     float(line.replace('TRIS:', '').strip())
             elif line.startswith('MG:'):
-                reagent_concs[melting_temp_utils.MG] = \
+                reagent_concs[sequence_utils.MG] = \
                     float(line.replace('MG:', '').strip())
             elif line.startswith('DNTP:'):
-                reagent_concs[melting_temp_utils.DNTP] = \
+                reagent_concs[sequence_utils.DNTP] = \
                     float(line.replace('DNTP:', '').strip())
             elif line.startswith('>'):
                 if len(seq) > 0:
