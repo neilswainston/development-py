@@ -1,7 +1,11 @@
 '''
-Created on 10 Sep 2015
+synbiochem (c) University of Manchester 2015
 
-@author: neilswainston
+synbiochem is licensed under the MIT License.
+
+To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
+
+@author:  neilswainston
 '''
 import math
 import re
