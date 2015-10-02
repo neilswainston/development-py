@@ -7,12 +7,37 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+import itertools
 import math
 import operator
 import random
 import re
-import synbiochem.utils
+import subprocess
+import sys
+import tempfile
 import urllib2
+
+AA_CODES = {'Ala': 'A',
+            'Cys': 'C',
+            'Asp': 'D',
+            'Glu': 'E',
+            'Phe': 'F',
+            'Gly': 'G',
+            'His': 'H',
+            'Ile': 'I',
+            'Lys': 'K',
+            'Leu': 'L',
+            'Met': 'M',
+            'Asn': 'N',
+            'Pro': 'P',
+            'Gln': 'Q',
+            'Arg': 'R',
+            'Ser': 'S',
+            'Thr': 'T',
+            'Val': 'V',
+            'Trp': 'W',
+            'Tyr': 'Y'}
+
 
 NA = 'NA'
 K = 'K'
@@ -64,6 +89,15 @@ class CodonOptimiser(object):
                         else dna_seq[3 * i:3 * (i + 1)]
                         for i, amino_acid in enumerate(protein_seq)])
 
+    def get_all_rev_trans(self, aa_seq):
+        '''Returns all reverse translations of amino acid sequence.'''
+        codons = [self.get_all_codons(aa) for aa in aa_seq]
+        return [''.join(t) for t in list(itertools.product(*codons))]
+
+    def get_all_codons(self, amino_acid):
+        '''Returns all codons for a given amino acid.'''
+        return [t[0] for t in self.__codon_usage_table[amino_acid]]
+
     def get_random_codon(self, amino_acid):
         '''Returns a random codon for a given amino acid,
         based on codon probability from the codon usage table.'''
@@ -79,8 +113,7 @@ class CodonOptimiser(object):
 
     def __get_codon_usage_table(self):
         '''Gets the codon usage table for a given taxonomy id.'''
-        codon_usage_table = {aa_code: {}
-                             for aa_code in synbiochem.utils.AA_CODES.values()}
+        codon_usage_table = {aa_code: {} for aa_code in AA_CODES.values()}
 
         url = 'http://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?species=' \
             + self.__taxonomy_id + '&aa=1&style=GCG'
@@ -95,15 +128,41 @@ class CodonOptimiser(object):
             elif in_codons:
                 values = re.split('\\s+', line)
 
-                if values[0] in synbiochem.utils.AA_CODES:
-                    aa_code = synbiochem.utils.AA_CODES[values[0]]
-                    codon_usage = codon_usage_table[aa_code]
+                if values[0] in AA_CODES:
+                    codon_usage = codon_usage_table[AA_CODES[values[0]]]
                     codon_usage[values[1]] = float(values[3])
 
         codon_usage_table.update((x, _scale(y))
                                  for x, y in codon_usage_table.items())
 
         return codon_usage_table
+
+
+def get_minimum_free_energy(sequences):
+    '''Returns minimum free energy of supplied DNA / RNA sequences.'''
+    with tempfile.NamedTemporaryFile() as input_file:
+        for i, sequence in enumerate(sequences):
+            input_file.write('>Seq' + str(i) + '\n' + sequence + '\n')
+            input_file.flush()
+
+        seq_in = open(input_file.name)
+        proc = subprocess.Popen('/usr/local/bin/RNAfold',
+                                stdin=seq_in,
+                                stdout=subprocess.PIPE)
+
+        proc.wait()
+
+        mfes = []
+
+        pattern = re.compile(r'[+-]?\d+\.\d+')
+
+        for line in iter(proc.stdout.readline, ''):
+            src = pattern.search(line)
+
+            if src:
+                mfes.append(float(src.group()))
+
+        return mfes
 
 
 def get_random_dna(length, max_repeat_nuc=float('inf')):
@@ -204,3 +263,28 @@ def _get_melting_temp(dna_gc_content, mismatches, length, base_melting_temp):
     return base_melting_temp + \
         ((gc_increment * dna_gc_content) - fixed_decrement -
          (mismatch_decrement * mismatches)) / float(length)
+
+
+def main(argv):
+    '''main method'''
+    upstream_seq = argv[1]
+    upstream_trunc_seq = argv[2]
+    variant_seq = argv[3]
+    downstream_seq = argv[4]
+
+    cod_opt = CodonOptimiser('9606')
+    sequences = []
+
+    for rev_trans in cod_opt.get_all_rev_trans(variant_seq):
+        sequences.extend([upstream_seq + rev_trans + downstream_seq,
+                          upstream_trunc_seq + rev_trans + downstream_seq])
+
+    mfes = get_minimum_free_energy(sequences)
+
+    for i in xrange(0, len(sequences), 2):
+        print '\t'.join([sequences[i], sequences[i+1],
+                         str(mfes[i]), str(mfes[i+1]),
+                         str(mfes[i] - mfes[i+1])])
+
+if __name__ == '__main__':
+    main(sys.argv)
