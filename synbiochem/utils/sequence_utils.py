@@ -64,9 +64,9 @@ class CodonOptimiser(object):
                 attempts += 1
 
                 if attempts > max_attempts:
-                    raise ValueError('Unable to optimise sequence. ' +
-                                     'Greater than ' + str(max_repeat_nuc) +
-                                     ' repeating nucleotides.')
+                    raise ValueError('Unable to optimise sequence. '
+                                     + 'Greater than ' + str(max_repeat_nuc)
+                                     + ' repeating nucleotides.')
 
                 optimised_seq = self.get_codon_optimised_seq(protein_seq)
 
@@ -140,7 +140,8 @@ class CodonOptimiser(object):
 
 def get_minimum_free_energy(sequences):
     '''Returns minimum free energy of supplied DNA / RNA sequences.'''
-    with tempfile.NamedTemporaryFile() as input_file:
+    with tempfile.NamedTemporaryFile() as input_file, \
+    tempfile.NamedTemporaryFile() as output_file:
         for i, sequence in enumerate(sequences):
             input_file.write('>Seq' + str(i) + '\n' + sequence + '\n')
             input_file.flush()
@@ -148,7 +149,7 @@ def get_minimum_free_energy(sequences):
         seq_in = open(input_file.name)
         proc = subprocess.Popen('/usr/local/bin/RNAfold',
                                 stdin=seq_in,
-                                stdout=subprocess.PIPE)
+                                stdout=output_file)
 
         proc.wait()
 
@@ -156,11 +157,12 @@ def get_minimum_free_energy(sequences):
 
         pattern = re.compile(r'[+-]?\d+\.\d+')
 
-        for line in iter(proc.stdout.readline, ''):
-            src = pattern.search(line)
+        with open(output_file.name) as out_file:
+            for line in out_file.readlines():
+                src = pattern.search(line)
 
-            if src:
-                mfes.append(float(src.group()))
+                if src:
+                    mfes.append(float(src.group()))
 
         return mfes
 
@@ -175,9 +177,9 @@ def get_random_dna(length, max_repeat_nuc=float('inf')):
         attempts += 1
 
         if attempts > max_attempts:
-            raise ValueError('Unable to optimise sequence. ' +
-                             'Greater than ' + str(max_repeat_nuc) +
-                             ' repeating nucleotides.')
+            raise ValueError('Unable to optimise sequence. '
+                             + 'Greater than ' + str(max_repeat_nuc)
+                             + ' repeating nucleotides.')
 
         random_dna = _get_random_dna(length)
 
@@ -261,8 +263,8 @@ def _get_melting_temp(dna_gc_content, mismatches, length, base_melting_temp):
     mismatch_decrement = 100
     fixed_decrement = 500
     return base_melting_temp + \
-        ((gc_increment * dna_gc_content) - fixed_decrement -
-         (mismatch_decrement * mismatches)) / float(length)
+        ((gc_increment * dna_gc_content) - fixed_decrement
+         - (mismatch_decrement * mismatches)) / float(length)
 
 
 def main(argv):
@@ -282,9 +284,9 @@ def main(argv):
     mfes = get_minimum_free_energy(sequences)
 
     for i in xrange(0, len(sequences), 2):
-        print '\t'.join([sequences[i], sequences[i+1],
-                         str(mfes[i]), str(mfes[i+1]),
-                         str(mfes[i] - mfes[i+1])])
+        print '\t'.join([sequences[i], sequences[i + 1],
+                         str(mfes[i]), str(mfes[i + 1]),
+                         str(mfes[i] - mfes[i + 1])])
 
 if __name__ == '__main__':
     main(sys.argv)
