@@ -64,9 +64,9 @@ class CodonOptimiser(object):
                 attempts += 1
 
                 if attempts > max_attempts:
-                    raise ValueError('Unable to optimise sequence. '
-                                     + 'Greater than ' + str(max_repeat_nuc)
-                                     + ' repeating nucleotides.')
+                    raise ValueError('Unable to optimise sequence. ' +
+                                     'Greater than ' + str(max_repeat_nuc) +
+                                     ' repeating nucleotides.')
 
                 optimised_seq = self.get_codon_optimised_seq(protein_seq)
 
@@ -141,7 +141,8 @@ class CodonOptimiser(object):
 def get_minimum_free_energy(sequences):
     '''Returns minimum free energy of supplied DNA / RNA sequences.'''
     with tempfile.NamedTemporaryFile() as input_file, \
-    tempfile.NamedTemporaryFile() as output_file:
+            tempfile.NamedTemporaryFile() as output_file:
+
         for i, sequence in enumerate(sequences):
             input_file.write('>Seq' + str(i) + '\n' + sequence + '\n')
             input_file.flush()
@@ -177,9 +178,9 @@ def get_random_dna(length, max_repeat_nuc=float('inf')):
         attempts += 1
 
         if attempts > max_attempts:
-            raise ValueError('Unable to optimise sequence. '
-                             + 'Greater than ' + str(max_repeat_nuc)
-                             + ' repeating nucleotides.')
+            raise ValueError('Unable to optimise sequence. ' +
+                             'Greater than ' + str(max_repeat_nuc) +
+                             ' repeating nucleotides.')
 
         random_dna = _get_random_dna(length)
 
@@ -263,14 +264,14 @@ def _get_melting_temp(dna_gc_content, mismatches, length, base_melting_temp):
     mismatch_decrement = 100
     fixed_decrement = 500
     return base_melting_temp + \
-        ((gc_increment * dna_gc_content) - fixed_decrement
-         - (mismatch_decrement * mismatches)) / float(length)
+        ((gc_increment * dna_gc_content) - fixed_decrement -
+         (mismatch_decrement * mismatches)) / float(length)
 
 
 def main(argv):
     '''main method'''
     upstream_seq = argv[1]
-    upstream_trunc_seq = argv[2]
+    upstream_trunc_seq = upstream_seq[-int(argv[2]):]
     variant_seq = argv[3]
     downstream_seq = argv[4]
 
