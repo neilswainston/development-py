@@ -36,14 +36,16 @@ class BiGGReader(object):
                                       result['bigg_id'] + '_' +
                                       result['compartment_bigg_id'],
                                       result['organism'])
-                                     for result in model_data['results']
-                                     if result['bigg_id'] not in bigg_data]:
-                organisms[model_id] = current_bigg_ids[2]
-                databases.update(self.__add_metabolite(model_id, model_ids,
-                                                       current_bigg_ids,
-                                                       bigg_data))
+                                     for result in model_data['results']]:
 
-            return bigg_data, organisms, databases
+                organisms[model_id] = current_bigg_ids[2]
+
+                if current_bigg_ids[0] not in bigg_data:
+                    databases.update(self.__add_metabolite(model_id, model_ids,
+                                                           current_bigg_ids,
+                                                           bigg_data))
+
+        return bigg_data, organisms, databases
 
     def __add_metabolite(self, model_id, model_ids, current_bigg_ids,
                          bigg_data):
