@@ -7,12 +7,13 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-from Bio.PDB.PDBParser import PDBParser
 from matplotlib.colors import LinearSegmentedColormap
 import numpy
 import pylab
 import scipy.spatial
 import sys
+
+from Bio.PDB.PDBParser import PDBParser
 
 
 def calc_proximity(pdb_filename):
@@ -51,10 +52,17 @@ def plot(values, plot_filename, plot_format, title, max_value=None):
     pylab.savefig(plot_filename, format=plot_format)
 
 
+def export_html(values):
+    print ','.join(['[' + ','.join([str(v) for v in value.tolist()]) + ']'
+                    for value in values])
+
+
 def main(argv):
     '''main method.'''
     pdb_filename = argv[1]
     proximities = calc_proximity(pdb_filename)
+
+    export_html(proximities)
 
     plot_format = 'png'
     plot_filename = pdb_filename.replace('pdb', plot_format)
