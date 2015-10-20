@@ -10,6 +10,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import itertools
 import math
 import operator
+import os
 import random
 import re
 import subprocess
@@ -86,7 +87,7 @@ class CodonOptimiser(object):
         supplied mutation rate.'''
         return ''.join([self.get_random_codon(amino_acid)
                         if random.random() < mutation_rate
-                        else dna_seq[3 * i:3 * (i + 1)]
+                        else dna_seq[3 * i:3 * (i+1)]
                         for i, amino_acid in enumerate(protein_seq)])
 
     def get_all_rev_trans(self, aa_seq):
@@ -138,7 +139,7 @@ class CodonOptimiser(object):
         return codon_usage_table
 
 
-def get_minimum_free_energy(sequences):
+def get_minimum_free_energy(exec_dir, sequences):
     '''Returns minimum free energy of supplied DNA / RNA sequences.'''
     with tempfile.NamedTemporaryFile() as input_file, \
             tempfile.NamedTemporaryFile() as output_file:
@@ -148,14 +149,16 @@ def get_minimum_free_energy(sequences):
             input_file.flush()
 
         seq_in = open(input_file.name)
-        proc = subprocess.Popen('/usr/local/bin/RNAfold',
+
+        proc = subprocess.Popen(os.path.join(exec_dir, 'RNAfold'),
                                 stdin=seq_in,
                                 stdout=output_file)
 
         proc.wait()
 
-        mfes = []
+        _cleanup(os.getcwd(), 'Seq\\d+_ss.ps')
 
+        mfes = []
         pattern = re.compile(r'[+-]?\d+\.\d+')
 
         with open(output_file.name) as out_file:
@@ -268,12 +271,19 @@ def _get_melting_temp(dna_gc_content, mismatches, length, base_melting_temp):
          (mismatch_decrement * mismatches)) / float(length)
 
 
+def _cleanup(drctry, pattern):
+    '''Deletes files in directory matching pattern.'''
+    for filename in os.listdir(drctry):
+        if re.search(pattern, filename):
+            os.remove(os.path.join(drctry, filename))
+
+
 def main(argv):
     '''main method'''
-    upstream_seq = argv[1]
-    upstream_trunc_seq = upstream_seq[-int(argv[2]):]
-    variant_seq = argv[3]
-    downstream_seq = argv[4]
+    upstream_seq = argv[2]
+    upstream_trunc_seq = upstream_seq[-int(argv[3]):]
+    variant_seq = argv[4]
+    downstream_seq = argv[5]
 
     cod_opt = CodonOptimiser('9606')
     sequences = []
@@ -282,12 +292,16 @@ def main(argv):
         sequences.extend([upstream_seq + rev_trans + downstream_seq,
                           upstream_trunc_seq + rev_trans + downstream_seq])
 
-    mfes = get_minimum_free_energy(sequences)
+    mfes = get_minimum_free_energy(argv[1], sequences)
+
+    outfile = open(argv[6], 'w')
 
     for i in xrange(0, len(sequences), 2):
-        print '\t'.join([sequences[i], sequences[i + 1],
-                         str(mfes[i]), str(mfes[i + 1]),
-                         str(mfes[i] - mfes[i + 1])])
+        outfile.write('\t'.join([sequences[i], sequences[i+1],
+                                 str(mfes[i]), str(mfes[i+1]),
+                                 str(mfes[i] - mfes[i+1])]) + '\n')
+
+    outfile.close()
 
 if __name__ == '__main__':
     main(sys.argv)
