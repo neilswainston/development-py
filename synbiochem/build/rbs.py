@@ -41,14 +41,21 @@ class RBSSolution(object):
                      for _ in range(0, max(0, len_target - len(rbs)))])
 
         self.__sequences = [pre_seq, rbs, post_seq]
-        self.__energy = self.__calc_energy(rbs)
-        self.__rbs_new = None
-        self.__pre_seq_new = None
-        self.__energy_new = None
+        self.__dg = self.__calc_dg(rbs)
+        self.__sequences_new = [None, None, post_seq]
+        self.__dg_new = None
 
     def get_energy(self):
         '''Gets the (simulated annealing) energy.'''
-        return self.__energy
+        return self.__dg - self.__dg_target
+
+    def get_dg(self):
+        '''Gets the delta G.'''
+        return self.__dg
+
+    def get_tir(self):
+        '''Gets the translation initiation rate.'''
+        return _RBS_CALC.K * math.exp(-self.__dg / _RBS_CALC.RT_eff)
 
     def mutate(self, verbose=False):
         '''Mutates and scores RBS.'''
@@ -80,33 +87,34 @@ class RBSSolution(object):
             pre_seq_new = self.__sequences[0]
             rbs_new = self.__sequences[1]
 
-        self.__pre_seq_new = pre_seq_new
-        self.__rbs_new = RBS_MC_Design.RemoveStartCodons(rbs_new)
-        self.__energy_new = self.__calc_energy(rbs_new, verbose)
-        return self.__energy_new
+        rbs_new = RBS_MC_Design.RemoveStartCodons(rbs_new)
+
+        self.__sequences_new[0] = pre_seq_new
+        self.__sequences_new[1] = rbs_new
+        self.__dg_new = self.__calc_dg(rbs_new, verbose)
+        return self.__dg_new - self.__dg_target
 
     def accept(self):
         '''Accept potential update.'''
-        self.__sequences[0] = self.__pre_seq_new
-        self.__sequences[1] = self.__rbs_new
-        self.__energy = self.__energy_new
-        self.__pre_seq_new = None
-        self.__rbs_new = None
-        self.__energy_new = None
+        self.__sequences = self.__sequences_new
+        self.__dg = self.__dg_new
+        self.__sequences_new = [None, None, self.__sequences[2]]
+        self.__dg_new = None
 
-    def __calc_energy(self, rbs, verbose=False):
+    def __calc_dg(self, rbs, verbose=False):
         '''Calculates (simulated annealing) energy for given RBS.'''
         calc = RBS_MC_Design.Run_RBS_Calculator(self.__sequences[0],
                                                 self.__sequences[2],
                                                 rbs,
                                                 verbose)
 
-        return calc.dG_total_list[0] - self.__dg_target
+        return calc.dG_total_list[0]
 
     def __repr__(self):
         # return '%r' % (self.__dict__)
-        return self.__sequences[0] + ' ' + self.__sequences[1] + ' ' + \
-            self.__sequences[2]
+        return str(self.__dg) + '\t' + str(self.get_tir()) + '\t' + \
+            self.__sequences[0] + ' ' + \
+            self.__sequences[1] + ' ' + self.__sequences[2]
 
     def __print__(self):
         return self.__repr__
