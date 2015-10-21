@@ -58,40 +58,10 @@ class RBSSolution(object):
         return _RBS_CALC.K * math.exp(-self.__dg / _RBS_CALC.RT_eff)
 
     def mutate(self, verbose=False):
-        '''Mutates and scores RBS.'''
-        weighted_moves = [('insert', 0.1), ('delete', 0.1), ('replace', 0.8)]
-        move = RBS_MC_Design.weighted_choice(weighted_moves)
-        pos = int(random.random() * len(self.__sequences[1]))
-
-        if move == 'insert' and \
-                len(self.__sequences[1]) < RBS_MC_Design.Max_RBS_Length:
-            letter = random.choice(['A', 'T', 'G', 'C'])
-            rbs_new = self.__sequences[1][0:pos] + letter + \
-                self.__sequences[1][pos:len(self.__sequences[1])]
-            pre_seq_new = self.__sequences[0][1:] \
-                if self.__sequences[0] > 0 else ''
-
-        elif move == 'delete' and len(self.__sequences[1]) > 1:
-            rbs_new = self.__sequences[1][0:pos] + \
-                self.__sequences[1][pos + 1:len(self.__sequences[1])]
-            pre_seq_new = random.choice(['A', 'T', 'G', 'C']) + \
-                self.__sequences[0]
-
-        elif move == 'replace':
-            letter = random.choice(['A', 'T', 'G', 'C'])
-            rbs_new = self.__sequences[1][0:pos] + letter + \
-                self.__sequences[1][pos + 1:len(self.__sequences[1])]
-            pre_seq_new = self.__sequences[0]
-
-        else:
-            pre_seq_new = self.__sequences[0]
-            rbs_new = self.__sequences[1]
-
-        rbs_new = RBS_MC_Design.RemoveStartCodons(rbs_new)
-
-        self.__sequences_new[0] = pre_seq_new
-        self.__sequences_new[1] = rbs_new
-        self.__dg_new = self.__calc_dg(rbs_new, verbose)
+        '''Mutates and scores whole design.'''
+        self.__mutate_pre_seq()
+        self.__mutate_rbs()
+        self.__dg_new = self.__calc_dg(self.__sequences_new[1], verbose)
         return self.__dg_new - self.__dg_target
 
     def accept(self):
@@ -110,6 +80,44 @@ class RBSSolution(object):
 
         return calc.dG_total_list[0]
 
+    def __mutate_pre_seq(self):
+        '''Mutates pre-sequence.'''
+        pos = int(random.random() * len(self.__sequences[0]))
+        self.__sequences_new[0] = _replace(self.__sequences[0], pos,
+                                           _rand_nuc())
+
+    def __mutate_rbs(self):
+        '''Mutates RBS.'''
+        weighted_moves = [('insert', 0.1), ('delete', 0.1), ('replace', 0.8)]
+        move = RBS_MC_Design.weighted_choice(weighted_moves)
+        pos = int(random.random() * len(self.__sequences[1]))
+
+        if move == 'insert' and \
+                len(self.__sequences[1]) < RBS_MC_Design.Max_RBS_Length:
+            letter = random.choice(['A', 'T', 'G', 'C'])
+            rbs_new = self.__sequences[1][0:pos] + letter + \
+                self.__sequences[1][pos:len(self.__sequences[1])]
+            pre_seq_new = self.__sequences_new[0][1:] \
+                if len(self.__sequences_new[0]) > 0 else ''
+
+        elif move == 'delete' and len(self.__sequences[1]) > 1:
+            rbs_new = _replace(self.__sequences[1], pos, '')
+            pre_seq_new = random.choice(['A', 'T', 'G', 'C']) + \
+                self.__sequences_new[0]
+
+        elif move == 'replace':
+            rbs_new = _replace(self.__sequences[1], pos, _rand_nuc())
+            pre_seq_new = self.__sequences_new[0]
+
+        else:
+            pre_seq_new = self.__sequences_new[0]
+            rbs_new = self.__sequences[1]
+
+        rbs_new = RBS_MC_Design.RemoveStartCodons(rbs_new)
+
+        self.__sequences_new[0] = pre_seq_new
+        self.__sequences_new[1] = rbs_new
+
     def __repr__(self):
         # return '%r' % (self.__dict__)
         return str(self.__dg) + '\t' + str(self.get_tir()) + '\t' + \
@@ -118,6 +126,16 @@ class RBSSolution(object):
 
     def __print__(self):
         return self.__repr__
+
+
+def _replace(sequence, pos, nuc):
+    '''Replace nucleotide at pos with nuc.'''
+    return sequence[:pos] + nuc + sequence[pos + 1:]
+
+
+def _rand_nuc():
+    '''Returns a random nucleotide.'''
+    return random.choice(['A', 'T', 'G', 'C'])
 
 
 def main(argv):
