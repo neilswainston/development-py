@@ -23,7 +23,7 @@ _RBS_CALC = RBS_Calculator.RBS_Calculator('A', [0, 0])
 class RBSSolution(object):
     '''Solution for RBS optimisation.'''
 
-    def __init__(self, sequences, tir_target=None,
+    def __init__(self, post_seq, len_target=50, tir_target=None,
                  dg_target=None):
         # Check if dg_total or TIR (translation initiation rate) was specified.
         # If TIR, then convert to dg_total.
@@ -31,17 +31,19 @@ class RBSSolution(object):
             (_RBS_CALC.logK - math.log(float(tir_target))) \
             if tir_target is not None else dg_target
 
-        self.__sequences = sequences
-
         # If an initial RBS (sequences[1] is given, use it.
         # Otherwise, randomly choose one that is a decent starting point.
-        if sequences[1] is None:
-            (sequences[1], _) = RBS_MC_Design.GetInitialRBS(sequences[0],
-                                                            sequences[2],
-                                                            self.__dg_target)
+        (rbs, _) = RBS_MC_Design.GetInitialRBS('', post_seq,
+                                               self.__dg_target)
 
-        self.__energy = self.__calc_energy(sequences[1])
+        pre_seq = \
+            ''.join([random.choice(['A', 'T', 'G', 'C'])
+                     for _ in range(0, max(0, len_target - len(rbs)))])
+
+        self.__sequences = [pre_seq, rbs, post_seq]
+        self.__energy = self.__calc_energy(rbs)
         self.__rbs_new = None
+        self.__pre_seq_new = None
         self.__energy_new = None
 
     def get_energy(self):
@@ -59,24 +61,36 @@ class RBSSolution(object):
             letter = random.choice(['A', 'T', 'G', 'C'])
             rbs_new = self.__sequences[1][0:pos] + letter + \
                 self.__sequences[1][pos:len(self.__sequences[1])]
+            pre_seq_new = self.__sequences[0][1:] \
+                if self.__sequences[0] > 0 else ''
+
         elif move == 'delete' and len(self.__sequences[1]) > 1:
             rbs_new = self.__sequences[1][0:pos] + \
                 self.__sequences[1][pos + 1:len(self.__sequences[1])]
+            pre_seq_new = random.choice(['A', 'T', 'G', 'C']) + \
+                self.__sequences[0]
+
         elif move == 'replace':
             letter = random.choice(['A', 'T', 'G', 'C'])
             rbs_new = self.__sequences[1][0:pos] + letter + \
                 self.__sequences[1][pos + 1:len(self.__sequences[1])]
+            pre_seq_new = self.__sequences[0]
+
         else:
+            pre_seq_new = self.__sequences[0]
             rbs_new = self.__sequences[1]
 
+        self.__pre_seq_new = pre_seq_new
         self.__rbs_new = RBS_MC_Design.RemoveStartCodons(rbs_new)
         self.__energy_new = self.__calc_energy(rbs_new, verbose)
         return self.__energy_new
 
     def accept(self):
         '''Accept potential update.'''
+        self.__sequences[0] = self.__pre_seq_new
         self.__sequences[1] = self.__rbs_new
         self.__energy = self.__energy_new
+        self.__pre_seq_new = None
         self.__rbs_new = None
         self.__energy_new = None
 
@@ -91,7 +105,8 @@ class RBSSolution(object):
 
     def __repr__(self):
         # return '%r' % (self.__dict__)
-        return self.__sequences[1]
+        return self.__sequences[0] + ' ' + self.__sequences[1] + ' ' + \
+            self.__sequences[2]
 
     def __print__(self):
         return self.__repr__
@@ -99,7 +114,7 @@ class RBSSolution(object):
 
 def main(argv):
     '''main method.'''
-    print sim_ann.optimise(RBSSolution([argv[1], None, argv[2]],
+    print sim_ann.optimise(RBSSolution(argv[1], len_target=int(argv[2]),
                                        tir_target=float(argv[3])),
                            verbose=False)
 
