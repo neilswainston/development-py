@@ -9,10 +9,12 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 import math
 import random
-import synbiochem.optimisation.simulated_annealing as sim_ann
 import sys
+
 import RBS_Calculator
 import RBS_MC_Design
+import synbiochem.optimisation.simulated_annealing as sim_ann
+
 
 # Necessary to get constants hidden as class variables in RBS_Calculator:
 _RBS_CALC = RBS_Calculator.RBS_Calculator('A', [0, 0])
@@ -20,6 +22,7 @@ _RBS_CALC = RBS_Calculator.RBS_Calculator('A', [0, 0])
 
 class RBSSolution(object):
     '''Solution for RBS optimisation.'''
+
     def __init__(self, sequences, tir_target=None,
                  dg_target=None):
         # Check if dg_total or TIR (translation initiation rate) was specified.
@@ -28,14 +31,15 @@ class RBSSolution(object):
             (_RBS_CALC.logK - math.log(float(tir_target))) \
             if tir_target is not None else dg_target
 
+        self.__sequences = sequences
+
         # If an initial RBS (sequences[1] is given, use it.
         # Otherwise, randomly choose one that is a decent starting point.
         if sequences[1] is None:
-            (sequences[1], _) = \
-                RBS_MC_Design.GetInitialRBS(sequences[0], sequences[2],
-                                            self.__dg_target)
+            (sequences[1], _) = RBS_MC_Design.GetInitialRBS(sequences[0],
+                                                            sequences[2],
+                                                            self.__dg_target)
 
-        self.__sequences = sequences
         self.__energy = self.__calc_energy(sequences[1])
         self.__rbs_new = None
         self.__energy_new = None
@@ -50,26 +54,22 @@ class RBSSolution(object):
         move = RBS_MC_Design.weighted_choice(weighted_moves)
         pos = int(random.random() * len(self.__sequences[1]))
 
-        if move == 'insert':
+        if move == 'insert' and \
+                len(self.__sequences[1]) < RBS_MC_Design.Max_RBS_Length:
             letter = random.choice(['A', 'T', 'G', 'C'])
             rbs_new = self.__sequences[1][0:pos] + letter + \
                 self.__sequences[1][pos:len(self.__sequences[1])]
-        if move == 'delete' and len(self.__sequences[1]) > 1:
+        elif move == 'delete' and len(self.__sequences[1]) > 1:
             rbs_new = self.__sequences[1][0:pos] + \
-                self.__sequences[1][pos+1:len(self.__sequences[1])]
-        if move == 'replace':
+                self.__sequences[1][pos + 1:len(self.__sequences[1])]
+        elif move == 'replace':
             letter = random.choice(['A', 'T', 'G', 'C'])
             rbs_new = self.__sequences[1][0:pos] + letter + \
                 self.__sequences[1][pos + 1:len(self.__sequences[1])]
+        else:
+            rbs_new = self.__sequences[1]
 
         self.__rbs_new = RBS_MC_Design.RemoveStartCodons(rbs_new)
-        len_rbs_new = len(self.__rbs_new)
-
-        if len_rbs_new > RBS_MC_Design.Max_RBS_Length:
-            self.__rbs_new = \
-                self.__rbs_new[len_rbs_new -
-                               RBS_MC_Design.Max_RBS_Length:len_rbs_new+1]
-
         self.__energy_new = self.__calc_energy(rbs_new, verbose)
         return self.__energy_new
 

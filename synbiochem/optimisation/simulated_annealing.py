@@ -56,7 +56,7 @@ def optimise(solution, max_iter=10000, verbose=False):
                 r_temp /= 2.0
                 accepts = 0
                 rejects = 0
-            if float(accepts) / float(accepts + rejects) < 0.01:
+            elif float(accepts) / float(accepts + rejects) < 0.01:
                 # Too many rejects, increase r_temp:
                 r_temp *= 2.0
                 accepts = 0
