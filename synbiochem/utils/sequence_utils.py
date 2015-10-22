@@ -53,6 +53,12 @@ class CodonOptimiser(object):
     def __init__(self, taxonomy_id):
         self.__taxonomy_id = taxonomy_id
         self.__codon_usage_table = self.__get_codon_usage_table()
+        self.__codon_to_w = {}
+
+        for key in self.__codon_usage_table:
+            aa_dict = dict([(a, b/self.__codon_usage_table[key][0][1])
+                            for a, b in self.__codon_usage_table[key]])
+            self.__codon_to_w.update(aa_dict)
 
     def optimise(self, protein_seqs, max_repeat_nuc=float('inf')):
         '''Codon optimises the supplied protein sequences.'''
@@ -81,6 +87,15 @@ class CodonOptimiser(object):
         '''Returns a codon optimised DNA sequence.'''
         return ''.join([self.get_random_codon(aa)
                         for aa in protein_seq])
+
+    def get_cai(self, dna_seq):
+        '''Gets the CAI for a given DNA sequence.'''
+        cai = 0
+
+        for i in range(0, len(dna_seq), 3):
+            cai += self.__codon_to_w[dna_seq[i:i+3]]
+
+        return cai/(len(dna_seq)/3)
 
     def mutate(self, protein_seq, dna_seq, mutation_rate):
         '''Mutate a protein-encoding DNA sequence according to a
@@ -239,7 +254,8 @@ def _scale(codon_usage):
     codon_usage = dict([(key, value / sum(codon_usage.values()))
                         for key, value in codon_usage.items()])
 
-    return sorted(codon_usage.items(), key=operator.itemgetter(1))
+    return sorted(codon_usage.items(), key=operator.itemgetter(1),
+                  reverse=True)
 
 
 def _get_random_dna(length):
