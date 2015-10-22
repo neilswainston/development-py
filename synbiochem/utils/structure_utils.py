@@ -12,22 +12,27 @@ import numpy
 import pylab
 import scipy.spatial
 import sys
+import tempfile
+import urllib
 
 from Bio.PDB.PDBParser import PDBParser
 
 
-def calc_proximity(pdb_filename):
+def calc_proximity(pdb_id):
     '''Calculates residue proximities from PDB file.'''
-    pdb_id = pdb_filename.split('.')[0]
-    parser = PDBParser()
+    with tempfile.TemporaryFile() as pdb_file:
+        opener = urllib.URLopener()
+        opener.retrieve('http://www.rcsb.org/pdb/files/' + pdb_id + '.pdb',
+                        pdb_file.name)
+        parser = PDBParser()
 
-    chains = [c
-              for c in parser.get_structure(pdb_id, pdb_filename).get_chains()]
+        chains = [c for c in parser.get_structure(pdb_id,
+                                                  pdb_file.name).get_chains()]
 
-    coords = [residue.child_dict['CA'].get_coord()
-              for residue in chains[0] if 'CA' in residue.child_dict]
+        coords = [residue.child_dict['CA'].get_coord()
+                  for residue in chains[0] if 'CA' in residue.child_dict]
 
-    return scipy.spatial.distance.cdist(coords, coords, 'euclidean')
+        return scipy.spatial.distance.cdist(coords, coords, 'euclidean')
 
 
 def plot(values, plot_filename, plot_format, title, max_value=None):
@@ -59,15 +64,15 @@ def export_html(values):
 
 def main(argv):
     '''main method.'''
-    pdb_filename = argv[1]
-    proximities = calc_proximity(pdb_filename)
+    pdb_id = argv[1]
+    proximities = calc_proximity(pdb_id)
 
-    export_html(proximities)
+    # export_html(proximities)
 
     plot_format = 'png'
-    plot_filename = pdb_filename.replace('pdb', plot_format)
+    plot_filename = pdb_id + '.' + plot_format
     plot(proximities, plot_filename, plot_format,
-         pdb_filename + ' proximity plot')
+         pdb_id + ' proximity plot')
 
 
 if __name__ == '__main__':
