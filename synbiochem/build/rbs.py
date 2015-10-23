@@ -7,6 +7,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+import ast
 import math
 import random
 import sys
@@ -25,14 +26,13 @@ _RBS_CALC = RBS_Calculator.RBS_Calculator('A', [0, 0])
 class RBSSolution(object):
     '''Solution for RBS optimisation.'''
 
-    def __init__(self, uniprot_id_set, taxonomy_id, len_target=50,
-                 tir_target=None):
+    def __init__(self, uniprot_id_set, taxonomy_id, len_target, tir_target):
         # Check if dg_total or TIR (translation initiation rate) was specified.
         # If TIR, then convert to dg_total.
         self.__dg_target = _RBS_CALC.RT_eff * \
             (_RBS_CALC.logK - math.log(float(tir_target)))
 
-        self.__prot_seqs = uniprot_utils.get_sequences([uniprot_id_set])
+        self.__prot_seqs = uniprot_utils.get_sequences(uniprot_id_set)
         self.__cod_opt = seq_utils.CodonOptimiser(taxonomy_id)
         cds = [self.__cod_opt.get_codon_optimised_seq(prot_seq)
                for prot_seq in self.__prot_seqs.values()]
@@ -55,7 +55,8 @@ class RBSSolution(object):
         '''Gets the (simulated annealing) energy.'''
         dgs = self.__dgs if dgs is None else dgs
         cds = self.__seqs[2] if cds is None else cds
-        return abs(dgs[0] - self.__dg_target) * self.__cod_opt.get_cai(cds[0])
+        return sum([abs(d_g-self.__dg_target) for d_g in dgs])/len(dgs)
+        # * self.__cod_opt.get_cai(cds[0])
 
     def mutate(self, verbose=False):
         '''Mutates and scores whole design.'''
@@ -126,7 +127,8 @@ class RBSSolution(object):
 
     def __repr__(self):
         # return '%r' % (self.__dict__)
-        return str(self.__cod_opt.get_cai(self.__seqs[2][0])) + '\t' + \
+        return str([self.__cod_opt.get_cai(prot_seq)
+                    for prot_seq in self.__seqs[2]]) + '\t' + \
             str(_get_tirs(self.__dgs)) + '\t' + self.__seqs[0] + ' ' + \
             self.__seqs[1] + ' ' + str(self.__seqs[2])
 
@@ -152,9 +154,9 @@ def _rand_nuc():
 
 def main(argv):
     '''main method.'''
-    print sim_ann.optimise(RBSSolution(argv[1], argv[2],
-                                       len_target=int(argv[3]),
-                                       tir_target=float(argv[4])),
+    print sim_ann.optimise(RBSSolution(argv[4:], argv[1],
+                                       len_target=int(argv[2]),
+                                       tir_target=float(argv[3])),
                            verbose=False)
 
 

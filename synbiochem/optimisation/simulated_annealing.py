@@ -24,7 +24,7 @@ def optimise(solution, max_iter=10000, verbose=False):
 
     print str(counter) + '\t' + str(energy) + '\t' + str(solution)
 
-    while energy > 0.25 and counter < max_iter:
+    while energy > 0.3 and counter < max_iter:
         counter += 1
         energy_new = solution.mutate(verbose=verbose)
 
