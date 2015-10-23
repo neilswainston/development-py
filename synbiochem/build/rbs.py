@@ -7,9 +7,9 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-import ast
 import math
 import random
+import re
 import sys
 
 import RBS_Calculator
@@ -51,12 +51,13 @@ class RBSSolution(object):
         self.__seqs_new = [None, None, cds]
         self.__dgs_new = None
 
-    def get_energy(self, dgs=None, cds=None):
+    def get_energy(self, dgs=None, cdss=None):
         '''Gets the (simulated annealing) energy.'''
         dgs = self.__dgs if dgs is None else dgs
-        cds = self.__seqs[2] if cds is None else cds
-        return sum([abs(d_g-self.__dg_target) for d_g in dgs])/len(dgs)
-        # * self.__cod_opt.get_cai(cds[0])
+        cdss = self.__seqs[2] if cdss is None else cdss
+        cais = [self.__cod_opt.get_cai(cds) for cds in cdss]
+        return sum([abs(d_g-self.__dg_target) for d_g in dgs])/len(dgs) * \
+            (1-sum(cais)/len(cais))
 
     def mutate(self, verbose=False):
         '''Mutates and scores whole design.'''
@@ -129,6 +130,8 @@ class RBSSolution(object):
         # return '%r' % (self.__dict__)
         return str([self.__cod_opt.get_cai(prot_seq)
                     for prot_seq in self.__seqs[2]]) + '\t' + \
+            str([_count_start_codons(seq)
+                 for seq in self.__seqs]) + '\t' + \
             str(_get_tirs(self.__dgs)) + '\t' + self.__seqs[0] + ' ' + \
             self.__seqs[1] + ' ' + str(self.__seqs[2])
 
@@ -150,6 +153,14 @@ def _replace(sequence, pos, nuc):
 def _rand_nuc():
     '''Returns a random nucleotide.'''
     return random.choice(['A', 'T', 'G', 'C'])
+
+
+def _count_start_codons(seqs):
+    '''Counts start codons in sequence.'''
+    if isinstance(seqs, str) or isinstance(seqs, unicode):
+        return len(re.findall('[AGT]TG', seqs))
+    else:
+        return [_count_start_codons(seq) for seq in seqs]
 
 
 def main(argv):
