@@ -7,6 +7,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+import itertools
 from matplotlib.colors import LinearSegmentedColormap
 import numpy
 import pylab
@@ -16,6 +17,7 @@ import tempfile
 import urllib
 
 from Bio.PDB.PDBParser import PDBParser
+
 
 # KD Hydrophobicity, EIIP, Helix, Sheet, Turn
 AMINO_ACID_PROPERTIES = {
@@ -90,6 +92,9 @@ def main(argv):
     '''main method.'''
     pdb_id = argv[1]
     proximities = calc_proximity(pdb_id)
+
+    input = [AMINO_ACID_PROPERTIES[amino_acid] for amino_acid in amino_acids]
+    output = itertools.chain.from_iterable(proximities)
 
     # export_html(proximities)
 
