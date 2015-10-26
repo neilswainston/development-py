@@ -1,7 +1,11 @@
 '''
-Created on 6 Oct 2015
+synbiochem (c) University of Manchester 2015
 
-@author: neilswainston
+synbiochem is licensed under the MIT License.
+
+To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
+
+@author:  neilswainston
 '''
 # pylint: disable=too-few-public-methods
 
