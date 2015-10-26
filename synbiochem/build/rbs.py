@@ -130,7 +130,7 @@ class RBSSolution(object):
         # return '%r' % (self.__dict__)
         return str([self.__cod_opt.get_cai(prot_seq)
                     for prot_seq in self.__seqs[2]]) + '\t' + \
-            str([_count_start_codons(seq)
+            str([_count_undesired_patterns(seq)
                  for seq in self.__seqs]) + '\t' + \
             str(_get_tirs(self.__dgs)) + '\t' + self.__seqs[0] + ' ' + \
             self.__seqs[1] + ' ' + str(self.__seqs[2])
@@ -155,12 +155,17 @@ def _rand_nuc():
     return random.choice(['A', 'T', 'G', 'C'])
 
 
-def _count_start_codons(seqs):
-    '''Counts start codons in sequence.'''
+def _count_undesired_patterns(seqs):
+    '''Counts undesired patterns in sequence.'''
+    max_repeat_nucs = 4
+
     if isinstance(seqs, str) or isinstance(seqs, unicode):
-        return len(re.findall('[AGT]TG', seqs))
+        # Start codons | restriction sites | repeating nucleotides
+        patterns = '|'.join(['[AGT]TG', 'GGTCTC', 'CACCTGC'] +
+                            [x*max_repeat_nucs for x in ['A', 'C', 'G', 'T']])
+        return len(re.findall(patterns, seqs))
     else:
-        return [_count_start_codons(seq) for seq in seqs]
+        return [_count_undesired_patterns(seq) for seq in seqs]
 
 
 def main(argv):
