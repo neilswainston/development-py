@@ -11,7 +11,7 @@ import math
 import random
 
 
-def optimise(solution, max_iter=10000, verbose=False):
+def optimise(solution, acceptance=0.25, max_iter=10000, verbose=False):
     '''Optmises a solution with simulated annealing.'''
 
     # Initialization:
@@ -24,7 +24,7 @@ def optimise(solution, max_iter=10000, verbose=False):
 
     print str(counter) + '\t' + str(energy) + '\t' + str(solution)
 
-    while energy > 0.05 and counter < max_iter:
+    while energy > acceptance and counter < max_iter:
         counter += 1
         energy_new = solution.mutate(verbose=verbose)
 

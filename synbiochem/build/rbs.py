@@ -14,9 +14,9 @@ import sys
 
 import RBS_Calculator
 import RBS_MC_Design
+import synbiochem.optimisation.simulated_annealing as sim_ann
 import synbiochem.utils.sequence_utils as seq_utils
 import synbiochem.utils.uniprot_utils as uniprot_utils
-import synbiochem.optimisation.simulated_annealing as sim_ann
 
 
 # Necessary to get constants hidden as class variables in RBS_Calculator:
@@ -42,11 +42,8 @@ class RBSSolution(object):
         (rbs, _) = RBS_MC_Design.GetInitialRBS('', cds[0],
                                                self.__dg_target)
 
-        pre_seq = \
-            ''.join([random.choice(['A', 'T', 'G', 'C'])
-                     for _ in range(0, max(0, len_target - len(rbs)))])
-
-        self.__seqs = [pre_seq, rbs, cds]
+        self.__seqs = [_get_valid_rand_seq(max(0, len_target - len(rbs))),
+                       rbs, cds]
         self.__dgs = self.__calc_dgs(rbs)
         self.__seqs_new = [None, None, cds]
         self.__dgs_new = None
@@ -56,8 +53,9 @@ class RBSSolution(object):
         dgs = self.__dgs if dgs is None else dgs
         cdss = self.__seqs[2] if cdss is None else cdss
         cais = [self.__cod_opt.get_cai(cds) for cds in cdss]
-        return sum([abs(d_g-self.__dg_target) for d_g in dgs])/len(dgs) * \
-            (1-sum(cais)/len(cais))
+        return sum([abs(d_g - self.__dg_target) for d_g in dgs]) / len(dgs) * \
+            (1 - sum(cais) / len(cais)) * \
+            sum(_count_invalid_patterns(cdss)) / len(cdss)
 
     def mutate(self, verbose=False):
         '''Mutates and scores whole design.'''
@@ -85,7 +83,12 @@ class RBSSolution(object):
     def __mutate_pre_seq(self):
         '''Mutates pre-sequence.'''
         pos = int(random.random() * len(self.__seqs[0]))
-        self.__seqs_new[0] = _replace(self.__seqs[0], pos, _rand_nuc())
+        pre_seq_new = _replace(self.__seqs[0], pos, _rand_nuc())
+
+        if _count_invalid_patterns(pre_seq_new + self.__seqs[1]) == 0:
+            self.__seqs_new[0] = pre_seq_new
+        else:
+            self.__seqs_new[0] = self.__seqs[0]
 
     def __mutate_rbs(self):
         '''Mutates RBS.'''
@@ -114,15 +117,17 @@ class RBSSolution(object):
             pre_seq_new = self.__seqs_new[0]
             rbs_new = self.__seqs[1]
 
-        rbs_new = RBS_MC_Design.RemoveStartCodons(rbs_new)
-
-        self.__seqs_new[0] = pre_seq_new
-        self.__seqs_new[1] = rbs_new
+        if _count_invalid_patterns(pre_seq_new + rbs_new) == 0:
+            self.__seqs_new[0] = pre_seq_new
+            self.__seqs_new[1] = rbs_new
+        else:
+            self.__seqs_new[0] = self.__seqs[0]
+            self.__seqs_new[1] = self.__seqs[1]
 
     def __mutate_cds(self):
         '''Mutates CDS.'''
         self.__seqs_new[2] = \
-            [self.__cod_opt.mutate(prot_seq, dna_seq, 1.0/len(dna_seq))
+            [self.__cod_opt.mutate(prot_seq, dna_seq, 1.0 / len(dna_seq))
              for dna_seq, prot_seq in zip(self.__seqs[2],
                                           self.__prot_seqs.values())]
 
@@ -130,7 +135,7 @@ class RBSSolution(object):
         # return '%r' % (self.__dict__)
         return str([self.__cod_opt.get_cai(prot_seq)
                     for prot_seq in self.__seqs[2]]) + '\t' + \
-            str([_count_undesired_patterns(seq)
+            str([_count_invalid_patterns(seq)
                  for seq in self.__seqs]) + '\t' + \
             str(_get_tirs(self.__dgs)) + '\t' + self.__seqs[0] + ' ' + \
             self.__seqs[1] + ' ' + str(self.__seqs[2])
@@ -139,10 +144,20 @@ class RBSSolution(object):
         return self.__repr__
 
 
+def _get_valid_rand_seq(length):
+    '''Returns a valid random sequence of supplied length.'''
+    seq = ''.join([random.choice(['A', 'T', 'G', 'C'])
+                   for _ in range(0, length)])
+
+    if _count_invalid_patterns(seq) == 0:
+        return seq
+
+    return _get_valid_rand_seq(length)
+
+
 def _get_tirs(dgs):
     '''Gets the translation initiation rate.'''
-    return [_RBS_CALC.K * math.exp(-d_g / _RBS_CALC.RT_eff)
-            for d_g in dgs]
+    return [_RBS_CALC.calc_expression_level(d_g) for d_g in dgs]
 
 
 def _replace(sequence, pos, nuc):
@@ -155,24 +170,22 @@ def _rand_nuc():
     return random.choice(['A', 'T', 'G', 'C'])
 
 
-def _count_undesired_patterns(seqs):
-    '''Counts undesired patterns in sequence.'''
-    max_repeat_nucs = 4
+def _count_invalid_patterns(seqs):
+    '''Counts invalid patterns in sequence.'''
+    invalid_patterns = '[AGT]TG'
 
     if isinstance(seqs, str) or isinstance(seqs, unicode):
-        # Start codons | restriction sites | repeating nucleotides
-        patterns = '|'.join(['[AGT]TG', 'GGTCTC', 'CACCTGC'] +
-                            [x*max_repeat_nucs for x in ['A', 'C', 'G', 'T']])
-        return len(re.findall(patterns, seqs))
+        return len(re.findall(invalid_patterns, seqs))
     else:
-        return [_count_undesired_patterns(seq) for seq in seqs]
+        return [_count_invalid_patterns(seq) for seq in seqs]
 
 
 def main(argv):
     '''main method.'''
-    print sim_ann.optimise(RBSSolution(argv[4:], argv[1],
+    print sim_ann.optimise(RBSSolution(argv[5:], argv[1],
                                        len_target=int(argv[2]),
                                        tir_target=float(argv[3])),
+                           acceptance=float(argv[4]),
                            verbose=False)
 
 
