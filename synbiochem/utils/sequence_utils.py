@@ -17,7 +17,6 @@ import subprocess
 import sys
 import urllib2
 import uuid
-import synbiochem.optimisation.simulated_annealing as sim_ann
 import synbiochem.utils.uniprot_utils as uniprot_utils
 
 AA_CODES = {'Ala': 'A',
@@ -86,17 +85,30 @@ class CodonOptimiser(object):
         return optimised_seqs
 
     def get_codon_optimised_seq(self, protein_seq, invalid_pattern=None):
-        '''Returns a codon optimised DNA sequence.'''
+        '''Returns a codon optimised DNA sequence.
+        TODO: Can get stuck in a loop. Check max iteration. e.g. WG protein seq
+        guarantees 4 consecutive nucleotides.'''
         if invalid_pattern is None:
             return ''.join([self.get_random_codon(aa)
                             for aa in protein_seq])
         else:
-            mut_rate = 1
-            solution = \
-                CodonOptimiserSolution(protein_seq, self.__taxonomy_id,
-                                       invalid_pattern, mut_rate)
-            sim_ann.optimise(solution, max_iter=float('inf'))
-            return solution.get_cds()
+            seq = ''
+            i = 0
+
+            while True:
+                amino_acid = protein_seq[i]
+                new_seq = seq + self.get_random_codon(amino_acid)
+
+                if count_pattern(new_seq, invalid_pattern) > 0:
+                    i -= 1
+                    seq = seq[:-3]
+                else:
+                    seq = new_seq
+
+                    if i == len(protein_seq) - 1:
+                        return seq
+
+                    i += 1
 
     def get_cai(self, dna_seq):
         '''Gets the CAI for a given DNA sequence.'''
@@ -162,39 +174,6 @@ class CodonOptimiser(object):
                                  for x, y in codon_usage_table.items())
 
         return codon_usage_table
-
-
-class CodonOptimiserSolution(object):
-    '''Optimises protein sequences to avoid invalid patterns.'''
-    def __init__(self, prot_seq, taxonomy_id, invalid_pattern, mut_rate):
-        self.__prot_seq = prot_seq
-        self.__cod_opt = CodonOptimiser(taxonomy_id)
-        self.__cds = self.__cod_opt.get_codon_optimised_seq(prot_seq)
-        self.__cds_new = self.__cds
-        self.__invalid_pattern = invalid_pattern
-        self._mut_rate = mut_rate
-
-    def get_cds(self):
-        '''Gets the CDS.'''
-        return self.__cds
-
-    def accept(self):
-        '''Accept potential update.'''
-        self.__cds = self.__cds_new
-
-    def get_energy(self, cds=None):
-        '''Gets the (simulated annealing) energy.'''
-        cds = self.__cds if cds is None else cds
-        return count_pattern(cds, self.__invalid_pattern)
-
-    def mutate(self):
-        '''Mutates CDS.'''
-        self.__cds_new = \
-            self.__cod_opt.mutate(self.__prot_seq,
-                                  self.__cds,
-                                  3.0 * self._mut_rate / len(self.__cds))
-
-        return self.get_energy(self.__cds_new)
 
 
 def get_minimum_free_energy(exec_dir, sequences):

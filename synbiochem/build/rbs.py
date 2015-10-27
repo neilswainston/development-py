@@ -32,7 +32,7 @@ class RBSSolution(object):
         self.__cod_opt = seq_utils.CodonOptimiser(taxonomy_id)
 
         # Invalid pattern is restriction sites | repeating nucleotides
-        max_repeat_nucs = 4
+        max_repeat_nucs = 6
         self.__invalid_pattern = '|'.join(['GGTCTC', 'CACCTGC'] +
                                           [x * max_repeat_nucs
                                            for x in ['A', 'C', 'G', 'T']])
@@ -62,10 +62,9 @@ class RBSSolution(object):
         '''Gets the (simulated annealing) energy.'''
         dgs = self.__dgs if dgs is None else dgs
         cdss = self.__seqs[2] if cdss is None else cdss
-        cais = [self.__cod_opt.get_cai(cds) for cds in cdss]
-        return sum([abs(d_g - self.__dg_target) for d_g in dgs]) / len(dgs) * \
-            (1 - sum(cais) / len(cais)) * \
-            (1 + (sum(self.__count_invalid_pattern(cdss))**100))
+        return sum([abs(d_g - self.__dg_target) for d_g in dgs]) * \
+            (1 + (sum(self.__count_invalid_pattern([self.__seqs[1]] +
+                                                   cdss))**10))
 
     def mutate(self, verbose=False):
         '''Mutates and scores whole design.'''
@@ -140,7 +139,7 @@ class RBSSolution(object):
     def __mutate_cds(self):
         '''Mutates CDS.'''
         self.__seqs_new[2] = \
-            [self.__cod_opt.mutate(prot_seq, dna_seq, 3.0 * 10 / len(dna_seq))
+            [self.__cod_opt.mutate(prot_seq, dna_seq, 3.0 / len(dna_seq))
              for dna_seq, prot_seq in zip(self.__seqs[2],
                                           self.__prot_seqs.values())]
 
