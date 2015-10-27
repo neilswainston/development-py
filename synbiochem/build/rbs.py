@@ -53,7 +53,7 @@ class RBSSolution(object):
                        rbs,
                        cds,
                        self.__get_valid_rand_seq(post_seq_length)
-                       if self.__prot_seqs > 1 else None]
+                       if len(self.__prot_seqs) > 1 else None]
         self.__dgs = self.__calc_dgs(rbs)
         self.__seqs_new = [None, None, cds, self.__seqs[3]]
         self.__dgs_new = None
@@ -168,7 +168,8 @@ class RBSSolution(object):
         return str(cai) + '\t' + str(invalid_patterns) + '\t' + \
             str(start_codons) + '\t' + str(_get_tirs(self.__dgs)) + '\t' + \
             self.__seqs[0] + ' ' + self.__seqs[1] + ' ' + \
-            str(self.__seqs[2]) + ' ' + self.__seqs[3]
+            str(self.__seqs[2]) + ' ' + \
+            '' if self.__seqs[3] is None else self.__seqs[3]
 
     def __print__(self):
         return self.__repr__

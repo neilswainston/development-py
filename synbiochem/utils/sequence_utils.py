@@ -292,6 +292,8 @@ def count_pattern(strings, pattern):
     '''Counts pattern in string of list of strings.'''
     if isinstance(strings, str) or isinstance(strings, unicode):
         return len(re.findall(pattern, strings))
+    elif strings is None:
+        return 0
     else:
         return [count_pattern(s, pattern) for s in strings]
 
