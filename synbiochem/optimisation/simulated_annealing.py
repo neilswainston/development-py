@@ -11,7 +11,7 @@ import math
 import random
 
 
-def optimise(solution, acceptance=0.25, max_iter=10000):
+def optimise(solution, acceptance=0.25, max_iter=10000, verbose=False):
     '''Optmises a solution with simulated annealing.'''
 
     # Initialization:
@@ -22,7 +22,8 @@ def optimise(solution, acceptance=0.25, max_iter=10000):
 
     energy = solution.get_energy()
 
-    print str(counter) + '\t' + str(energy) + '\t' + str(solution)
+    if verbose:
+        print str(counter) + '\t' + str(energy) + '\t' + str(solution)
 
     while energy > acceptance and counter < max_iter:
         counter += 1
@@ -32,7 +33,9 @@ def optimise(solution, acceptance=0.25, max_iter=10000):
             # Accept move immediately:
             solution.accept()
             energy = energy_new
-            print str(counter) + '\t' + str(energy) + '\t' + str(solution)
+
+            if verbose:
+                print str(counter) + '\t' + str(energy) + '\t' + str(solution)
         elif energy == energy_new:
             # Take no action:
             continue
@@ -40,7 +43,10 @@ def optimise(solution, acceptance=0.25, max_iter=10000):
             # Accept move based on conditional probability:
             solution.accept()
             energy = energy_new
-            print str(counter) + '\t' + str(energy) + '\t' + str(solution)
+
+            if verbose:
+                print str(counter) + '\t' + str(energy) + '\t' + str(solution)
+
             accepts += 1
         else:
             # Reject move:
