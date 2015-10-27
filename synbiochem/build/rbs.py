@@ -59,7 +59,8 @@ class RBSSolution(object):
         cais = [self.__cod_opt.get_cai(cds) for cds in cdss]
         return sum([abs(d_g - self.__dg_target) for d_g in dgs]) / len(dgs) * \
             (1 - sum(cais) / len(cais)) * \
-            sum(_count_invalid_patterns(cdss)) / len(cdss)
+            sum(_count_invalid_pattern(cdss) +
+                _count_pattern(cdss, '[AGT]TG')) / len(cdss)
 
     def mutate(self, verbose=False):
         '''Mutates and scores whole design.'''
@@ -89,7 +90,8 @@ class RBSSolution(object):
         pos = int(random.random() * len(self.__seqs[0]))
         pre_seq_new = _replace(self.__seqs[0], pos, _rand_nuc())
 
-        if _count_invalid_patterns(pre_seq_new + self.__seqs[1]) == 0:
+        if _count_invalid_pattern(pre_seq_new + self.__seqs[1]) + \
+                _count_pattern(pre_seq_new + self.__seqs[1], '[AGT]TG') == 0:
             self.__seqs_new[0] = pre_seq_new
         else:
             self.__seqs_new[0] = self.__seqs[0]
@@ -121,7 +123,8 @@ class RBSSolution(object):
             pre_seq_new = self.__seqs_new[0]
             rbs_new = self.__seqs[1]
 
-        if _count_invalid_patterns(pre_seq_new + rbs_new) == 0:
+        if _count_invalid_pattern(pre_seq_new + rbs_new) + \
+                _count_pattern(pre_seq_new + rbs_new, '[AGT]TG') == 0:
             self.__seqs_new[0] = pre_seq_new
             self.__seqs_new[1] = rbs_new
         else:
@@ -137,12 +140,14 @@ class RBSSolution(object):
 
     def __repr__(self):
         # return '%r' % (self.__dict__)
-        return str([self.__cod_opt.get_cai(prot_seq)
-                    for prot_seq in self.__seqs[2]]) + '\t' + \
-            str([_count_invalid_patterns(seq)
-                 for seq in self.__seqs]) + '\t' + \
-            str(_get_tirs(self.__dgs)) + '\t' + self.__seqs[0] + ' ' + \
-            self.__seqs[1] + ' ' + str(self.__seqs[2]) + ' ' + self.__seqs[3]
+        cai = [self.__cod_opt.get_cai(prot_seq) for prot_seq in self.__seqs[2]]
+        invalid_patterns = [_count_invalid_pattern(seq) for seq in self.__seqs]
+        start_codons = [_count_pattern(seq, '[AGT]TG') for seq in self.__seqs]
+
+        return str(cai) + '\t' + str(invalid_patterns) + '\t' + \
+            str(start_codons) + '\t' + str(_get_tirs(self.__dgs)) + '\t' + \
+            self.__seqs[0] + ' ' + self.__seqs[1] + ' ' + \
+            str(self.__seqs[2]) + ' ' + self.__seqs[3]
 
     def __print__(self):
         return self.__repr__
@@ -169,7 +174,7 @@ def _get_valid_rand_seq(length):
     '''Returns a valid random sequence of supplied length.'''
     seq = ''.join([_rand_nuc() for _ in range(0, length)])
 
-    if _count_invalid_patterns(seq) == 0:
+    if _count_invalid_pattern(seq) + _count_pattern(seq, '[AGT]TG') == 0:
         return seq
 
     return _get_valid_rand_seq(length)
@@ -190,18 +195,21 @@ def _rand_nuc():
     return random.choice(['A', 'T', 'G', 'C'])
 
 
-def _count_invalid_patterns(seqs):
-    '''Counts undesired patterns in sequence.'''
+def _count_invalid_pattern(seqs):
+    '''Counts invalid patterns in sequence.'''
     max_repeat_nucs = 4
+    # Start codons | restriction sites | repeating nucleotides
+    pattern = '|'.join(['GGTCTC', 'CACCTGC'] +
+                       [x * max_repeat_nucs for x in ['A', 'C', 'G', 'T']])
+    return _count_pattern(seqs, pattern)
 
-    if isinstance(seqs, str) or isinstance(seqs, unicode):
-        # Start codons | restriction sites | repeating nucleotides
-        patterns = '|'.join(['[AGT]TG', 'GGTCTC', 'CACCTGC'] +
-                            [x * max_repeat_nucs
-                             for x in ['A', 'C', 'G', 'T']])
-        return len(re.findall(patterns, seqs))
+
+def _count_pattern(strings, pattern):
+    '''Counts pattern in string of list of strings.'''
+    if isinstance(strings, str) or isinstance(strings, unicode):
+        return len(re.findall(pattern, strings))
     else:
-        return [_count_invalid_patterns(seq) for seq in seqs]
+        return [_count_pattern(s, pattern) for s in strings]
 
 
 def main(argv):
