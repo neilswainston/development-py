@@ -21,14 +21,14 @@ if __name__ == '__main__':
         'SEKVVENCEEIMKASGKYTRSEAKAIDQFLMVFKNQDFPPGSSIIFAICPKGSLTIAFSKEERVP' + \
         'KTGKAVIKNKLLGEAVLESMIGKNGVSPATRKSLAERLSKLMNKKDPYNEANVNVATKN'
 
-    # PAL
-    print sim_ann.optimise(RBSSolution(['P35510'], taxonomy_id, len_target,
-                                       tir_target))
-
     # TAL
     print sim_ann.optimise(RBSSolution(['Q3IWB0', 'A9AUJ9', 'A5FKY3', 'Q1LRV9',
                                         'Q8VXG7'], taxonomy_id, len_target,
                                        tir_target), verbose=True)
+
+    # PAL
+    print sim_ann.optimise(RBSSolution(['P35510'], taxonomy_id, len_target,
+                                       tir_target))
 
     # 4CL
     print sim_ann.optimise(RBSSolution(['O54075', 'O24146', 'Q9S777', 'P31687',
