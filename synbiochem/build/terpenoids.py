@@ -11,13 +11,13 @@ from synbiochem.build.rbs import RBSSolution
 import synbiochem.optimisation.simulated_annealing as sim_ann
 
 
-if __name__ == '__main__':
+def main():
     '''main method.'''
     taxonomy_id = '83333'
     len_target = 60
     tir_target = 15000
 
-    optimised_CHI = 'MGSMALPSISAKWKGKNAKELTESVPFFRQLVTGEFEKLARVTMKKRLTGIQY' + \
+    optimised_chi = 'MGSMALPSISAKWKGKNAKELTESVPFFRQLVTGEFEKLARVTMKKRLTGIQY' + \
         'SEKVVENCEEIMKASGKYTRSEAKAIDQFLMVFKNQDFPPGSSIIFAICPKGSLTIAFSKEERVP' + \
         'KTGKAVIKNKLLGEAVLESMIGKNGVSPATRKSLAERLSKLMNKKDPYNEANVNVATKN'
 
@@ -40,5 +40,8 @@ if __name__ == '__main__':
                                        tir_target))
 
     # CHI
-    print sim_ann.optimise(RBSSolution(['P41088', optimised_CHI], taxonomy_id,
+    print sim_ann.optimise(RBSSolution(['P41088', optimised_chi], taxonomy_id,
                                        len_target, tir_target))
+
+if __name__ == '__main__':
+    main()
