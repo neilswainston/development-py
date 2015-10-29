@@ -62,7 +62,8 @@ class RBSSolution(object):
         '''Gets the (simulated annealing) energy.'''
         dgs = self.__dgs if dgs is None else dgs
         cdss = self.__seqs[2] if cdss is None else cdss
-        return sum([abs(d_g - self.__dg_target) for d_g in dgs]) * \
+        return sum([abs(d_g - self.__dg_target) for d_g in dgs]) / \
+            len(self.__seqs[2]) * \
             (1 + (sum(self.__count_invalid_pattern([self.__seqs[1]] +
                                                    cdss))**10))
 
@@ -168,8 +169,7 @@ class RBSSolution(object):
         return str(cai) + '\t' + str(invalid_patterns) + '\t' + \
             str(start_codons) + '\t' + str(_get_tirs(self.__dgs)) + '\t' + \
             self.__seqs[0] + ' ' + self.__seqs[1] + ' ' + \
-            str(self.__seqs[2]) + ' ' + \
-            '' if self.__seqs[3] is None else self.__seqs[3]
+            str(len(self.__seqs[2])) + ' '
 
     def __print__(self):
         return self.__repr__
