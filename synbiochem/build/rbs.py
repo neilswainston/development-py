@@ -42,6 +42,8 @@ class RBSSolution(object):
                                                       self.__invalid_pattern)
                for prot_seq in self.__prot_seqs.values()]
 
+        stop_codon = self.__cod_opt.get_codon_optimised_seq('*')
+
         # Randomly choose an RBS that is a decent starting point,
         # using the first CDS as the upstream sequence:
         (rbs, _) = RBS_MC_Design.GetInitialRBS('', cds[0],
@@ -52,10 +54,11 @@ class RBSSolution(object):
                                                      len_target - len(rbs))),
                        rbs,
                        cds,
+                       stop_codon,
                        self.__get_valid_rand_seq(post_seq_length)
                        if len(self.__prot_seqs) > 1 else None]
         self.__dgs = self.__calc_dgs(rbs)
-        self.__seqs_new = [None, None, cds, self.__seqs[3]]
+        self.__seqs_new = [None, None, cds, self.__seqs[3], self.__seqs[4]]
         self.__dgs_new = None
 
     def get_energy(self, dgs=None, cdss=None):
@@ -79,7 +82,8 @@ class RBSSolution(object):
         '''Accept potential update.'''
         self.__seqs = self.__seqs_new
         self.__dgs = self.__dgs_new
-        self.__seqs_new = [None, None, self.__seqs[2], self.__seqs[3]]
+        self.__seqs_new = [None, None, self.__seqs[2], self.__seqs[3],
+                           self.__seqs[4]]
         self.__dgs_new = None
 
     def __calc_dgs(self, rbs, verbose=False):
@@ -173,6 +177,13 @@ class RBSSolution(object):
 
     def __print__(self):
         return self.__repr__
+
+    def print_sol(self):
+        for cds in self.__seqs[2]:
+            print self.__seqs[0] + ' ' + self.__seqs[1] + ' ' + cds + ' ' + \
+                self.__seqs[3] + ' ' + \
+                '' if self.__seqs[4] is None else self.__seqs[4]
+        print '\n'
 
 
 def _get_tirs(dgs):

@@ -38,7 +38,8 @@ AA_CODES = {'Ala': 'A',
             'Thr': 'T',
             'Val': 'V',
             'Trp': 'W',
-            'Tyr': 'Y'}
+            'Tyr': 'Y',
+            'End': '*'}
 
 
 NA = 'NA'
@@ -57,7 +58,7 @@ class CodonOptimiser(object):
         self.__codon_to_w = {}
 
         for key in self.__codon_usage_table:
-            aa_dict = dict([(a, b/self.__codon_usage_table[key][0][1])
+            aa_dict = dict([(a, b / self.__codon_usage_table[key][0][1])
                             for a, b in self.__codon_usage_table[key]])
             self.__codon_to_w.update(aa_dict)
 
@@ -115,16 +116,16 @@ class CodonOptimiser(object):
         cai = 0
 
         for i in range(0, len(dna_seq), 3):
-            cai += self.__codon_to_w[dna_seq[i:i+3]]
+            cai += self.__codon_to_w[dna_seq[i:i + 3]]
 
-        return cai/(len(dna_seq)/3)
+        return cai / (len(dna_seq) / 3)
 
     def mutate(self, protein_seq, dna_seq, mutation_rate):
         '''Mutate a protein-encoding DNA sequence according to a
         supplied mutation rate.'''
         return ''.join([self.get_random_codon(amino_acid)
                         if random.random() < mutation_rate
-                        else dna_seq[3 * i:3 * (i+1)]
+                        else dna_seq[3 * i:3 * (i + 1)]
                         for i, amino_acid in enumerate(protein_seq)])
 
     def get_all_rev_trans(self, aa_seq):
@@ -370,9 +371,9 @@ def main(argv):
     outfile = open(argv[6], 'w')
 
     for i in xrange(0, len(sequences), 2):
-        outfile.write('\t'.join([sequences[i], sequences[i+1],
-                                 str(mfes[i]), str(mfes[i+1]),
-                                 str(mfes[i] - mfes[i+1])]) + '\n')
+        outfile.write('\t'.join([sequences[i], sequences[i + 1],
+                                 str(mfes[i]), str(mfes[i + 1]),
+                                 str(mfes[i] - mfes[i + 1])]) + '\n')
 
     outfile.close()
 

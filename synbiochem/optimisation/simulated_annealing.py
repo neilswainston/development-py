@@ -19,6 +19,7 @@ def optimise(solution, acceptance=0.25, max_iter=10000, verbose=False):
     accepts = 0
     rejects = 0
     r_temp = 0.6
+    cooling_rate = 1e-3
 
     energy = solution.get_energy()
 
@@ -64,5 +65,7 @@ def optimise(solution, acceptance=0.25, max_iter=10000, verbose=False):
                 r_temp *= 2.0
                 accepts = 0
                 rejects = 0
+
+        r_temp *= 1 - cooling_rate
 
     return (solution, counter)

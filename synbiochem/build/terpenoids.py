@@ -22,23 +22,34 @@ if __name__ == '__main__':
         'KTGKAVIKNKLLGEAVLESMIGKNGVSPATRKSLAERLSKLMNKKDPYNEANVNVATKN'
 
     # TAL
-    print sim_ann.optimise(RBSSolution(['Q3IWB0', 'A9AUJ9', 'A5FKY3', 'Q1LRV9',
+    sol = sim_ann.optimise(RBSSolution(['Q3IWB0', 'A9AUJ9', 'A5FKY3', 'Q1LRV9',
                                         'Q8VXG7'], taxonomy_id, len_target,
-                                       tir_target), verbose=True)
+                                       tir_target), verbose=True)[0]
+
+    sol.print_sol()
 
     # PAL
-    print sim_ann.optimise(RBSSolution(['P35510'], taxonomy_id, len_target,
-                                       tir_target))
+    sol = sim_ann.optimise(RBSSolution(['P35510'], taxonomy_id, len_target,
+                                       tir_target))[0]
+
+    sol.print_sol()
 
     # 4CL
-    print sim_ann.optimise(RBSSolution(['O54075', 'O24146', 'Q9S777', 'P31687',
+    sol = sim_ann.optimise(RBSSolution(['O54075', 'O24146', 'Q9S777', 'P31687',
                                         'Q42879', 'Q9K3W1'], taxonomy_id,
-                                       len_target, tir_target), verbose=True)
+                                       len_target, tir_target),
+                           verbose=True)[0]
+
+    sol.print_sol()
 
     # CHS
-    print sim_ann.optimise(RBSSolution(['P13114'], taxonomy_id, len_target,
-                                       tir_target))
+    sol = sim_ann.optimise(RBSSolution(['P13114'], taxonomy_id, len_target,
+                                       tir_target))[0]
+
+    sol.print_sol()
 
     # CHI
-    print sim_ann.optimise(RBSSolution(['P41088', optimised_CHI], taxonomy_id,
-                                       len_target, tir_target))
+    sol = sim_ann.optimise(RBSSolution(['P41088', optimised_CHI], taxonomy_id,
+                                       len_target, tir_target))[0]
+
+    sol.print_sol()
