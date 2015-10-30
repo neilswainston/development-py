@@ -10,8 +10,9 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 # pylint: disable=too-few-public-methods
 
 import json
-import urllib2
 import sys
+import urllib2
+
 from synbiochem.utils.chemistry_utils import MolecularMassCalculator
 
 

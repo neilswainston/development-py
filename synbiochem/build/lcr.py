@@ -10,6 +10,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import itertools
 import os
 import sys
+
 from synbiochem.utils import sequence_utils as sequence_utils
 
 

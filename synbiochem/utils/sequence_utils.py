@@ -21,6 +21,7 @@ import uuid
 import synbiochem.utils.uniprot_utils as uniprot_utils
 
 
+
 AA_CODES = {'Ala': 'A',
             'Cys': 'C',
             'Asp': 'D',
