@@ -20,6 +20,12 @@ import synbiochem.utils.sequence_utils as seq_utils
 # Necessary to get constants hidden as class variables in RBS_Calculator:
 _RBS_CALC = RBS_Calculator.RBS_Calculator('A', [0, 0])
 
+# Invalid pattern is restriction sites | repeating nucleotides:
+_MAX_REPEATING_NUCS = 6
+_INVALID_PATTERN = '|'.join(['GGTCTC', 'CACCTGC'] +
+                            [x * _MAX_REPEATING_NUCS
+                             for x in ['A', 'C', 'G', 'T']])
+
 
 class RBSSolution(object):
     '''Solution for RBS optimisation.'''
@@ -29,17 +35,12 @@ class RBSSolution(object):
         # If TIR, then convert to dg_total.
         self.__dg_target = _RBS_CALC.RT_eff * \
             (_RBS_CALC.logK - math.log(float(tir_target)))
-        self.__cod_opt = seq_utils.CodonOptimiser(taxonomy_id)
 
-        # Invalid pattern is restriction sites | repeating nucleotides
-        max_repeat_nucs = 6
-        self.__invalid_pattern = '|'.join(['GGTCTC', 'CACCTGC'] +
-                                          [x * max_repeat_nucs
-                                           for x in ['A', 'C', 'G', 'T']])
+        self.__cod_opt = seq_utils.CodonOptimiser(taxonomy_id)
 
         self.__prot_seqs = seq_utils.get_sequences(protein_ids)
         cds = [self.__cod_opt.get_codon_optimised_seq(prot_seq,
-                                                      self.__invalid_pattern)
+                                                      _INVALID_PATTERN)
                for prot_seq in self.__prot_seqs.values()]
 
         stop_codon = self.__cod_opt.get_codon_optimised_seq('*')
@@ -67,8 +68,8 @@ class RBSSolution(object):
         cdss = self.__seqs[2] if cdss is None else cdss
         return sum([abs(d_g - self.__dg_target) for d_g in dgs]) / \
             len(self.__seqs[2]) * \
-            (1 + (sum(self.__count_invalid_pattern([self.__seqs[1]] +
-                                                   cdss))**10))
+            (1 + (sum(seq_utils.count_pattern([self.__seqs[1]] + cdss,
+                                              _INVALID_PATTERN)))**10)
 
     def mutate(self, verbose=False):
         '''Mutates and scores whole design.'''
@@ -99,7 +100,8 @@ class RBSSolution(object):
         pos = int(random.random() * len(self.__seqs[0]))
         pre_seq_new = _replace(self.__seqs[0], pos, _rand_nuc())
 
-        if self.__count_invalid_pattern(pre_seq_new + self.__seqs[1]) + \
+        if seq_utils.count_pattern(pre_seq_new + self.__seqs[1],
+                                   _INVALID_PATTERN) + \
                 seq_utils.count_pattern(pre_seq_new + self.__seqs[1],
                                         '[AGT]TG') == 0:
             self.__seqs_new[0] = pre_seq_new
@@ -133,7 +135,7 @@ class RBSSolution(object):
             pre_seq_new = self.__seqs_new[0]
             rbs_new = self.__seqs[1]
 
-        if self.__count_invalid_pattern(pre_seq_new + rbs_new) + \
+        if seq_utils.count_pattern(pre_seq_new + rbs_new, _INVALID_PATTERN) + \
                 seq_utils.count_pattern(pre_seq_new + rbs_new, '[AGT]TG') == 0:
             self.__seqs_new[0] = pre_seq_new
             self.__seqs_new[1] = rbs_new
@@ -152,20 +154,16 @@ class RBSSolution(object):
         '''Returns a valid random sequence of supplied length.'''
         seq = ''.join([_rand_nuc() for _ in range(0, length)])
 
-        if self.__count_invalid_pattern(seq) + \
+        if seq_utils.count_pattern(seq, _INVALID_PATTERN) + \
                 seq_utils.count_pattern(seq, '[AGT]TG') == 0:
             return seq
 
         return self.__get_valid_rand_seq(length)
 
-    def __count_invalid_pattern(self, seqs):
-        '''Counts invalid patterns in sequence.'''
-        return seq_utils.count_pattern(seqs, self.__invalid_pattern)
-
     def __repr__(self):
         # return '%r' % (self.__dict__)
         cai = [self.__cod_opt.get_cai(prot_seq) for prot_seq in self.__seqs[2]]
-        invalid_patterns = [self.__count_invalid_pattern(seq)
+        invalid_patterns = [seq_utils.count_pattern(seq, _INVALID_PATTERN)
                             for seq in self.__seqs]
         start_codons = [seq_utils.count_pattern(seq, '[AGT]TG')
                         for seq in self.__seqs]

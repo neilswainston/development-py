@@ -17,7 +17,9 @@ import subprocess
 import sys
 import urllib2
 import uuid
+
 import synbiochem.utils.uniprot_utils as uniprot_utils
+
 
 AA_CODES = {'Ala': 'A',
             'Cys': 'C',

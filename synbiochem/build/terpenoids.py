@@ -11,13 +11,13 @@ from synbiochem.build.rbs import RBSSolution
 import synbiochem.optimisation.simulated_annealing as sim_ann
 
 
-if __name__ == '__main__':
+def main():
     '''main method.'''
     taxonomy_id = '83333'
     len_target = 60
     tir_target = 15000
 
-    optimised_CHI = 'MGSMALPSISAKWKGKNAKELTESVPFFRQLVTGEFEKLARVTMKKRLTGIQY' + \
+    optimised_chi = 'MGSMALPSISAKWKGKNAKELTESVPFFRQLVTGEFEKLARVTMKKRLTGIQY' + \
         'SEKVVENCEEIMKASGKYTRSEAKAIDQFLMVFKNQDFPPGSSIIFAICPKGSLTIAFSKEERVP' + \
         'KTGKAVIKNKLLGEAVLESMIGKNGVSPATRKSLAERLSKLMNKKDPYNEANVNVATKN'
 
@@ -25,13 +25,11 @@ if __name__ == '__main__':
     sol = sim_ann.optimise(RBSSolution(['Q3IWB0', 'A9AUJ9', 'A5FKY3', 'Q1LRV9',
                                         'Q8VXG7'], taxonomy_id, len_target,
                                        tir_target), verbose=True)[0]
-
     sol.print_sol()
 
     # PAL
     sol = sim_ann.optimise(RBSSolution(['P35510'], taxonomy_id, len_target,
                                        tir_target))[0]
-
     sol.print_sol()
 
     # 4CL
@@ -39,17 +37,17 @@ if __name__ == '__main__':
                                         'Q42879', 'Q9K3W1'], taxonomy_id,
                                        len_target, tir_target),
                            verbose=True)[0]
-
     sol.print_sol()
 
     # CHS
     sol = sim_ann.optimise(RBSSolution(['P13114'], taxonomy_id, len_target,
                                        tir_target))[0]
-
     sol.print_sol()
 
     # CHI
-    sol = sim_ann.optimise(RBSSolution(['P41088', optimised_CHI], taxonomy_id,
+    sol = sim_ann.optimise(RBSSolution(['P41088', optimised_chi], taxonomy_id,
                                        len_target, tir_target))[0]
-
     sol.print_sol()
+
+if __name__ == '__main__':
+    main()
