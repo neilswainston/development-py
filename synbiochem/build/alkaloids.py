@@ -24,26 +24,33 @@ def main():
         'VAEVKEGLNKAGLPAQVMIDFSHANSSKQFKKQMDVCADVCQQIAGGEKAIIGVMVESHLVEGNQ' + \
         'SLESGEPLAYGKSITDACIGWEDTDALLRQLANAVKARRG'
 
-    print sim_ann.optimise(RBSSolution(['P07023'], taxonomy_id, len_target,
-                                       tir_target), verbose=True)
+    sol = sim_ann.optimise(RBSSolution(['P07023'], taxonomy_id, len_target,
+                                       tir_target), verbose=True)[0]
+    sol.print_sol()
 
-    print sim_ann.optimise(RBSSolution([optimised_p0ab91], taxonomy_id,
-                                       len_target, tir_target))
+    sol = sim_ann.optimise(RBSSolution([optimised_p0ab91], taxonomy_id,
+                                       len_target, tir_target))[0]
+    sol.print_sol()
 
-    print sim_ann.optimise(RBSSolution(['P23538'], taxonomy_id, len_target,
-                                       tir_target))
+    sol = sim_ann.optimise(RBSSolution(['P23538'], taxonomy_id, len_target,
+                                       tir_target))[0]
+    sol.print_sol()
 
-    print sim_ann.optimise(RBSSolution(['P27302'], taxonomy_id, len_target,
-                                       tir_target))
+    sol = sim_ann.optimise(RBSSolution(['P27302'], taxonomy_id, len_target,
+                                       tir_target))[0]
+    sol.print_sol()
 
-    print sim_ann.optimise(RBSSolution(['Q57160'], taxonomy_id, len_target,
-                                       tir_target))
+    sol = sim_ann.optimise(RBSSolution(['Q57160'], taxonomy_id, len_target,
+                                       tir_target))[0]
+    sol.print_sol()
 
-    print sim_ann.optimise(RBSSolution(['Q57501'], taxonomy_id, len_target,
-                                       tir_target))
+    sol = sim_ann.optimise(RBSSolution(['Q57501'], taxonomy_id, len_target,
+                                       tir_target))[0]
+    sol.print_sol()
 
-    print sim_ann.optimise(RBSSolution(['K0IQX2'], taxonomy_id, len_target,
-                                       tir_target))
+    sol = sim_ann.optimise(RBSSolution(['K0IQX2'], taxonomy_id, len_target,
+                                       tir_target))[0]
+    sol.print_sol()
 
 if __name__ == '__main__':
     main()
