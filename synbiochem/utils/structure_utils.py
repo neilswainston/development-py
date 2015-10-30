@@ -7,61 +7,145 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-import itertools
+from itertools import chain
 from matplotlib.colors import LinearSegmentedColormap
-import numpy
 import pylab
+import random
 import scipy.spatial
 import sys
 import tempfile
 import urllib
+import urllib2
 
+from Bio import SeqUtils
 from Bio.PDB.PDBParser import PDBParser
+import numpy
 
 
 # KD Hydrophobicity, EIIP, Helix, Sheet, Turn
 AMINO_ACID_PROPERTIES = {
-    'A': [1.8, -0.0667, 32.9, -23.6, -41.6],
-    'R': [-4.5, 0.2674, 0, -6.2, -5.1],
-    'N': [-3.5, -0.2589, -24.8, -41.6, 44.5],
-    'D': [-3.5, 0.4408, 5.8, -41.6, 37.8],
-    'C': [2.5, 0.1933, -5.1, 6.8, 17.4],
-    'Q': [-3.5, 0.1545, 11.3, 0, -2],
-    'E': [-3.5, -0.2463, 36.5, -67.3, -30.1],
-    'G': [-0.4, -0.2509, -46.2, -13.9, 44.5],
-    'H': [-3.2, -0.1414, 11.3, -18.6, -5.1],
-    'I': [4.5, -0.2794, -1, 45.1, -75.5],
-    'L': [3.8, -0.2794, 26.2, 15.7, -52.8],
-    'K': [-3.9, -0.0679, 19.1, -31.5, 1],
-    'M': [1.9, 0.1899, 27.8, 1, -51.1],
-    'F': [2.8, 0.26, 10.4, 20.7, -51.1],
-    'P': [-1.6, -0.1665, -59.8, -47.8, 41.9],
-    'S': [-0.8, 0.1933, -32.9, -6.2, 35.8],
-    'T': [-0.7, 0.2572, -24.8, 28.5, -4.1],
-    'W': [-0.9, 0.0331, 3, 21.5, -4.1],
-    'Y': [-1.3, 0.0148, -31.5, 27, 13.1],
-    'V': [4.2, -0.2469, -3, 49.5, -69.3]
+    'A': [0.66, 0.336, 0.870, 0.399, 0.326],
+    'R': [0.1, 0.707, 0.597, 0.518, 0.569],
+    'N': [0.189, 0.123, 0.391, 0.276, 0.9],
+    'D': [0.189, 0.9, 0.645, 0.276, 0.855],
+    'C': [0.722, 0.625, 0.554, 0.608, 0.719],
+    'Q': [0.189, 0.582, 0.691, 0.561, 0.59],
+    'E': [0.189, 0.137, 0.9, 0.1, 0.403],
+    'G': [0.464, 0.132, 0.213, 0.466, 0.9],
+    'H': [0.216, 0.253, 0.691, 0.434, 0.569],
+    'I': [0.9, 0.1, 0.589, 0.870, 0.1],
+    'L': [0.838, 0.1, 0.814, 0.668, 0.251],
+    'K': [0.153, 0.335, 0.755, 0.345, 0.61],
+    'M': [0.669, 0.621, 0.828, 0.568, 0.263],
+    'F': [0.749, 0.699, 0.683, 0.703, 0.263],
+    'P': [0.358, 0.225, 0.1, 0.234, 0.883],
+    'S': [0.429, 0.625, 0.323, 0.518, 0.842],
+    'T': [0.438, 0.696, 0.391, 0.756, 0.576],
+    'W': [0.42, 0.447, 0.622, 0.708, 0.576],
+    'Y': [0.384, 0.427, 0.335, 0.746, 0.691],
+    'V': [0.873, 0.136, 0.572, 0.9, 0.141]
 }
 
 
-def calc_proximity(pdb_id):
-    '''Calculates residue proximities from PDB file.'''
+def get_pdb_ids(scop_id, max_ids=None):
+    '''Returns all PDB ids for a given SCOP id.'''
+    url = 'http://www.rcsb.org/pdb/results/results.do' + \
+        '?startAt=0&resultsperpage=1000000&outformat=text&qrid=' + \
+        scop_id
+
+    ids = [line.split()[0] for line in urllib2.urlopen(url)]
+
+    return ids if max_ids is None \
+        else random.sample(ids, min(len(ids), max_ids))
+
+
+def get_residues(pdb_id):
+    '''Gets the residues in a PDB file.'''
+    return [SeqUtils.seq1(''.join([residue.get_resname()
+                                   for residue in chn
+                                   if 'CA' in residue.child_dict]))
+            for chn in get_structure(pdb_id).get_chains()]
+
+
+def get_structure(pdb_id):
+    '''Returns a PDB structure.'''
     with tempfile.TemporaryFile() as pdb_file:
         opener = urllib.URLopener()
         opener.retrieve('http://www.rcsb.org/pdb/files/' + pdb_id + '.pdb',
                         pdb_file.name)
-        parser = PDBParser()
-
-        chains = [c for c in parser.get_structure(pdb_id,
-                                                  pdb_file.name).get_chains()]
-
-        coords = [residue.child_dict['CA'].get_coord()
-                  for residue in chains[0] if 'CA' in residue.child_dict]
-
-        return scipy.spatial.distance.cdist(coords, coords, 'euclidean')
+        parser = PDBParser(QUIET=True)
+        return parser.get_structure(pdb_id, pdb_file.name)
 
 
-def plot(values, plot_filename, plot_format, title, max_value=None):
+def calc_proximities(pdb_id):
+    '''Calculates residue proximities from PDB file.'''
+    structure = get_structure(pdb_id)
+    chains = [c for c in structure.get_chains()]
+
+    coords = [[residue.child_dict['CA'].get_coord()
+              for residue in chn
+              if 'CA' in residue.child_dict]
+              for chn in chains]
+
+    return [scipy.spatial.distance.cdist(coord, coord, 'euclidean')
+            for coord in coords]
+
+
+def plot_proximities(pdb_id):
+    '''Plots proximity plot(s).'''
+    all_proximities = calc_proximities(pdb_id)
+
+    plot_format = 'png'
+
+    for idx, proximities in enumerate(all_proximities):
+        name = pdb_id + '_' + str(idx+1)
+        _plot(proximities, name + '.' + plot_format, plot_format,
+              name + ' proximity plot')
+
+
+def get_learning_data(pdb_id):
+    '''Gets input/output for deep learning.'''
+    all_proximities = calc_proximities(pdb_id)
+    all_residues = get_residues(pdb_id)
+
+    inpt = [list(chain.from_iterable([AMINO_ACID_PROPERTIES[amino_acid]
+                                      if amino_acid in AMINO_ACID_PROPERTIES
+                                      else [0.0, 0.0, 0.0]
+                                      for amino_acid in residues]))
+            for residues in all_residues]
+
+    output = [list(chain.from_iterable(proximities))
+              for proximities in all_proximities]
+
+    return pdb_id, all_residues, inpt, output
+
+
+def sample_learning_data(pdb_id, num_samples, nmer_len):
+    '''Samples learning data for deep learning.'''
+    pdb_id, all_residues, inpt, output = get_learning_data(pdb_id)
+
+    results = []
+
+    num_aa_props = len(AMINO_ACID_PROPERTIES['A'])
+
+    for _ in range(num_samples):
+        chn = int(random.random() * len(all_residues))
+        start = int(random.random() * (len(all_residues[chn]) - nmer_len))
+        rnge = range(start, start+nmer_len)
+        result = [pdb_id,
+                  ''.join([all_residues[chn][i] for i in rnge]),
+                  inpt[chn][start * num_aa_props:(start + nmer_len) *
+                            num_aa_props],
+                  [output[chn][i]
+                   for i in _get_sub_square_matrix(start, nmer_len,
+                                                   len(all_residues[chn]))]]
+
+        results.append(result)
+
+    return results
+
+
+def _plot(values, plot_filename, plot_format, title, max_value=None):
     '''Plots 3d matrix values.'''
     fig = pylab.figure()
     sub_plot = fig.add_subplot(111)
@@ -83,25 +167,18 @@ def plot(values, plot_filename, plot_format, title, max_value=None):
     pylab.savefig(plot_filename, format=plot_format)
 
 
-def export_html(values):
-    print ','.join(['[' + ','.join([str(v) for v in value.tolist()]) + ']'
-                    for value in values])
+def _get_sub_square_matrix(idx, lngth, size):
+    '''Returns square submatrix of length lngth from square matrix of given
+    size.'''
+    return [((idx + r) * size) + idx + c for r in range(lngth)
+            for c in range(lngth)]
 
 
 def main(argv):
     '''main method.'''
-    pdb_id = argv[1]
-    proximities = calc_proximity(pdb_id)
-
-    input = [AMINO_ACID_PROPERTIES[amino_acid] for amino_acid in amino_acids]
-    output = itertools.chain.from_iterable(proximities)
-
-    # export_html(proximities)
-
-    plot_format = 'png'
-    plot_filename = pdb_id + '.' + plot_format
-    plot(proximities, plot_filename, plot_format,
-         pdb_id + ' proximity plot')
+    for pdb_id in get_pdb_ids(argv[1], int(argv[2])):
+        for data in sample_learning_data(pdb_id, int(argv[3]), int(argv[4])):
+            print '\t'.join([str(datum) for datum in data])
 
 
 if __name__ == '__main__':
