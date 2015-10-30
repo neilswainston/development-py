@@ -179,11 +179,13 @@ class RBSSolution(object):
         return self.__repr__
 
     def print_sol(self):
-        for cds in self.__seqs[2]:
-            print self.__seqs[0] + ' ' + self.__seqs[1] + ' ' + cds + ' ' + \
-                self.__seqs[3] + ' ' + \
+        '''Prints the solution.'''
+        tirs = _get_tirs(self.__dgs)
+        for i, cds in enumerate(self.__seqs[2]):
+            print str(self.__dgs[i]) + '\t' + str(tirs[i]) + '\t' + \
+                self.__seqs[0] + '\t' + self.__seqs[1] + '\t' + cds + '\t' + \
+                self.__seqs[3] + '\t' + \
                 '' if self.__seqs[4] is None else self.__seqs[4]
-        print '\n'
 
 
 def _get_tirs(dgs):
