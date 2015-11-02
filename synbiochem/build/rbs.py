@@ -183,7 +183,7 @@ class RBSSolution(object):
             print str(self.__dgs[i]) + '\t' + str(tirs[i]) + '\t' + \
                 self.__seqs[0] + '\t' + self.__seqs[1] + '\t' + cds + '\t' + \
                 self.__seqs[3] + '\t' + \
-                '' if self.__seqs[4] is None else self.__seqs[4]
+                ('' if self.__seqs[4] is None else self.__seqs[4])
 
 
 def _get_tirs(dgs):
