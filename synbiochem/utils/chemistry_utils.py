@@ -29,14 +29,17 @@ class MolecularMassCalculator(object):
 
     def get_molecular_mass(self, formula):
         '''Calculate and return molecular mass from chemical formula.'''
-        mass = 0
+        return sum([self.__element_to_mass[element] * count
+                    for element, count in get_elem_comp(formula)])
 
-        for term in re.findall('[A-Z]{1}[0-9]*[a-z]{0,1}[0-9]*',
-                               formula):
 
-            element = re.search("[A-z]*", term).group(0)
-            result = re.search("[0-9]+", term)
-            count = int(result.group(0)) if result else 1
-            mass += self.__element_to_mass[element] * count
+def get_elem_comp(formula):
+    '''Gets elemental composition as a dict from formula.'''
+    elem_comp = {}
 
-        return mass
+    for term in re.findall('[A-Z]{1}[0-9]*[a-z]{0,1}[0-9]*', formula):
+        element = re.search('[A-z]*', term).group(0)
+        result = re.search('[0-9]+', term)
+        elem_comp[element] = int(result.group(0)) if result else 1
+
+    return elem_comp
