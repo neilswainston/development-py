@@ -7,9 +7,10 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-from scipy.optimize import linprog
-import chemistry_utils
 import itertools
+from scipy.optimize import linprog
+
+import chemistry_utils
 
 
 def balance():

@@ -9,6 +9,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 from itertools import chain
 from matplotlib.colors import LinearSegmentedColormap
+import numpy
 import pylab
 import random
 import scipy.spatial
@@ -19,7 +20,6 @@ import urllib2
 
 from Bio import SeqUtils
 from Bio.PDB.PDBParser import PDBParser
-import numpy
 
 
 # KD Hydrophobicity, EIIP, Helix, Sheet, Turn
