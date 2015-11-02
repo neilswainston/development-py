@@ -21,7 +21,6 @@ import uuid
 import synbiochem.utils.uniprot_utils as uniprot_utils
 
 
-
 AA_CODES = {'Ala': 'A',
             'Cys': 'C',
             'Asp': 'D',
@@ -88,31 +87,40 @@ class CodonOptimiser(object):
 
         return optimised_seqs
 
-    def get_codon_optimised_seq(self, protein_seq, invalid_pattern=None):
+    def get_codon_optimised_seq(self, protein_seq, invalid_pattern=None,
+                                max_attempts=1000):
         '''Returns a codon optimised DNA sequence.
-        TODO: Can get stuck in a loop. Check max iteration. e.g. WG protein seq
+        TODO: *May* get stuck in a loop. Check max iteration. e.g. WG protein seq
         guarantees 4 consecutive nucleotides.'''
         if invalid_pattern is None:
             return ''.join([self.get_random_codon(aa)
                             for aa in protein_seq])
         else:
+            attempts = 0
             seq = ''
             i = 0
 
-            while True:
+            while attempts < max_attempts:
                 amino_acid = protein_seq[i]
                 new_seq = seq + self.get_random_codon(amino_acid)
 
                 if count_pattern(new_seq, invalid_pattern) > 0:
-                    i -= 1
-                    seq = seq[:-3]
+                    num_problem_codons = len(max(re.findall(invalid_pattern,
+                                                            new_seq),
+                                                 key=len)) / 3
+                    i -= num_problem_codons
+                    seq = seq[:-num_problem_codons * 3]
+                    attempts += 1
                 else:
+                    attempts = 0
                     seq = new_seq
 
                     if i == len(protein_seq) - 1:
                         return seq
 
                     i += 1
+
+            raise ValueError('Unable to generate codon-optimised sequence.')
 
     def get_cai(self, dna_seq):
         '''Gets the CAI for a given DNA sequence.'''

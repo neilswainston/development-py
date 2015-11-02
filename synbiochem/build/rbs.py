@@ -151,15 +151,19 @@ class RBSSolution(object):
              for dna_seq, prot_seq in zip(self.__seqs[2],
                                           self.__prot_seqs.values())]
 
-    def __get_valid_rand_seq(self, length):
+    def __get_valid_rand_seq(self, length, attempts=0, max_attempts=1000):
         '''Returns a valid random sequence of supplied length.'''
+        if attempts > max_attempts - 1:
+            raise ValueError('Unable to generate valid random sequence of ' +
+                             'length ' + str(length))
+
         seq = ''.join([_rand_nuc() for _ in range(0, length)])
 
         if seq_utils.count_pattern(seq, _INVALID_PATTERN) + \
                 seq_utils.count_pattern(seq, '[AGT]TG') == 0:
             return seq
 
-        return self.__get_valid_rand_seq(length)
+        return self.__get_valid_rand_seq(length, attempts + 1, max_attempts)
 
     def __repr__(self):
         # return '%r' % (self.__dict__)
