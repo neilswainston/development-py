@@ -83,8 +83,8 @@ def calc_proximities(pdb_id):
     chains = [c for c in structure.get_chains()]
 
     coords = [[residue.child_dict['CA'].get_coord()
-              for residue in chn
-              if 'CA' in residue.child_dict]
+               for residue in chn
+               if 'CA' in residue.child_dict]
               for chn in chains]
 
     return [scipy.spatial.distance.cdist(coord, coord, 'euclidean')
@@ -98,7 +98,7 @@ def plot_proximities(pdb_id):
     plot_format = 'png'
 
     for idx, proximities in enumerate(all_proximities):
-        name = pdb_id + '_' + str(idx+1)
+        name = pdb_id + '_' + str(idx + 1)
         _plot(proximities, name + '.' + plot_format, plot_format,
               name + ' proximity plot')
 
@@ -131,7 +131,7 @@ def sample_learning_data(pdb_id, num_samples, nmer_len):
     for _ in range(num_samples):
         chn = int(random.random() * len(all_residues))
         start = int(random.random() * (len(all_residues[chn]) - nmer_len))
-        rnge = range(start, start+nmer_len)
+        rnge = range(start, start + nmer_len)
         result = [pdb_id,
                   ''.join([all_residues[chn][i] for i in rnge]),
                   inpt[chn][start * num_aa_props:(start + nmer_len) *
