@@ -23,7 +23,7 @@ _RBS_CALC = RBS_Calculator.RBS_Calculator('A', [0, 0])
 # Invalid pattern is restriction sites | repeating nucleotides:
 _MAX_REPEATING_NUCS = 6
 _INVALID_PATTERN = '|'.join(['GGTCTC', 'GAGACC',
-                             'CACCTGC', 'GCAGGTG'
+                             'CACCTGC', 'GCAGGTG',
                              'GAATTC',
                              'AGATCT',
                              'GGATCC',
