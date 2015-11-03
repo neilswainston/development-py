@@ -22,10 +22,17 @@ _RBS_CALC = RBS_Calculator.RBS_Calculator('A', [0, 0])
 
 # Invalid pattern is restriction sites | repeating nucleotides:
 _MAX_REPEATING_NUCS = 6
-_INVALID_PATTERN = '|'.join(['GGTCTC', 'CACCTGC', 'GAATTC', 'AGATCT', 'GGATCC',
-                             'CTCGAG', 'GAGTC[ACGT]{5}'] +
+_INVALID_PATTERN = '|'.join(['GGTCTC', 'GAGACC',
+                             'CACCTGC', 'GCAGGTG'
+                             'GAATTC',
+                             'AGATCT',
+                             'GGATCC',
+                             'CTCGAG',
+                             'GAGTC[ACGT]{5}', '[ACGT]{5}GACTC'] +
                             [x * _MAX_REPEATING_NUCS
                              for x in ['A', 'C', 'G', 'T']])
+
+_START_CODON_PATTERN = '[ACGT]TG'
 
 
 class RBSSolution(object):
@@ -48,8 +55,7 @@ class RBSSolution(object):
 
         # Randomly choose an RBS that is a decent starting point,
         # using the first CDS as the upstream sequence:
-        (rbs, _) = RBS_MC_Design.GetInitialRBS('', cds[0],
-                                               self.__dg_target)
+        rbs = self.__get_init_rbs(cds[0])
 
         post_seq_length = 30
         self.__seqs = [self.__get_valid_rand_seq(max(0,
@@ -88,6 +94,20 @@ class RBSSolution(object):
                            self.__seqs[4]]
         self.__dgs_new = None
 
+    def __get_init_rbs(self, cds, attempts=0, max_attempts=1000):
+        '''Gets an initial RBS.'''
+        if attempts > max_attempts - 1:
+            raise ValueError('Unable to generate valid initial RBS.')
+
+        (rbs, _) = RBS_MC_Design.GetInitialRBS('', cds,
+                                               self.__dg_target)
+
+        if seq_utils.count_pattern(rbs, _INVALID_PATTERN) + \
+                seq_utils.count_pattern(rbs, _START_CODON_PATTERN) == 0:
+            return rbs
+
+        return self.__get_init_rbs(cds, attempts + 1, max_attempts)
+
     def __calc_dgs(self, rbs, verbose=False):
         '''Calculates (simulated annealing) energies for given RBS.'''
         return [RBS_MC_Design.Run_RBS_Calculator(self.__seqs[0],
@@ -104,7 +124,7 @@ class RBSSolution(object):
         if seq_utils.count_pattern(pre_seq_new + self.__seqs[1],
                                    _INVALID_PATTERN) + \
                 seq_utils.count_pattern(pre_seq_new + self.__seqs[1],
-                                        '[AGT]TG') == 0:
+                                        _START_CODON_PATTERN) == 0:
             self.__seqs_new[0] = pre_seq_new
         else:
             self.__seqs_new[0] = self.__seqs[0]
@@ -137,7 +157,8 @@ class RBSSolution(object):
             rbs_new = self.__seqs[1]
 
         if seq_utils.count_pattern(pre_seq_new + rbs_new, _INVALID_PATTERN) + \
-                seq_utils.count_pattern(pre_seq_new + rbs_new, '[AGT]TG') == 0:
+                seq_utils.count_pattern(pre_seq_new + rbs_new,
+                                        _START_CODON_PATTERN) == 0:
             self.__seqs_new[0] = pre_seq_new
             self.__seqs_new[1] = rbs_new
         else:
@@ -146,10 +167,15 @@ class RBSSolution(object):
 
     def __mutate_cds(self):
         '''Mutates CDS.'''
-        self.__seqs_new[2] = \
-            [self.__cod_opt.mutate(prot_seq, dna_seq, 3.0 / len(dna_seq))
-             for dna_seq, prot_seq in zip(self.__seqs[2],
-                                          self.__prot_seqs.values())]
+        new_cds = [self.__cod_opt.mutate(prot_seq, dna_seq, 3.0 / len(dna_seq))
+                   for dna_seq, prot_seq in zip(self.__seqs[2],
+                                                self.__prot_seqs.values())]
+
+        self.__seqs_new[2] = [cds
+                              if seq_utils.count_pattern(cds,
+                                                         _INVALID_PATTERN) == 0
+                              else self.__seqs_new[2][idx]
+                              for idx, cds in enumerate(new_cds)]
 
     def __get_valid_rand_seq(self, length, attempts=0, max_attempts=1000):
         '''Returns a valid random sequence of supplied length.'''
@@ -160,7 +186,7 @@ class RBSSolution(object):
         seq = ''.join([_rand_nuc() for _ in range(0, length)])
 
         if seq_utils.count_pattern(seq, _INVALID_PATTERN) + \
-                seq_utils.count_pattern(seq, '[AGT]TG') == 0:
+                seq_utils.count_pattern(seq, _START_CODON_PATTERN) == 0:
             return seq
 
         return self.__get_valid_rand_seq(length, attempts + 1, max_attempts)
@@ -170,7 +196,7 @@ class RBSSolution(object):
         cai = [self.__cod_opt.get_cai(prot_seq) for prot_seq in self.__seqs[2]]
         invalid_patterns = [seq_utils.count_pattern(seq, _INVALID_PATTERN)
                             for seq in self.__seqs]
-        start_codons = [seq_utils.count_pattern(seq, '[AGT]TG')
+        start_codons = [seq_utils.count_pattern(seq, _START_CODON_PATTERN)
                         for seq in self.__seqs]
 
         return str(cai) + '\t' + str(invalid_patterns) + '\t' + \

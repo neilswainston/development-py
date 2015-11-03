@@ -90,8 +90,8 @@ class CodonOptimiser(object):
     def get_codon_optimised_seq(self, protein_seq, invalid_pattern=None,
                                 max_attempts=1000):
         '''Returns a codon optimised DNA sequence.
-        TODO: *May* get stuck in a loop. Check max iteration. e.g. WG protein seq
-        guarantees 4 consecutive nucleotides.'''
+        TODO: *May* get stuck in a loop. Check max iteration. e.g. WG protein
+        seq guarantees 4 consecutive nucleotides.'''
         if invalid_pattern is None:
             return ''.join([self.get_random_codon(aa)
                             for aa in protein_seq])

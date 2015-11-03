@@ -68,4 +68,7 @@ def optimise(solution, acceptance=0.25, max_iter=10000, verbose=False):
 
         r_temp *= 1 - cooling_rate
 
+    if counter == max_iter:
+        raise ValueError('Unable to optimise: ' + str(solution))
+
     return (solution, counter)
