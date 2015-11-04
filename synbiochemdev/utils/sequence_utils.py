@@ -1,12 +1,13 @@
 '''
-synbiochem (c) University of Manchester 2015
+synbiochemdev (c) University of Manchester 2015
 
-synbiochem is licensed under the MIT License.
+synbiochemdev is licensed under the MIT License.
 
 To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+import csv
 import itertools
 import math
 import operator
@@ -17,8 +18,6 @@ import subprocess
 import sys
 import urllib2
 import uuid
-
-import synbiochem.utils.uniprot_utils as uniprot_utils
 
 
 AA_CODES = {'Ala': 'A',
@@ -293,11 +292,19 @@ def get_sequences(protein_ids):
 
     for idx, protein_id in enumerate(protein_ids):
         if re.match(uniprot_id_pattern, protein_id):
-            sequences.update(uniprot_utils.get_sequences([protein_id]))
+            sequences.update(get_uniprot_seqs([protein_id]))
         else:
             sequences[str(idx)] = protein_id
 
     return sequences
+
+
+def get_uniprot_seqs(uniprot_ids):
+    '''Gets dictionary of ids to sequences from Uniprot.'''
+    query = '+or+'.join(['id:' + uniprot_id for uniprot_id in uniprot_ids])
+    url = 'http://www.uniprot.org/uniprot/?query=' + query + \
+        '&format=tab&columns=id,sequence'
+    return dict(list(csv.reader(urllib2.urlopen(url), delimiter='\t'))[1:])
 
 
 def count_pattern(strings, pattern):

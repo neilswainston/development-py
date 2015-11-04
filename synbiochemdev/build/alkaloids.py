@@ -1,14 +1,14 @@
 '''
-synbiochem (c) University of Manchester 2015
+synbiochemdev (c) University of Manchester 2015
 
-synbiochem is licensed under the MIT License.
+synbiochemdev is licensed under the MIT License.
 
 To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-from synbiochem.build.rbs import RBSSolution
-import synbiochem.optimisation.simulated_annealing as sim_ann
+from synbiochemdev.build.rbs import RBSSolution
+import synbiochemdev.optimisation.simulated_annealing as sim_ann
 
 
 def main():

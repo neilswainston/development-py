@@ -1,14 +1,14 @@
 '''
-synbiochem (c) University of Manchester 2015
+synbiochemdev (c) University of Manchester 2015
 
-synbiochem is licensed under the MIT License.
+synbiochemdev is licensed under the MIT License.
 
 To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-from synbiochem.build import lcr
-from synbiochem.utils import sequence_utils, uniprot_utils
+from synbiochemdev.build import lcr
+from synbiochemdev.utils import sequence_utils, uniprot_utils
 
 
 def build_pathway(target_melt_temp, host_id, uniprot_ids, plasmid_seq=None,

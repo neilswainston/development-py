@@ -1,7 +1,7 @@
 '''
-synbiochem (c) University of Manchester 2015
+synbiochemdev (c) University of Manchester 2015
 
-synbiochem is licensed under the MIT License.
+synbiochemdev is licensed under the MIT License.
 
 To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
@@ -13,8 +13,8 @@ import sys
 
 import RBS_Calculator
 import RBS_MC_Design
-import synbiochem.optimisation.simulated_annealing as sim_ann
-import synbiochem.utils.sequence_utils as seq_utils
+import synbiochemdev.optimisation.simulated_annealing as sim_ann
+import synbiochemdev.utils.sequence_utils as seq_utils
 
 
 # Necessary to get constants hidden as class variables in RBS_Calculator:
