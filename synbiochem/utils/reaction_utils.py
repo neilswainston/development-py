@@ -13,24 +13,20 @@ from scipy.optimize import linprog
 import synbiochem.utils.chemistry_utils as chem_utils
 
 
-def balance(reaction_def, optional_formulae=None,
-            optional_charges=None, max_stoich=8):
+def balance(reaction_def, optional_comp=None, max_stoich=8):
     '''Applies linear programming to balance reaction.'''
-    if optional_formulae is None:
-        optional_formulae = ['H', 'H2O']
-
-    if optional_charges is None:
-        optional_charges = [1, 0]
+    if optional_comp is None:
+        optional_comp = [('H', 1), ('H2O', 0)]
 
     # [['CO2', 'C5H7O4'], ['C3H3O3'], ['H', 'H2O'], ['H', 'H2O']]
     all_formulae = [[x[0] for x in reaction_def if x[2] <= 0],
                     [x[0] for x in reaction_def if x[2] > 0]]
-    all_formulae.extend([optional_formulae for _ in range(2)])
+    all_formulae.extend([[x[0] for x in optional_comp] for _ in range(2)])
 
     # [[0, -1], [-1], [1, 0], [1, 0]]
     all_charges = [[x[1] for x in reaction_def if x[2] <= 0],
                    [x[1] for x in reaction_def if x[2] > 0]]
-    all_charges.extend([optional_charges for _ in range(2)])
+    all_charges.extend([[x[1] for x in optional_comp] for _ in range(2)])
 
     all_elem_comp = [[_get_elem_comp(formula, idx)
                       for formula in formulae]
@@ -38,7 +34,7 @@ def balance(reaction_def, optional_formulae=None,
 
     (balanced, stoichs) = _optimise(_get_elem_matrix(all_elem_comp,
                                                      all_charges),
-                                    max_stoich, len(optional_formulae))
+                                    max_stoich, len(optional_comp))
 
     return balanced, _format_stoichs(stoichs, all_formulae, all_charges) \
         if balanced else None
