@@ -166,7 +166,7 @@ class RBSSolution(object):
             self.__seqs_new[1] = self.__seqs[1]
 
     def __mutate_cds(self):
-        '''Mutates CDS.'''
+        '''Mutates (potentially) multiple CDS.'''
         new_cds = [self.__cod_opt.mutate(prot_seq, dna_seq, 3.0 / len(dna_seq))
                    for dna_seq, prot_seq in zip(self.__seqs[2],
                                                 self.__prot_seqs.values())]
@@ -176,6 +176,17 @@ class RBSSolution(object):
                                                          _INVALID_PATTERN) == 0
                               else self.__seqs_new[2][idx]
                               for idx, cds in enumerate(new_cds)]
+
+    def __mutate_single_cds(self):
+        '''Mutates one randomly-selected CDS.'''
+        idx = int(random.random() * len(self.__seqs[2]))
+        new_cds = self.__cod_opt.mutate(self.__prot_seqs.values()[idx],
+                                        self.__seqs[2][idx],
+                                        3.0 * len(self.__seqs[2]) /
+                                        len(self.__seqs[2][idx]))
+
+        if seq_utils.count_pattern(new_cds, _INVALID_PATTERN) == 0:
+            self.__seqs_new[2][idx] = new_cds
 
     def __get_valid_rand_seq(self, length, attempts=0, max_attempts=1000):
         '''Returns a valid random sequence of supplied length.'''
