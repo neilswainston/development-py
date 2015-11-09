@@ -23,14 +23,19 @@ Finally the model is evaluated by functions provided by scikit-learn.
 '''
 
 # some utilities for command line interfaces
+from collections import defaultdict
+from functools import partial
+from itertools import count
+
 import climate
-# deep neural networks on top of Theano
-import theanets
-import numpy as np
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.metrics import classification_report, confusion_matrix
+import theanets
+
+import numpy as np
 
 
+# Deep neural networks on top of Theano:
 def train(x_data, y_data, split=0.75, optimize='sgd', learning_rate=0.01,
           momentum=0.5):
     '''Train the network.'''
@@ -45,19 +50,30 @@ def train(x_data, y_data, split=0.75, optimize='sgd', learning_rate=0.01,
     exp = theanets.Experiment(theanets.Classifier,
                               layers=(len(x_data[0]), 50, len(set(y_data))))
 
+    # x_data = np.array(x_data, dtype=np.float32)
+    y_map = _enumerate(y_data)
+    y_data = np.array([y[1] for y in y_map], dtype=np.int32)
+
     exp.train((x_data[:ind], y_data[:ind]),
               (x_data[ind:], y_data[ind:]),
               optimize=optimize, learning_rate=learning_rate,
               momentum=momentum)
 
-    return exp
+    return exp, dict(set(y_map))
 
 
-def classify(exp, x_test, y_test):
+def classify(exp, x_test, y_test, y_map):
     '''Classifies and analyses test data.'''
+    y_test = np.array([y_map[y] for y in y_test], dtype=np.int32)
     y_pred = exp.network.classify(x_test)
-    return y_pred, classification_report(y_test, y_pred), \
+    return y_map, y_pred, classification_report(y_test, y_pred), \
         confusion_matrix(y_test, y_pred)
+
+
+def _enumerate(lst):
+    '''Returns enumeration of supplied list.'''
+    label_to_number = defaultdict(partial(next, count()))
+    return [(item, label_to_number[item]) for item in lst]
 
 
 def main():
@@ -71,13 +87,15 @@ def main():
     # convert the features and targets to the 32-bit format suitable for the
     # model
     x_data = x_data.astype(np.float32)
-    y_data = y_data.astype(np.int32)
+    # y_data = y_data.astype(np.int32)
+    # x_data = x_data.tolist()
+    y_data = [str(y) for y in y_data]
 
     # Split data into training and classifying:
     ind = int(0.8 * len(x_data))
-    exp = train(x_data[:ind], y_data[:ind])
+    exp, y_map = train(x_data[:ind], y_data[:ind])
 
-    for output in classify(exp, x_data[ind:], y_data[ind:]):
+    for output in classify(exp, x_data[ind:], y_data[ind:], y_map):
         print output
 
 
