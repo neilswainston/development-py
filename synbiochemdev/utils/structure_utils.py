@@ -11,6 +11,7 @@ from itertools import chain
 from matplotlib.colors import LinearSegmentedColormap
 import pylab
 import random
+import re
 import sys
 import tempfile
 import urllib
@@ -20,7 +21,6 @@ from Bio.PDB.PDBParser import PDBParser
 from Bio.PDB.Polypeptide import PPBuilder
 import numpy
 import scipy.spatial
-import synbiochemdev.utils.file_utils as file_utils
 
 
 # KD Hydrophobicity, EIIP, Helix, Sheet, Turn
@@ -65,24 +65,37 @@ def _get_chain_res_struct(pdb_ids):
     pdb_id = pdb_ids.pop(0)
     pdb_id_fasta = '>' + pdb_id
     in_field = False
+    tokens = None
+    str_data = ''
 
     with tempfile.NamedTemporaryFile() as temp:
         urllib.urlretrieve('http://www.rcsb.org/pdb/files/ss.txt', temp.name)
 
         for line in open(temp.name):
             if line.startswith(pdb_id_fasta):
-                tokens = line.split('>|:')
+                if in_field:
+                    chain_res_struct[tokens] = str_data
+                    str_data = ''
+
+                tokens = tuple(re.split('>|:', line.strip())[1:])
                 in_field = True
-            elif line.startswith('>'):
-                if len(pdb_ids):
+
+            elif in_field and line.startswith('>'):
+                chain_res_struct[tokens] = str_data
+                str_data = ''
+
+                if len(pdb_ids) == 0:
                     break
                 else:
                     pdb_id = pdb_ids.pop(0)
                     pdb_id_fasta = '>' + pdb_id
                     in_field = False
+                    tokens = None
+                    str_data = ''
+
             elif in_field:
                 # Do something:
-                print line
+                str_data += line.strip()
 
     return chain_res_struct
 
