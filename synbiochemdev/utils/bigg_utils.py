@@ -10,6 +10,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import json
 import sys
 import urllib2
+
 import synbiochem.utils.chemistry_utils as chem_utils
 
 
