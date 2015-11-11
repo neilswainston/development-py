@@ -32,9 +32,9 @@ def get_pdb_ids(max_ids=None):
             else random.sample(ids, min(len(ids), max_ids))
 
 
-def get_chain_seq_struct(pdb_ids):
-    '''Returns chain, sequence and structure.'''
-    chain_seq_struct = {}
+def get_seq_struct(pdb_ids):
+    '''Returns sequence and structure.'''
+    seq_struct = {}
     pdb_ids = sorted(pdb_ids)
     pdb_id = pdb_ids.pop(0)
     pdb_id_fasta = '>' + pdb_id
@@ -48,22 +48,22 @@ def get_chain_seq_struct(pdb_ids):
         for line in open(temp.name):
             if line.startswith(pdb_id_fasta):
                 if in_field:
-                    if tokens[:2] not in chain_seq_struct:
-                        chain_seq_struct[tokens[:2]] = [None, None]
+                    if tokens[:2] not in seq_struct:
+                        seq_struct[tokens[:2]] = [None, None]
 
-                    chain_seq_struct[tokens[:2]][0 if tokens[2] == 'sequence'
-                                                 else 1] = str_data
+                    seq_struct[tokens[:2]][0 if tokens[2] == 'sequence'
+                                           else 1] = str_data
                     str_data = ''
 
                 tokens = tuple(re.split('>|:', line.strip())[1:])
                 in_field = True
 
             elif in_field and line.startswith('>'):
-                if tokens[:2] not in chain_seq_struct:
-                    chain_seq_struct[tokens[:2]] = [None, None]
+                if tokens[:2] not in seq_struct:
+                    seq_struct[tokens[:2]] = [None, None]
 
-                chain_seq_struct[tokens[:2]][0 if tokens[2] == 'sequence'
-                                             else 1] = str_data
+                seq_struct[tokens[:2]][0 if tokens[2] == 'sequence'
+                                       else 1] = str_data
                 str_data = ''
 
                 if len(pdb_ids) == 0:
@@ -77,9 +77,9 @@ def get_chain_seq_struct(pdb_ids):
 
             elif in_field:
                 # Do something:
-                str_data += line.strip()
+                str_data += line[:-1]
 
-    return chain_seq_struct
+    return seq_struct
 
 
 def get_sequences(pdb_id):
@@ -135,15 +135,23 @@ def plot_proximities(pdb_id):
               name + ' proximity plot')
 
 
-def sample_seq_structs(sample_size, struct_pattern):
+def sample_seqs(sample_size, struct_patt):
     '''Sample sequence and structure data.'''
-    sample_seq_structs = []
+    seqs = []
+    patt = re.compile(struct_patt)
 
-    while len(sample_seq_structs) < sample_size:
-        for chain_seq_struct in get_chain_seq_struct(get_pdb_ids(sample_size)):
-            print chain_seq_struct
+    while len(seqs) < sample_size:
+        pdb_ids = get_pdb_ids(sample_size)
+        seq_struct = get_seq_struct(pdb_ids)
+        assert all([len(v[0]) == len(v[1]) for v in seq_struct.values()])
+        matches = set([v[0][slice(*(m.span()))]
+                       for v in seq_struct.values()
+                       for m in patt.finditer(v[1])])
 
-    return sample_seq_structs[:sample_size]
+        seqs.extend(random.sample(matches,
+                                  min(len(matches), sample_size - len(seqs))))
+
+    return seqs[:sample_size]
 
 
 def _plot(values, plot_filename, plot_format, title, max_value=None):

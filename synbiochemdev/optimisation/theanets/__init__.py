@@ -10,6 +10,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 from collections import defaultdict
 from functools import partial
 from itertools import count
+import random
 
 import climate
 from sklearn.datasets.samples_generator import make_blobs
@@ -65,6 +66,15 @@ class Classifier(object):
         return [inv_y_map[y] for y in y_pred], inv_y_map, \
             classification_report(y_test, y_pred), \
             confusion_matrix(y_test, y_pred)
+
+
+def randomise_order(x_data, y_data):
+    '''Assumes x_data and y_data are paired (such that x_data[i] is paired with
+    y_data[i]) and then randomises their orders such that this pairing is
+    maintained.'''
+    data = zip(x_data, y_data)
+    random.shuffle(data)
+    return zip(*data)
 
 
 def _enumerate(lst):
