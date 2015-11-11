@@ -138,7 +138,7 @@ def main(argv):
     ind = int(0.8 * len(x_data))
 
     classifier = theanets.Classifier()
-    classifier.train(x_data[:ind], y_data[:ind])
+    classifier.train(x_data[:ind], y_data[:ind], hidden_layers=[10])
 
     for output in classifier.classify(x_data[ind:], y_data[ind:]):
         print output
