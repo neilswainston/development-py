@@ -7,17 +7,18 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+# pylint: disable=no-member
+
 from collections import defaultdict
 from functools import partial
 from itertools import count
+import numpy
 import random
 
 import climate
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.metrics import classification_report, confusion_matrix
 import theanets
-
-import numpy as np
 
 
 class Classifier(object):
@@ -44,9 +45,9 @@ class Classifier(object):
         layers = [len(x_data[0])] + hidden_layers + [len(set(y_data))]
         self.__exp = theanets.Experiment(theanets.Classifier, layers=layers)
 
-        x_data = np.array(x_data, dtype=np.float32)
+        x_data = numpy.array(x_data, dtype=numpy.float32)
         y_enum = _enumerate(y_data)
-        y_data = np.array([y[1] for y in y_enum], dtype=np.int32)
+        y_data = numpy.array([y[1] for y in y_enum], dtype=numpy.int32)
         self.__y_map = dict(set(y_enum))
 
         # Split data into training and validation:
@@ -59,7 +60,8 @@ class Classifier(object):
 
     def classify(self, x_test, y_test):
         '''Classifies and analyses test data.'''
-        y_test = np.array([self.__y_map[y] for y in y_test], dtype=np.int32)
+        y_test = numpy.array([self.__y_map[y]
+                              for y in y_test], dtype=numpy.int32)
         y_pred = self.__exp.network.classify(x_test)
         inv_y_map = {v: k for k, v in self.__y_map.items()}
 
