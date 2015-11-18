@@ -19,16 +19,24 @@ def main():
     for reac_id, reac_props in reader.get_reac_data().iteritems():
         participants = chem_utils.parse_equation(reac_props['equation'])
 
-        reac_def = [(chem_data[prt[0]]['formula'], chem_data[prt[0]]['charge'],
-                     prt[1])
-                    for prt in participants
-                    if 'formula' in chem_data[prt[0]] and 'charge'
-                    in chem_data[prt[0]]]
+        try:
+            reac_def = [(chem_data[prt[0]]['formula'],
+                         chem_data[prt[0]]['charge']
+                         if 'charge' in chem_data[prt[0]] else 0,
+                         prt[1])
+                        for prt in participants]
 
-        is_balanced, was_balanced, balanced_def = chem_utils.balance(reac_def)
+            is_balanced, was_balanced, balanced_def = \
+                chem_utils.balance(reac_def)
 
-        print '\t'.join([reac_id, str(is_balanced), str(was_balanced),
-                         reac_props['description'], str(balanced_def)])
+            print '\t'.join([reac_id, str(is_balanced),
+                             str(was_balanced),
+                             reac_props['description'],
+                             '' if balanced_def is None
+                             else str(balanced_def)])
+        except KeyError:
+            print '\t'.join([reac_id, 'UNKNOWN', 'UNKNOWN',
+                             reac_props['description'], ''])
 
 if __name__ == '__main__':
     main()
