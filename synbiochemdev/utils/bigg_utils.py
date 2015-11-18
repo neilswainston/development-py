@@ -11,7 +11,7 @@ import json
 import sys
 import urllib2
 
-import synbiochem.utils.chemistry_utils as chem_utils
+import synbiochem.utils.chem_utils as chem_utils
 
 
 def get_metabolome(model_ids):
