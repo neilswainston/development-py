@@ -16,6 +16,10 @@ def main():
     reader = MnxRefReader()
     chem_data = reader.get_chem_data()
 
+    for chem_id, props in chem_data.iteritems():
+        if 'formula' not in props:
+            print chem_id + '\t' + str(props)
+
     for reac_id, reac_props in reader.get_reac_data().iteritems():
         participants = chem_utils.parse_equation(reac_props['equation'])
 
