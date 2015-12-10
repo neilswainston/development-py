@@ -14,10 +14,10 @@ from synbiochem.utils.sequence_utils import CodonOptimiser, \
 
 def main(argv):
     '''main method'''
-    upstream_seq = argv[2]
-    upstream_trunc_seq = upstream_seq[-int(argv[3]):]
-    variant_seq = argv[4]
-    downstream_seq = argv[5]
+    upstream_seq = argv[1]
+    upstream_trunc_seq = upstream_seq[-int(argv[2]):]
+    variant_seq = argv[3]
+    downstream_seq = argv[4]
 
     cod_opt = CodonOptimiser('9606')
     sequences = []
@@ -26,9 +26,9 @@ def main(argv):
         sequences.extend([upstream_seq + rev_trans + downstream_seq,
                           upstream_trunc_seq + rev_trans + downstream_seq])
 
-    mfes = get_minimum_free_energy(argv[1], sequences)
+    mfes = get_minimum_free_energy(sequences)
 
-    outfile = open(argv[6], 'w')
+    outfile = open(argv[5], 'w')
 
     for i in xrange(0, len(sequences), 2):
         outfile.write('\t'.join([sequences[i], sequences[i + 1],
