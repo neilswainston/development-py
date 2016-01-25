@@ -10,10 +10,11 @@ from compiler.ast import flatten
 import os
 import time
 
-import pandas
 from sklearn.metrics import log_loss
 from sklearn.metrics import roc_auc_score as auc
 import theanets
+
+import pandas
 
 
 # from sklearn.metrics import confusion_matrix
