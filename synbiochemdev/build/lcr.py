@@ -11,7 +11,7 @@ import itertools
 import os
 import sys
 
-from synbiochemdev.utils import sequence_utils as sequence_utils
+from synbiochem.utils import sequence_utils as sequence_utils
 
 
 def get_bridging_oligos(target_melt_temp, sequences, plasmid_seq=None,
@@ -40,9 +40,7 @@ def get_bridging_oligos(target_melt_temp, sequences, plasmid_seq=None,
 
 def _pairwise(iterable):
     '''s -> (s0,s1), (s1,s2), (s2, s3), ...'''
-    first, second = itertools.tee(iterable)
-    next(second, None)
-    return itertools.izip(first, second)
+    return [(iterable[i], iterable[i + 1]) for i in range(len(iterable) - 1)]
 
 
 def _get_bridge(sequences, num_sequences, pair, target_melt_temp,
