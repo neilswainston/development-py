@@ -5,41 +5,62 @@ Created on 1 Mar 2016
 '''
 import os
 import sys
-import synbiochem.utils.sequence_utils as sequence_utils
+
+import synbiochem.utils
 import synbiochemdev.build.lcr as lcr
 
 
-def main(argv):
+def make_dominoes(parts_filename, design_filename):
+    '''Designs dominoes.'''
     id_seq = {}
-    all_oligos = []
+    pair_oligos = {}
 
-    with open(argv[0]) as partsfile:
+    with open(parts_filename) as partsfile:
         next(partsfile)
 
         for line in partsfile:
             line = line.split('\t')
             id_seq[line[0].strip()] = line[7].upper().strip().replace(
-                'gaattcaaaagatctgagtc'.upper(), '').replace(
-                'gactcggatccaaactcgag'.upper(), '')
+                'GAATTCAAAAGATCTGAGTCTTGTA', '').replace(
+                'TTGTAGACTCGGATCCAAACTCGAG', '')
 
-    with open(argv[1]) as designfile:
+    with open(design_filename) as designfile:
         for line in designfile:
             line = line.split()[1:]
-            pairs = [list(pair) for pair in lcr._pairwise(line)]
-            oligos = lcr.get_bridging_oligos(70, [id_seq[val] for val in line],
-                                             reagent_concs={sequence_utils.MG:
-                                                            0.01})
-            all_oligos.extend([pair + oligo[2:]
-                               for pair, oligo in zip(pairs, oligos)])
+            line = line + [line[0]]
+            pairs = [pair for pair in synbiochem.utils.pairwise(line)]
+            oligos = lcr.get_bridging_oligos(70, [id_seq[val] for val in line])
+            pair_oligos.update({pair: oligo[2:]
+                                for pair, oligo in zip(pairs, oligos)})
 
-    result_file = open(os.path.splitext(argv[1])[0] + '_dominoes.xls', 'w+')
+    result_file = open(os.path.splitext(design_filename)[0] + '_dominoes.xls',
+                       'w+')
 
-    for oligo in all_oligos:
-        result_line = '\t'.join(oligo)
+    oligo_pairs = {}
+
+    for pair, oligo in pair_oligos.iteritems():
+        result_line = '\t'.join(list(pair) + oligo)
         print result_line
         result_file.write(result_line + '\n')
 
+        if oligo[4] not in oligo_pairs:
+            oligo_pairs[oligo[4]] = [list(pair)]
+        else:
+            oligo_pairs[oligo[4]].append(list(pair))
+
+    result_file.write('\n')
+
+    for oligo, pairs in oligo_pairs.iteritems():
+        result_file.write('\t'.join([oligo] + [pair[0] + '_' + pair[1]
+                                               for pair in pairs]) + '\n')
+
     result_file.close()
+
+
+def main(args):
+    '''main method.'''
+    for design_filename in args[1:]:
+        make_dominoes(args[0], design_filename)
 
 if __name__ == '__main__':
     main(sys.argv[1:])

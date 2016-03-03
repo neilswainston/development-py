@@ -11,7 +11,8 @@ import itertools
 import os
 import sys
 
-from synbiochem.utils import sequence_utils as sequence_utils
+import synbiochem.utils
+import synbiochem.utils.sequence_utils as seq_utils
 
 
 def get_bridging_oligos(target_melt_temp, sequences, plasmid_seq=None,
@@ -31,16 +32,11 @@ def get_bridging_oligos(target_melt_temp, sequences, plasmid_seq=None,
     pairs = []
 
     for ordering in orderings:
-        pairs.extend(_pairwise(ordering))
+        pairs.extend(synbiochem.utils.pairwise(ordering))
 
     return [_get_bridge(sequences, num_sequences, pair, target_melt_temp,
                         reagent_concs)
             for pair in sorted(set(pairs))]
-
-
-def _pairwise(iterable):
-    '''s -> (s0,s1), (s1,s2), (s2, s3), ...'''
-    return [(iterable[i], iterable[i + 1]) for i in range(len(iterable) - 1)]
 
 
 def _get_bridge(sequences, num_sequences, pair, target_melt_temp,
@@ -59,10 +55,10 @@ def _get_bridge(sequences, num_sequences, pair, target_melt_temp,
 
 def _get_bridge_part(sequence, forward, target_melt_temp, reagent_concs=None):
     '''Gets half of bridging oligo.'''
-    for i in range(len(sequence)):
+    for i in range(1, len(sequence)):
         subsequence = sequence[:(i + 1)] if forward else sequence[-(i + 1):]
-        melting_temp = sequence_utils.get_melting_temp(subsequence, None,
-                                                       reagent_concs)
+        melting_temp = seq_utils.get_melting_temp(subsequence, None,
+                                                  reagent_concs)
 
         if melting_temp > target_melt_temp:
             return subsequence, melting_temp
@@ -76,11 +72,11 @@ def _read_input_file(filename):
     sequences = []
     plasmid_seq = None
     shuffle = False
-    reagent_concs = {sequence_utils.NA: 0.05,
-                     sequence_utils.K: 0,
-                     sequence_utils.TRIS: 0,
-                     sequence_utils.MG: 0.002,
-                     sequence_utils.DNTP: 1e-7}
+    reagent_concs = {seq_utils.NA: 0.05,
+                     seq_utils.K: 0,
+                     seq_utils.TRIS: 0,
+                     seq_utils.MG: 0.002,
+                     seq_utils.DNTP: 1e-7}
 
     in_plasmid = False
     seq = ''
@@ -92,19 +88,19 @@ def _read_input_file(filename):
             elif line.startswith('SHUFFLE:'):
                 shuffle = line.replace('SHUFFLE:', '').strip() == 'True'
             elif line.startswith('NA:'):
-                reagent_concs[sequence_utils.NA] = \
+                reagent_concs[seq_utils.NA] = \
                     float(line.replace('NA:', '').strip())
             elif line.startswith('K:'):
-                reagent_concs[sequence_utils.K] = \
+                reagent_concs[seq_utils.K] = \
                     float(line.replace('K:', '').strip())
             elif line.startswith('TRIS:'):
-                reagent_concs[sequence_utils.TRIS] = \
+                reagent_concs[seq_utils.TRIS] = \
                     float(line.replace('TRIS:', '').strip())
             elif line.startswith('MG:'):
-                reagent_concs[sequence_utils.MG] = \
+                reagent_concs[seq_utils.MG] = \
                     float(line.replace('MG:', '').strip())
             elif line.startswith('DNTP:'):
-                reagent_concs[sequence_utils.DNTP] = \
+                reagent_concs[seq_utils.DNTP] = \
                     float(line.replace('DNTP:', '').strip())
             elif line.startswith('>'):
                 if len(seq) > 0:
