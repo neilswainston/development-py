@@ -29,11 +29,12 @@ class SequenceSearcher(object):
 
     def get_next_gen(self):
         '''Gets next generation of sequences to try.'''
-        distances = _calc_distances(self.__seq_act[0][0],
-                                    [val[0] for val in self.__seq_act])
+        dissimilarities = _calc_dissimilarities(self.__seq_act[0][0],
+                                                [val[0]
+                                                 for val in self.__seq_act])
 
         self.__seq_act = [vals + [dist] for vals, dist in zip(self.__seq_act,
-                                                              distances)]
+                                                              dissimilarities)]
         self.__calc_pareto()
 
         vals = zip(*self.__seq_act)
@@ -82,32 +83,36 @@ def _mutate(seq, max_mut_prob=0.5):
     return mutant
 
 
-def _calc_distances(ref_seq, seqs):
-    '''Calculate sequence distances from best sequence.'''
-    distances = []
+def _calc_dissimilarities(ref_seq, seqs):
+    '''Calculate sequence distances from reference sequence.'''
+    disimilarities = []
     gap_pen = -1000
-    best = None
 
     for seq in seqs:
         for alg in pairwise2.align.globalds(seq,
                                             ref_seq,
                                             matlist.blosum62,
                                             gap_pen, gap_pen):
-            if best is None:
-                best = alg[2]
 
-            distances.append(1 - (alg[2] / best))
+            disimilarities.append(alg[2])
 
-    return distances
+    max_dis = max(disimilarities)
+    min_dis = min(disimilarities)
+    range_dis = max_dis - min_dis
+    return [1 - (dis - min_dis) / range_dis for dis in disimilarities]
 
 
 def main(argv):
     '''main method.'''
-    seq_act = {}
     seq = sequence_utils.get_random_aa(int(argv[0]))
+    seq_act = {_mutate(seq): 0.0 for _ in range(int(argv[1]) - 1)}
+    seq_act.update({seq: 1.0})
 
-    for _ in range(int(argv[1])):
-        seq_act[_mutate(seq)] = random.random()
+    dissimilarities = _calc_dissimilarities(seq, seq_act.keys())
+
+    for idx, key in enumerate(seq_act.keys()[1:]):
+        dissimilarity = dissimilarities[idx + 1]
+        seq_act[key] = random.random() * (1 - dissimilarity)
 
     seq_search = SequenceSearcher(seq_act)
     next_gen = seq_search.get_next_gen()
