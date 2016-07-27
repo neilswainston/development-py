@@ -12,9 +12,8 @@ import time
 
 from sklearn.metrics import log_loss
 from sklearn.metrics import roc_auc_score as auc
-import theanets
-
 import pandas
+import theanets
 
 
 # from sklearn.metrics import confusion_matrix

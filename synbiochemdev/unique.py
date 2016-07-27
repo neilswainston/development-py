@@ -11,6 +11,7 @@ import uuid
 
 from flask import Flask
 
+
 # Configuration:
 DEBUG = True
 SECRET_KEY = str(uuid.uuid4())
