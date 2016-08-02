@@ -7,6 +7,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+# pylint: disable=no-member
 # pylint: disable=too-few-public-methods
 import matplotlib.pyplot
 import operator
@@ -24,7 +25,7 @@ class SequenceSearcher(object):
 
     def __init__(self, seq_acts):
         self.__seq_acts = [list(val)
-                           for val in sorted(seq_acts.items(),
+                           for val in sorted(seq_acts,
                                              key=operator.itemgetter(1))]
         self.__seq_acts.reverse()
 
@@ -58,7 +59,7 @@ class SequenceSearcher(object):
             values.append(pareto)
 
 
-def _mutate(seq, max_mut_prob=0.5):
+def _mutate(seq, max_mut_prob=0.1):
     '''Mutate sequence.'''
     mutant = ''
     mut_prob = random.random() * max_mut_prob
@@ -112,16 +113,17 @@ def _plot(seq_acts):
 def main(argv):
     '''main method.'''
     seq = sequence_utils.get_random_aa(int(argv[0]))
-    seq_act = {_mutate(seq): 0.0 for _ in range(int(argv[1]) - 1)}
-    seq_act.update({seq: 1.0})
+    seqs = set([seq])
 
-    dissimilarities = _calc_dissimilarities(seq, seq_act.keys())
+    while len(seqs) < int(argv[1]):
+        mut = _mutate(seq)
+        seqs.add(mut)
 
-    for idx, key in enumerate(seq_act.keys()[1:]):
-        dissimilarity = dissimilarities[idx + 1]
-        seq_act[key] = random.random() * (1 - dissimilarity)
+    dissims = _calc_dissimilarities(seq, seqs)
 
-    seq_search = SequenceSearcher(seq_act)
+    seq_acts = zip(seqs, [random.random() * (1 - dis) for dis in dissims])
+
+    seq_search = SequenceSearcher(seq_acts)
     seq_acts = seq_search.get_seq_acts()
     pareto_seq_acts = [p_vals for p_vals in seq_acts if p_vals[3]]
     _plot(seq_acts)
