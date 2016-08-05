@@ -19,6 +19,7 @@ from Bio.SubsMat import MatrixInfo as matlist
 from django.contrib.gis.geos.base import numpy
 
 from synbiochem.utils import sequence_utils
+import holygrail.theanets_utils as theanets_utils
 
 
 class SequenceSearcher(object):
@@ -39,6 +40,7 @@ class SequenceSearcher(object):
         self.__seq_acts = [vals + [dist] for vals, dist in zip(self.__seq_acts,
                                                                dissims)]
         self.__calc_pareto()
+        self.__learn()
 
         return self.__seq_acts
 
@@ -58,6 +60,37 @@ class SequenceSearcher(object):
                 pareto = True
 
             values.append(pareto)
+
+    def __learn(self):
+        '''Attempt to learn sequence / activity relationship.'''
+        # x_data = [[val_x]
+        #          for val_x in _scale([val[2] for val in self.__seq_acts])]
+
+        # Convert sequences to inputs, based on amino acid properties:
+        x_data = sequence_utils.get_aa_props([val[0]
+                                              for val in self.__seq_acts])
+        y_data = [val[1] for val in self.__seq_acts]
+
+        x_data, y_data = theanets_utils.randomise_order(x_data, y_data)
+
+        # Split data into training and classifying:
+        ind = int(0.8 * len(x_data))
+
+        y_train = [[y] for y in y_data[:ind]]
+        regressor = theanets_utils.Regressor(x_data[:ind], y_train)
+
+        regressor.train(hidden_layers=[1024])
+        y_pred = regressor.predict(x_data[ind:])
+
+        for data, pred in zip(y_data[ind:], y_pred):
+            print str(data) + '\t' + str(pred)
+
+        matplotlib.pyplot.scatter(y_data[ind:], y_pred)
+        matplotlib.pyplot.xlabel('Activity')
+        matplotlib.pyplot.ylabel('Predicted activity')
+        matplotlib.pyplot.show()
+
+        print numpy.mean(y_data[ind:] - y_pred)
 
 
 def _mutate(seq, max_mut_prob=0.1):
@@ -103,7 +136,7 @@ def _scale(vals):
     return [(val - min_val) / range_val for val in vals]
 
 
-def _plot(seq_acts):
+def _plot_seq_acts(seq_acts):
     '''Plots sequence activity data.'''
     vals = zip(*seq_acts)
     pareto_vals = zip(*[p_vals for p_vals in seq_acts if p_vals[3]])
@@ -132,7 +165,7 @@ def main(argv):
     seq_search = SequenceSearcher(seq_acts)
     seq_acts = seq_search.get_seq_acts()
     pareto_seq_acts = [p_vals for p_vals in seq_acts if p_vals[3]]
-    _plot(seq_acts)
+    _plot_seq_acts(seq_acts)
 
     print '\t'.join(['Sequence', 'Activity',
                      'Sequence dis-similarity w.r.t. "best"'])
