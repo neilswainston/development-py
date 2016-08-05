@@ -16,6 +16,7 @@ import sys
 
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
+from django.contrib.gis.geos.base import numpy
 
 from synbiochem.utils import sequence_utils
 
@@ -80,7 +81,7 @@ def _calc_dissimilarities(ref_seq, seqs, matrix=None):
     if matrix is None:
         matrix = matlist.blosum62
 
-    disimilarities = []
+    similarities = []
     gap_pen = -1000
 
     for seq in seqs:
@@ -89,12 +90,17 @@ def _calc_dissimilarities(ref_seq, seqs, matrix=None):
                                             matrix,
                                             gap_pen, gap_pen):
 
-            disimilarities.append(alg[2])
+            similarities.append(alg[2])
 
-    max_dis = max(disimilarities)
-    min_dis = min(disimilarities)
-    range_dis = max_dis - min_dis
-    return [1 - (dis - min_dis) / range_dis for dis in disimilarities]
+    return [1 - dis for dis in _scale(similarities)]
+
+
+def _scale(vals):
+    '''Scales values.'''
+    max_val = max(vals)
+    min_val = min(vals)
+    range_val = max_val - min_val
+    return [(val - min_val) / range_val for val in vals]
 
 
 def _plot(seq_acts):
@@ -121,8 +127,8 @@ def main(argv):
 
     dissims = _calc_dissimilarities(seq, seqs)
 
-    seq_acts = zip(seqs, [random.random() * (1 - dis) for dis in dissims])
-
+    seq_acts = zip(seqs, [1 - dis + numpy.random.normal(scale=0.1)
+                          for dis in dissims])
     seq_search = SequenceSearcher(seq_acts)
     seq_acts = seq_search.get_seq_acts()
     pareto_seq_acts = [p_vals for p_vals in seq_acts if p_vals[3]]
