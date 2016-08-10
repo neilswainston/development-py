@@ -72,6 +72,8 @@ def main():
             else:
                 seq = seq + line.strip().upper()
 
+        seqs[seq_id] = seq
+
     for seq_id, seq in seqs.iteritems():
         rand_range = range(seq.find('*'), seq.find('*') + rand_len)
         update_seq = string.replace(
