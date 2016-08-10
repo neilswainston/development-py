@@ -23,7 +23,7 @@ def _learn(sequences, activities):
     y_train = [[y] for y in y_data[:ind]]
     regressor = theanets_utils.Regressor(x_data[:ind], y_train)
 
-    regressor.train(hidden_layers=[1024])
+    regressor.train(hidden_layers=[1024, 1024])
     y_pred = regressor.predict(x_data[ind:])
 
     return regressor, y_data[ind:], y_pred
@@ -31,9 +31,21 @@ def _learn(sequences, activities):
 
 def main():
     '''main method.'''
+    mao = sequence_utils.get_uniprot_values(['P46882'], ['sequence'])
+    mao_seq = mao['P46882']['Sequence']
+
+    with open('raw.csv', 'r') as raw, open('seq_act.txt', 'w') as seq_act:
+        for line in raw.read().split('\r'):
+            tokens = line.split(',')
+            offset = int(tokens[0]) - 1
+            seq_act.write(mao_seq[:offset] +
+                          tokens[1] +
+                          mao_seq[offset + len(tokens[1]):] +
+                          ',' + tokens[2] + '\r')
+
     vals = []
-    with open('Lynda_harris.txt', 'r') as fle:
-        for line in fle.read().split('\r'):
+    with open('seq_act.txt', 'r') as fle:
+        for line in fle.read().strip().split('\r'):
             vals.append(line.split(','))
 
     sequences = [val[0] for val in vals]
