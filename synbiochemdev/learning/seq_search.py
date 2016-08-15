@@ -77,6 +77,18 @@ def _mutate(seq, max_mut_prob=0.1):
     return mutant
 
 
+def _get_random_seqs(length, num_seqs):
+    '''Gets random sequences.'''
+    seq = sequence_utils.get_random_aa(length)
+    seqs = set([seq])
+
+    while len(seqs) < num_seqs:
+        mut = _mutate(seq)
+        seqs.add(mut)
+
+    return seq, seqs
+
+
 def _calc_dissimilarities(ref_seq, seqs, matrix=None):
     '''Calculate sequence distances from reference sequence.'''
     if matrix is None:
@@ -135,27 +147,8 @@ def _learn(sequences, activities):
     return regressor, y_data[ind:], y_pred
 
 
-def main(argv):
-    '''main method.'''
-    seq = sequence_utils.get_random_aa(int(argv[0]))
-    seqs = set([seq])
-
-    while len(seqs) < int(argv[1]):
-        mut = _mutate(seq)
-        seqs.add(mut)
-
-    dissims = _calc_dissimilarities(seq, seqs)
-
-    seq_acts = zip(seqs, [1 - dis + numpy.random.normal(scale=0.1)
-                          for dis in dissims])
-    seq_search = SequenceSearcher(seq_acts)
-    seq_acts = seq_search.get_seq_acts()
-    pareto_seq_acts = [p_vals for p_vals in seq_acts if p_vals[3]]
-    _plot_seq_acts(seq_acts)
-
-    regressor, y_data, y_pred = _learn([val[0] for val in seq_acts],
-                                       [val[1] for val in seq_acts])
-
+def _plot_activities(y_data, y_pred):
+    '''Plots measured and predicted activities.'''
     for data, pred in zip(y_data, y_pred):
         print str(data) + '\t' + str(pred)
 
@@ -167,6 +160,11 @@ def main(argv):
     print 'Mean delta: ' + str(numpy.mean([abs(j - i)
                                            for i, j in zip(y_data, y_pred)]))
 
+
+def _output_pareto(seq_acts):
+    '''Outputs pareto front members.'''
+    pareto_seq_acts = [p_vals for p_vals in seq_acts if p_vals[3]]
+
     print '\t'.join(['Sequence', 'Activity',
                      'Sequence dis-similarity w.r.t. "best"'])
 
@@ -175,6 +173,26 @@ def main(argv):
 
     print '\n% pareto: {0:.2f}'.format(float(len(pareto_seq_acts)) /
                                        len(seq_acts) * 100.0)
+
+
+def main(argv):
+    '''main method.'''
+    seq, seqs = _get_random_seqs(int(argv[0]), int(argv[1]))
+    dissims = _calc_dissimilarities(seq, seqs)
+
+    seq_acts = zip(seqs, [1 - dis + numpy.random.normal(scale=0.1)
+                          for dis in dissims])
+
+    seq_search = SequenceSearcher(seq_acts)
+    seq_acts = seq_search.get_seq_acts()
+    _plot_seq_acts(seq_acts)
+
+    _, y_data, y_pred = _learn([val[0] for val in seq_acts],
+                               [val[1] for val in seq_acts])
+
+    _plot_activities(y_data, y_pred)
+    _output_pareto(seq_acts)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

@@ -29,6 +29,20 @@ def _learn(sequences, activities):
     return regressor, y_data[ind:], y_pred
 
 
+def _plot(y_data, y_pred):
+    '''Plots data.'''
+    matplotlib.pyplot.scatter(y_data, y_pred)
+    matplotlib.pyplot.xlabel('Activity')
+    matplotlib.pyplot.ylabel('Predicted activity')
+    matplotlib.pyplot.show()
+
+    for data, pred in zip(y_data, y_pred):
+        print str(data) + '\t' + str(pred)
+
+    print 'Mean delta: ' + str(numpy.mean([abs(j - i)
+                                           for i, j in zip(y_data, y_pred)]))
+
+
 def main():
     '''main method.'''
     mao = sequence_utils.get_uniprot_values(['P46882'], ['sequence'])
@@ -52,17 +66,7 @@ def main():
     activities = [float(val[1]) for val in vals]
 
     _, y_data, y_pred = _learn(sequences, activities)
-
-    for data, pred in zip(y_data, y_pred):
-        print str(data) + '\t' + str(pred)
-
-    matplotlib.pyplot.scatter(y_data, y_pred)
-    matplotlib.pyplot.xlabel('Activity')
-    matplotlib.pyplot.ylabel('Predicted activity')
-    matplotlib.pyplot.show()
-
-    print 'Mean delta: ' + str(numpy.mean([abs(j - i)
-                                           for i, j in zip(y_data, y_pred)]))
+    _plot(y_data, y_pred)
 
 if __name__ == '__main__':
     main()

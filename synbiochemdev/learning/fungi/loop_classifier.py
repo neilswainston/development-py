@@ -1,11 +1,15 @@
-#  -*- coding: utf-8 -*-
 '''
-Spyder Editor
+synbiochem (c) University of Manchester 2016
 
-This is a temporary script file.
+synbiochem is licensed under the MIT License.
+
+To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
+
+@author:  Steve O'Hagan
 '''
-
-# import climate # for automatic logging
+# pylint: disable=no-member
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-locals
 from compiler.ast import flatten
 import os
 import time
@@ -77,8 +81,8 @@ def do_net_run(train, valid, test, act_type, num_hidden, num_nodes, num_in,
                                       hidden_dropout=drop_out,
                                       input_dropout=drop_out,
                                       algo='rmsprop'):
-            # print 'Tr loss: ' + str(trn['loss']), 'Vld loss: ',
-            # str(vdl['loss'])
+            print 'Tr loss: ' + str(trn['loss']), 'Vld loss: ', \
+                str(vdl['loss'])
             epoch = epoch + 1
 
         duration = time.clock() - start
