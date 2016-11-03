@@ -17,7 +17,7 @@ from numpy import record
 from synbiochem.utils import sequence_utils
 
 
-def get_seqs(uniprot_data, outdir, extn_len=1000):
+def get_seqs(uniprot_data, outdir, extn_len=500):
     '''Gets nucleotide sequences.'''
     if not os.path.exists(outdir):
         os.makedirs(outdir)
