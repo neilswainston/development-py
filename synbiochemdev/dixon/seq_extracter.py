@@ -17,7 +17,7 @@ from numpy import record
 from synbiochem.utils import sequence_utils
 
 
-def get_seqs(uniprot_data, outdir, extn_len=500):
+def get_seqs(uniprot_data, outdir, target_len=499):
     '''Gets nucleotide sequences.'''
     if not os.path.exists(outdir):
         os.makedirs(outdir)
@@ -37,6 +37,7 @@ def get_seqs(uniprot_data, outdir, extn_len=500):
             with open(tmpfile.name, 'rU') as in_file:
                 for record in SeqIO.parse(in_file, 'fasta'):
                     seq = str(record.seq)
+                    extn_len = (target_len - len(seq)) / 2
                     forward = uniprot_data[uniprot_id]['strand'] == 'plus'
                     start = max(0, uniprot_data[uniprot_id]['start'
                                                             if forward
