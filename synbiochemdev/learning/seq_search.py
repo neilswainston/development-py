@@ -9,7 +9,6 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 # pylint: disable=no-member
 # pylint: disable=too-few-public-methods
-import matplotlib.pyplot
 import operator
 import random
 import sys
@@ -20,6 +19,7 @@ import numpy
 
 from synbiochem.utils import sequence_utils
 import holygrail.theanets_utils as theanets_utils
+import matplotlib.pyplot
 
 
 class SequenceSearcher(object):
