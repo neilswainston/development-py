@@ -15,11 +15,11 @@ import sys
 
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
+import matplotlib.pyplot
 import numpy
 
 from synbiochem.utils import sequence_utils
-import holygrail.theanets_utils as theanets_utils
-import matplotlib.pyplot
+import sbclearn.theanets.theanets_utils as theanets_utils
 
 
 class SequenceSearcher(object):
@@ -66,7 +66,7 @@ def _mutate(seq, max_mut_prob=0.1):
     mutant = ''
     mut_prob = random.random() * max_mut_prob
 
-    for idx in range(len(seq)):
+    for idx, _ in enumerate(seq):
         if random.random() < mut_prob:
             mutant += random.choice(['A', 'C', 'D', 'E', 'F', 'G', 'H',
                                      'I', 'K', 'L', 'M', 'N', 'P', 'Q',
