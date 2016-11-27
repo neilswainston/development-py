@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/#"
+   xmlns:prov="http://www.w3.org/ns/prov#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:sbol="http://sbols.org/v2#">
+  <sbol:ComponentDefinition rdf:about="http://sys-bio.org/ComponentDefinition/B0012/1.0.0">
+    <sbol:displayId>B0012</sbol:displayId>
+    <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/B0012"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000141"/>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:version>1.0.0</sbol:version>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://sys-bio.org/ComponentDefinition/B0032/1.0.0">
+    <sbol:displayId>B0032</sbol:displayId>
+    <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/B0032"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:version>1.0.0</sbol:version>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/1.0.0">
+    <sbol:component>
+      <sbol:Component rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/B0012/1.0.0">
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://sys-bio.org/ComponentDefinition/B0012/1.0.0"/>
+        <sbol:displayId>B0012</sbol:displayId>
+        <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/B0012"/>
+        <sbol:version>1.0.0</sbol:version>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/B0032/1.0.0">
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://sys-bio.org/ComponentDefinition/B0032/1.0.0"/>
+        <sbol:displayId>B0032</sbol:displayId>
+        <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/B0032"/>
+        <sbol:version>1.0.0</sbol:version>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/E0040/1.0.0">
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://sys-bio.org/ComponentDefinition/E0040/1.0.0"/>
+        <sbol:displayId>E0040</sbol:displayId>
+        <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/E0040"/>
+        <sbol:version>1.0.0</sbol:version>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:component>
+      <sbol:Component rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/R0010/1.0.0">
+        <sbol:access rdf:resource="http://sbols.org/v2#public"/>
+        <sbol:definition rdf:resource="http://sys-bio.org/ComponentDefinition/R0010/1.0.0"/>
+        <sbol:displayId>R0010</sbol:displayId>
+        <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/R0010"/>
+        <sbol:version>1.0.0</sbol:version>
+      </sbol:Component>
+    </sbol:component>
+    <sbol:displayId>BB0001</sbol:displayId>
+    <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001"/>
+    <sbol:sequenceConstraint>
+      <sbol:SequenceConstraint rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/constraint1/1.0.0">
+        <sbol:displayId>constraint1</sbol:displayId>
+        <sbol:object rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/E0040/1.0.0"/>
+        <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/constraint1"/>
+        <sbol:restriction rdf:resource="http://sbols.org/v2#precedes"/>
+        <sbol:subject rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/R0010/1.0.0"/>
+        <sbol:version>1.0.0</sbol:version>
+      </sbol:SequenceConstraint>
+    </sbol:sequenceConstraint>
+    <sbol:sequenceConstraint>
+      <sbol:SequenceConstraint rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/constraint2/1.0.0">
+        <sbol:displayId>constraint2</sbol:displayId>
+        <sbol:object rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/B0032/1.0.0"/>
+        <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/constraint2"/>
+        <sbol:restriction rdf:resource="http://sbols.org/v2#precedes"/>
+        <sbol:subject rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/E0040/1.0.0"/>
+        <sbol:version>1.0.0</sbol:version>
+      </sbol:SequenceConstraint>
+    </sbol:sequenceConstraint>
+    <sbol:sequenceConstraint>
+      <sbol:SequenceConstraint rdf:about="http://sys-bio.org/ComponentDefinition/BB0001/constraint3/1.0.0">
+        <sbol:displayId>constraint3</sbol:displayId>
+        <sbol:object rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/B0012/1.0.0"/>
+        <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/constraint3"/>
+        <sbol:restriction rdf:resource="http://sbols.org/v2#precedes"/>
+        <sbol:subject rdf:resource="http://sys-bio.org/ComponentDefinition/BB0001/B0032/1.0.0"/>
+        <sbol:version>1.0.0</sbol:version>
+      </sbol:SequenceConstraint>
+    </sbol:sequenceConstraint>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:version>1.0.0</sbol:version>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://sys-bio.org/ComponentDefinition/E0040/1.0.0">
+    <sbol:displayId>E0040</sbol:displayId>
+    <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/E0040"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000139"/>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:version>1.0.0</sbol:version>
+  </sbol:ComponentDefinition>
+  <sbol:ComponentDefinition rdf:about="http://sys-bio.org/ComponentDefinition/R0010/1.0.0">
+    <sbol:displayId>R0010</sbol:displayId>
+    <sbol:persistentIdentity rdf:resource="http://sys-bio.org/ComponentDefinition/R0010"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:version>1.0.0</sbol:version>
+  </sbol:ComponentDefinition>
+</rdf:RDF>
