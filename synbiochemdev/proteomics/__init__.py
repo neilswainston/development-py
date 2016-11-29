@@ -7,7 +7,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 import ast
 import copy
 import re
@@ -26,27 +26,29 @@ def get_fasta(uniprot_id, filename, variants, digest=None):
 def get_fasta_from_seq(seq, filename, variants, digest=None, prefix='seq'):
     '''Gets a FASTA file representing variants of sequence.'''
     seqs = []
-    apply_variants(seq, variants, seqs)
+    apply_variants(seq, [], variants, seqs)
 
     id_seqs = OrderedDict(
-        (prefix + '_' + str(idx), seq) for idx, seq in enumerate(seqs))
+        (prefix + '_' + '_'.join(vals[0]), vals[1]) for vals in seqs)
 
     seq_utils.write_fasta(id_seqs, filename)
 
 
-def apply_variants(seq, variants, seqs):
+def apply_variants(seq, var_desc, variants, seqs):
     '''Generates all variants of sequence.'''
-    for pos, amino_acids in variants.iteritems():
+    for pos in sorted(variants):
         new_variants = copy.copy(variants)
         new_variants.pop(pos)
 
-        for amino_acid in amino_acids:
+        for amino_acid in variants[pos]:
             new_seq = seq[:pos] + amino_acid + seq[pos + 1:]
-            apply_variants(new_seq, new_variants, seqs)
+            new_var_desc = list(var_desc) + \
+                [seq[pos] + str(pos + 1) + amino_acid]
+            apply_variants(new_seq, new_var_desc, new_variants, seqs)
 
         return
 
-    seqs.append(seq)
+    seqs.append((var_desc, seq))
 
 
 def digest_seq(seq, digest):
