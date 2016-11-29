@@ -41,7 +41,7 @@ def get_fasta_from_seq(seq, filename, variants, digest=None, prefix='seq'):
                for seq_id, seq in id_seqs.iteritems()}
 
     unique_id_peps = get_unique_peps(id_peps)
-    # print_peps(unique_id_peps)
+    print_peps(unique_id_peps)
     draw_spectra(unique_id_peps,  max_charge=3)
 
     seq_utils.write_fasta(id_seqs, filename)
