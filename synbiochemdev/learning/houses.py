@@ -4,10 +4,10 @@ Created on 5 Aug 2016
 @author: neilswainston
 '''
 # pylint: disable=no-member
+import matplotlib.pyplot
 import numpy
 
 import holygrail.theanets_utils as theanets_utils
-import matplotlib.pyplot
 
 
 def _learn(inputs, outputs):

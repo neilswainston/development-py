@@ -15,10 +15,10 @@ import sys
 
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
+from synbiochem.utils import seq_utils
 import matplotlib.pyplot
 import numpy
 
-from synbiochem.utils import sequence_utils
 import sbclearn.theanets.theanets_utils as theanets_utils
 
 
@@ -79,7 +79,7 @@ def _mutate(seq, max_mut_prob=0.1):
 
 def _get_random_seqs(length, num_seqs):
     '''Gets random sequences.'''
-    seq = sequence_utils.get_random_aa(length)
+    seq = seq_utils.get_random_aa(length)
     seqs = set([seq])
 
     while len(seqs) < num_seqs:
@@ -132,7 +132,7 @@ def _plot_seq_acts(seq_acts):
 def _learn(sequences, activities):
     '''Attempt to learn sequence / activity relationship.'''
     # Convert sequences to inputs, based on amino acid properties:
-    x_data = sequence_utils.get_aa_props(sequences)
+    x_data = seq_utils.get_aa_props(sequences)
     x_data, y_data = theanets_utils.randomise_order(x_data, activities)
 
     # Split data into training and classifying:

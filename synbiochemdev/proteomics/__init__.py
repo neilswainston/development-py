@@ -16,9 +16,9 @@ import re
 import sys
 
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
+from synbiochem.utils import seq_utils
 
 from pyteomics import mass
-from synbiochem.utils import seq_utils
 import matplotlib.pyplot as plt
 
 

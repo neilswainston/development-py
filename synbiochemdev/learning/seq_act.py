@@ -4,17 +4,17 @@ Created on 5 Aug 2016
 @author: neilswainston
 '''
 # pylint: disable=no-member
+from synbiochem.utils import seq_utils
+import matplotlib.pyplot
 import numpy
 
-from synbiochem.utils import sequence_utils
 import holygrail.theanets_utils as theanets_utils
-import matplotlib.pyplot
 
 
 def _learn(sequences, activities):
     '''Attempt to learn sequence / activity relationship.'''
     # Convert sequences to inputs, based on amino acid properties:
-    x_data = sequence_utils.get_aa_props(sequences)
+    x_data = seq_utils.get_aa_props(sequences)
     x_data, y_data = theanets_utils.randomise_order(x_data, activities)
 
     # Split data into training and classifying:
@@ -45,7 +45,7 @@ def _plot(y_data, y_pred):
 
 def main():
     '''main method.'''
-    mao = sequence_utils.get_uniprot_values(['P46882'], ['sequence'])
+    mao = seq_utils.get_uniprot_values(['P46882'], ['sequence'])
     mao_seq = mao['P46882']['Sequence']
 
     with open('raw.csv', 'r') as raw, open('seq_act.txt', 'w') as seq_act:

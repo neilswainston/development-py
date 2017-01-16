@@ -5,13 +5,13 @@ Created on 8 Aug 2016
 '''
 import string
 
-from synbiochem.utils import sequence_utils
+from synbiochem.utils import seq_utils
 
 
 def _unacceptable(seq, rand_rnge, max_melt_temp=20):
     '''Checks whether seq is acceptable.'''
-    id_seqs = {'For': seq, 'Rev': sequence_utils.get_rev_comp(seq)}
-    results = sequence_utils.do_blast(id_seqs, id_seqs, evalue=10, word_size=4)
+    id_seqs = {'For': seq, 'Rev': seq_utils.get_rev_comp(seq)}
+    results = seq_utils.do_blast(id_seqs, id_seqs, evalue=10, word_size=4)
 
     for result in results:
         for alignment in result.alignments:
@@ -23,7 +23,7 @@ def _unacceptable(seq, rand_rnge, max_melt_temp=20):
                         len(set(rand_rnge).intersection(qu_rnge)) > 0 and \
                         len(set(rand_rnge).intersection(sb_rnge)) > 0:
                     melt_temp = _get_melting_temp(
-                        hsp.query, sequence_utils.get_comp(hsp.sbjct))
+                        hsp.query, seq_utils.get_comp(hsp.sbjct))
 
                     if melt_temp > max_melt_temp:
                         print hsp
@@ -40,16 +40,16 @@ def _get_melting_temp(query, subject):
 
     for nucs in zip(query, subject):
         if nucs[0] == '-':
-            dna1 = dna1 + sequence_utils.get_comp(nucs[1])
+            dna1 = dna1 + seq_utils.get_comp(nucs[1])
         else:
             dna1 = dna1 + nucs[0]
 
         if nucs[1] == '-':
-            dna2 = dna2 + sequence_utils.get_comp(nucs[0])
+            dna2 = dna2 + seq_utils.get_comp(nucs[0])
         else:
             dna2 = dna2 + nucs[1]
 
-    return sequence_utils.get_melting_temp(dna1, dna2, strict=False)
+    return seq_utils.get_melting_temp(dna1, dna2, strict=False)
 
 
 def main():
@@ -77,14 +77,14 @@ def main():
     for seq_id, seq in seqs.iteritems():
         rand_range = range(seq.find('*'), seq.find('*') + rand_len)
         update_seq = string.replace(
-            seq, '*', sequence_utils.get_random_dna(rand_len, max_repeat_nucl,
-                                                    invalid_patterns))
+            seq, '*', seq_utils.get_random_dna(rand_len, max_repeat_nucl,
+                                               invalid_patterns))
 
         while _unacceptable(update_seq, rand_range):
             update_seq = string.replace(
-                seq, '*', sequence_utils.get_random_dna(rand_len,
-                                                        max_repeat_nucl,
-                                                        invalid_patterns))
+                seq, '*', seq_utils.get_random_dna(rand_len,
+                                                   max_repeat_nucl,
+                                                   invalid_patterns))
 
         seqs[seq_id] = update_seq
 

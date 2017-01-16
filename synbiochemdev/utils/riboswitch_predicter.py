@@ -9,8 +9,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 import sys
 
-from synbiochem.utils.sequence_utils import CodonOptimiser, \
-    get_minimum_free_energy
+from synbiochem.utils.seq_utils import CodonOptimiser, get_minimum_free_energy
 
 
 def main(argv):

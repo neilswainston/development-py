@@ -14,7 +14,6 @@ import urllib
 from Bio import Seq, SeqIO
 from Bio.Alphabet import generic_dna
 from numpy import record
-
 from synbiochem.utils import sequence_utils
 
 

@@ -15,10 +15,11 @@ import os.path
 import random
 import time
 
-from holygrail import get_input_data
 from sklearn.metrics import accuracy_score as accs
 from sklearn.metrics import confusion_matrix as confmat
 from sklearn.metrics import log_loss
+
+from holygrail import get_input_data
 import cPickle as pkl
 import holygrail.data as hgd
 import numpy as np

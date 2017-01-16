@@ -8,6 +8,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 @author: neilswainston
 '''
 from synbiochem.utils import sequence_utils
+
 import matplotlib.pyplot as plt
 
 
