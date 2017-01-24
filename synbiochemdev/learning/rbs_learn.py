@@ -9,17 +9,43 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 from _collections import defaultdict
 
+import random
 import numpy
 
 import matplotlib.pyplot as plt
 import sbclearn.theanets.theanets_utils as theanets_utils
 
 
+def learn(filename):
+    '''Learn method.'''
+    x_data, y_data, seqs = _get_data(filename)
+    results = defaultdict(list)
+
+    for _ in range(5):
+        _learn(x_data, y_data, seqs, results)
+
+    seqs = [val[0] for val in results.keys()]
+    vals = [val[1] for val in results.keys()]
+    preds = results.values()
+
+    # The mean squared error:
+    print('Mean squared error: %.2f'
+          % numpy.mean([(x - y) ** 2
+                        for x, y in zip(vals, [numpy.mean(pred)
+                                               for pred in preds])]))
+
+    for result in zip(seqs, vals,
+                      [numpy.mean(pred) for pred in preds],
+                      [numpy.std(pred) for pred in preds]):
+        print '\t'.join([str(res) for res in result])
+
+    _plot(vals, preds)
+
+
 def _get_data(filename):
     '''Gets data.'''
     x_data = []
     y_data = []
-    test_seqs = []
 
     with open(filename, 'rU') as infile:
         for line in infile:
@@ -28,16 +54,14 @@ def _get_data(filename):
 
             if len(tokens) > 1:
                 y_data.append(float(tokens[1]))
-            else:
-                test_seqs.append(tokens[0])
 
-    x_data = [vals for vals in zip(*[val
-                                     for val in zip(*x_data)
-                                     if len(set(val)) > 1])]
-
+    x_data = [''.join(vals) for vals in zip(*[val
+                                              for val in zip(*x_data)
+                                              if len(set(val)) > 1])]
+    seqs = x_data
     x_data = [_encode_x_data(val) for val in x_data]
 
-    return x_data[:len(y_data)], y_data, x_data[len(y_data):], test_seqs
+    return x_data[:len(y_data)], y_data, seqs
 
 
 def _encode_x_data(x_data):
@@ -51,86 +75,66 @@ def _encode_x_data(x_data):
     return [val for nucl in x_data for val in x_vals[nucl]]
 
 
-def _split_data(x_data, y_data, split=0.9):
+def _split_data(seqs, x_data, y_data, split=0.9):
     '''Split data.'''
-    x_data_rand, y_data_rand = theanets_utils.randomise_order(x_data, y_data)
+    seqs_rand, x_data_rand, y_data_rand = \
+        theanets_utils.randomise_order([seqs, x_data, y_data])
 
     # Split data into training and classifying:
     ind = int(split * len(x_data_rand))
 
-    x_train = x_data_rand[:ind]
-    y_train = [[y] for y in y_data_rand[:ind]]
-    x_val = x_data_rand[ind:]
-    y_val = y_data_rand[ind:]
-
-    return x_train, y_train, x_val, y_val
+    return seqs_rand[:ind], x_data_rand[:ind], \
+        [[y] for y in y_data_rand[:ind]], \
+        seqs_rand[ind:], x_data_rand[ind:], y_data_rand[ind:]
 
 
-def _train(x_train, y_train):
+def _train(x_train, y_train, max_layers=3, max_nodes=100):
     '''Train neural network.'''
     regressor = theanets_utils.Regressor(x_train, y_train)
-    regressor.train(hidden_layers=[50, 25, 10])
+    hidden_layers = [random.randint(1, max_nodes)
+                     for _ in range(random.randint(1, max_layers))]
+    print str(hidden_layers)
+    regressor.train(hidden_layers=hidden_layers)
     return regressor
 
 
-def main():
-    '''main method.'''
-    x_data, y_data, x_test, test_seqs = _get_data('rbs.txt')
-    val_vals = []
-    val_pred = []
-    test_pred = []
+def _learn(x_data, y_data, seqs, results):
+    '''Learn method.'''
+    _, x_train, y_train, seqs_val, x_val, y_val = \
+        _split_data(seqs, x_data, y_data)
 
-    for _ in range(50):
-        x_train, y_train, x_val, y_val = _split_data(x_data, y_data)
-        regressor = _train(x_train, y_train)
+    regressor = _train(x_train, y_train)
 
-        val_pred.extend([val[0]
-                         for val in regressor.predict(x_val)])
-        val_vals.extend(y_val)
+    for tup in zip(*[seqs_val, y_val,
+                     [val[0] for val in regressor.predict(x_val)]]):
+        results[tup[:2]].append(tup[2])
 
-        test_pred.append([val[0]
-                          for val in regressor.predict(x_test)])
 
+def _plot(vals, preds):
+    '''Plot results.'''
     plt.title('Prediction of limonene production from RBS seqs')
     plt.xlabel('Measured')
     plt.ylabel('Predicted')
 
-    results = defaultdict(list)
-
-    for val, pred in zip(val_vals, val_pred):
-        results[val].append(pred)
-
-    plt.errorbar(results.keys(),
-                 [numpy.mean(vals) for vals in results.values()],
-                 yerr=[numpy.std(vals) for vals in results.values()],
+    plt.errorbar(vals,
+                 [numpy.mean(pred) for pred in preds],
+                 yerr=[numpy.std(pred) for pred in preds],
                  fmt='o',
                  color='black')
 
-    test_pred = zip(*test_pred)
-
-    plt.errorbar([numpy.mean(vals) for vals in test_pred],
-                 [numpy.mean(vals) for vals in test_pred],
-                 yerr=[numpy.std(vals) for vals in test_pred],
-                 fmt='o',
-                 color='red')
-
-    fit = numpy.poly1d(numpy.polyfit(val_vals, val_pred, 1))
-    plt.plot(val_vals, fit(val_vals), 'k')
+    fit = numpy.poly1d(numpy.polyfit(vals,
+                                     [numpy.mean(pred) for pred in preds], 1))
+    plt.plot(vals, fit(vals), 'k')
 
     plt.xlim(0, 1.6)
     plt.ylim(0, 1.6)
 
-    # The mean squared error:
-    print('Mean squared error: %.2f'
-          % numpy.mean([(x - y) ** 2 for x, y in zip(val_vals, val_pred)]))
-
-    for seq, pred, s_d in zip(test_seqs,
-                              [numpy.mean(vals) for vals in test_pred],
-                              [numpy.std(vals) for vals in test_pred]):
-        print seq + '\t' + str(pred) + '\t' + str(s_d)
-
     plt.show()
 
+
+def main():
+    '''main method.'''
+    learn('rbs.txt')
 
 if __name__ == '__main__':
     main()
