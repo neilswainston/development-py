@@ -7,6 +7,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+# pylint: disable=too-few-public-methods
 from _collections import defaultdict
 
 import numpy
@@ -15,26 +16,32 @@ import matplotlib.pyplot as plt
 import sbclearn.theanets.theanets_utils as theanets_utils
 
 
-def learn(x_data, y_data, seqs, hidden_layers=None, tests=50):
-    '''Learn method.'''
-    if hidden_layers is None:
-        hidden_layers = [25, 25, 25]
+class RBSRegression(object):
+    '''Class to perform prediction of production from RBS sequence.'''
 
-    results = defaultdict(list)
+    def __init__(self, data, split=0.9, tests=1):
+        self.__data = data
+        self.__split = split
+        self.__tests = tests
 
-    for _ in range(tests):
-        _learn(x_data, y_data, seqs, results, hidden_layers)
+    def predict(self, hidden_layers=None, hyperparams=None):
+        '''Learn method.'''
+        results = defaultdict(list)
 
-    seqs = [val[0] for val in results.keys()]
-    vals = [val[1] for val in results.keys()]
-    preds = results.values()
+        for _ in range(self.__tests):
+            _, error = self.__learn(hidden_layers, hyperparams, results)
 
-    # The mean squared error:
-    error = numpy.mean([(x - y) ** 2
-                        for x, y in zip(vals, [numpy.mean(pred)
-                                               for pred in preds])])
+        return error, results
 
-    return seqs, vals, preds, error
+    def __learn(self, hidden_layers, hyperparams, results):
+        '''Learn method.'''
+        x_train, y_train, x_val, y_val = \
+            theanets_utils.split_data(self.__data, self.__split)
+
+        regressor = theanets_utils.Regressor(x_train, y_train)
+        regressor.train(hidden_layers=hidden_layers, hyperparams=hyperparams)
+
+        return regressor.predict(x_val, y_val, results=results)
 
 
 def get_data(filename):
@@ -56,7 +63,7 @@ def get_data(filename):
     seqs = x_data
     x_data = [_encode_x_data(val) for val in x_data]
 
-    return x_data, y_data, seqs
+    return [x_data, y_data], seqs
 
 
 def _encode_x_data(x_data):
@@ -70,65 +77,34 @@ def _encode_x_data(x_data):
     return [val for nucl in x_data for val in x_vals[nucl]]
 
 
-def _split_data(seqs, x_data, y_data, split=0.9):
-    '''Split data.'''
-    seqs_rand, x_data_rand, y_data_rand = \
-        theanets_utils.randomise_order([seqs, x_data, y_data])
-
-    # Split data into training and classifying:
-    ind = int(split * len(x_data_rand))
-
-    return seqs_rand[:ind], x_data_rand[:ind], \
-        [[y] for y in y_data_rand[:ind]], \
-        seqs_rand[ind:], x_data_rand[ind:], y_data_rand[ind:]
-
-
-def _learn(x_data, y_data, seqs, results, hidden_layers):
-    '''Learn method.'''
-    _, x_train, y_train, seqs_val, x_val, y_val = \
-        _split_data(seqs, x_data, y_data)
-
-    regressor = _train(x_train, y_train, hidden_layers)
-
-    for tup in zip(*[seqs_val, y_val,
-                     [val[0] for val in regressor.predict(x_val)]]):
-        results[tup[:2]].append(tup[2])
-
-
-def _train(x_train, y_train, hidden_layers):
-    '''Train neural network.'''
-    regressor = theanets_utils.Regressor(x_train, y_train)
-    regressor.train(hidden_layers=hidden_layers)
-    return regressor
-
-
-def _output(seqs, vals, preds, error):
+def _output(error, results):
     '''Output results.'''
-    print 'Mean squared error: %.2f' % error
+    print 'Mean squared error: %.3f' % error
 
-    for result in zip(seqs, vals,
-                      [numpy.mean(pred) for pred in preds],
-                      [numpy.std(pred) for pred in preds]):
+    for result in zip(results.keys(),
+                      [numpy.mean(pred) for pred in results.values()],
+                      [numpy.std(pred) for pred in results.values()]):
         print '\t'.join([str(res) for res in result])
 
-    _plot(vals, preds)
+    _plot(results)
 
 
-def _plot(vals, preds):
+def _plot(results):
     '''Plot results.'''
     plt.title('Prediction of limonene production from RBS seqs')
     plt.xlabel('Measured')
     plt.ylabel('Predicted')
 
-    plt.errorbar(vals,
-                 [numpy.mean(pred) for pred in preds],
-                 yerr=[numpy.std(pred) for pred in preds],
+    plt.errorbar(results.keys(),
+                 [numpy.mean(pred) for pred in results.values()],
+                 yerr=[numpy.std(pred) for pred in results.values()],
                  fmt='o',
                  color='black')
 
-    fit = numpy.poly1d(numpy.polyfit(vals,
-                                     [numpy.mean(pred) for pred in preds], 1))
-    plt.plot(vals, fit(vals), 'k')
+    fit = numpy.poly1d(numpy.polyfit(results.keys(),
+                                     [numpy.mean(pred)
+                                      for pred in results.values()], 1))
+    plt.plot(results.keys(), fit(results.keys()), 'k')
 
     plt.xlim(0, 1.6)
     plt.ylim(0, 1.6)
@@ -138,9 +114,10 @@ def _plot(vals, preds):
 
 def main():
     '''main method.'''
-    x_data, y_data, seqs = get_data('rbs.txt')
-    seqs, vals, preds, error = learn(x_data, y_data, seqs)
-    _output(seqs, vals, preds, error)
+    data, _ = get_data('rbs.txt')
+    rbs_reg = RBSRegression(data)
+    error, results = rbs_reg.predict([10, 10, 10])
+    _output(error, results)
 
 if __name__ == '__main__':
     main()
