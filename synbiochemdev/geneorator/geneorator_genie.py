@@ -11,7 +11,6 @@ import datetime
 import sys
 
 from Bio.Seq import Seq
-from _regex_core import parse_set_member
 from synbiochem.utils import seq_utils
 
 
@@ -23,8 +22,8 @@ def get_oligos(templ, set_len=1, melt_temp=60, codons=None):
     oligos = []
     def_codons = _get_codons(codons)
 
-    for set_idx, start_pos in enumerate(xrange(0, len(templ), 3 * set_len)):
-        oligos.extend(_get_set(templ, set_idx, start_pos, set_len, melt_temp,
+    for set_idx, _ in enumerate(xrange(0, len(templ), 3 * set_len)):
+        oligos.extend(_get_set(templ, set_idx, set_len, melt_temp,
                                def_codons))
 
     return oligos
@@ -40,7 +39,7 @@ def _get_codons(codons):
     return def_codons
 
 
-def _get_set(templ, set_idx, start_pos, set_len, melt_temp, def_codons):
+def _get_set(templ, set_idx, set_len, melt_temp, def_codons):
     '''Gets a set.'''
     oligos = []
 
@@ -50,8 +49,7 @@ def _get_set(templ, set_idx, start_pos, set_len, melt_temp, def_codons):
     post_seq, post_tm = _get_seq_by_tm(templ[end_pos:], melt_temp)
 
     for set_member in range(set_len):
-        oligo = _get_oligo(templ, set_idx, set_member, start_pos,
-                           end_pos, pre_seq,
+        oligo = _get_oligo(templ, set_idx, set_member, set_len, pre_seq,
                            post_seq, def_codons)
 
         oligo.extend([pre_tm, post_tm,
@@ -63,10 +61,11 @@ def _get_set(templ, set_idx, start_pos, set_len, melt_temp, def_codons):
     return oligos
 
 
-def _get_oligo(templ, set_idx, set_member, start_pos, end_pos,
-               pre_seq, post_seq, def_codons):
+def _get_oligo(templ, set_idx, set_member, set_len, pre_seq, post_seq,
+               def_codons):
     '''Gets oligo.'''
-    # print set_idx, set_member, start_pos, end_pos
+    start_pos = set_idx * set_len * 3
+    end_pos = start_pos + 3 * set_len
 
     pos = start_pos + 3 * set_member
     codon = Seq(templ[pos:pos + 3])
