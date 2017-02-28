@@ -48,7 +48,7 @@ def _get_set(templ, set_idx, set_len, melt_temp, def_codons):
     pre_seq, pre_tm = _get_seq_by_tm(templ[:start_pos], melt_temp, False)
     post_seq, post_tm = _get_seq_by_tm(templ[end_pos:], melt_temp)
 
-    for set_member in range(set_len):
+    for set_member in range(min(set_len, len(templ[start_pos:]) / 3)):
         oligo = _get_oligo(templ, set_idx, set_member, set_len, pre_seq,
                            post_seq, def_codons)
 
@@ -95,10 +95,18 @@ def _get_seq_by_tm(seq, melt_temp, forward=True):
 
 def main(args):
     '''main method.'''
+    print '\t'.join(['Residue',
+                     'Set number',
+                     'Set member',
+                     'Sequence',
+                     'Length',
+                     '5\' Tm',
+                     '3\' Tm',
+                     'id'])
     for idx, oligo in enumerate(get_oligos(args[0],
                                            set_len=int(args[1]),
                                            melt_temp=float(args[2]),
-                                           codons={'S': 'DBK'})):
+                                           codons={'S': 'NNK'})):
         print '\t'.join(str(val) for val in [idx + 1] + oligo)
 
 
