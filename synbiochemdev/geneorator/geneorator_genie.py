@@ -46,7 +46,8 @@ def _get_set(templ, set_idx, set_len, melt_temp, def_codons):
     start_pos = set_idx * set_len * 3
     end_pos = start_pos + 3 * set_len
     pre_seq, pre_tm = _get_seq_by_tm(templ[:start_pos], melt_temp, False)
-    post_seq, post_tm = _get_seq_by_tm(templ[end_pos:], melt_temp)
+    post_seq, post_tm = _get_seq_by_tm(templ[end_pos:], melt_temp,
+                                       terminii=['C', 'G'])
 
     for set_member in range(min(set_len, len(templ[start_pos:]) / 3)):
         oligo = _get_oligo(templ, set_idx, set_member, set_len, pre_seq,
@@ -82,11 +83,16 @@ def _get_oligo(templ, set_idx, set_member, set_len, pre_seq, post_seq,
             len(seq)]
 
 
-def _get_seq_by_tm(seq, melt_temp, forward=True):
+def _get_seq_by_tm(seq, melt_temp, forward=True, terminii=None):
+    '''Gets sequence by melting temp.'''
+    if terminii is None:
+        terminii = ['A', 'C', 'G', 'T']
+
     t_m = seq_utils.get_melting_temp(seq) if seq else float('NaN')
 
     try:
-        seq, t_m = seq_utils.get_seq_by_melt_temp(seq, melt_temp, forward)
+        seq, t_m = seq_utils.get_seq_by_melt_temp(seq, melt_temp, forward,
+                                                  terminii)
     except ValueError:
         pass
 
