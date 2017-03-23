@@ -45,7 +45,8 @@ def _get_set(templ, set_idx, set_len, melt_temp, def_codons):
 
     start_pos = set_idx * set_len * 3
     end_pos = start_pos + 3 * set_len
-    pre_seq, pre_tm = _get_seq_by_tm(templ[:start_pos], melt_temp, False)
+    pre_seq, pre_tm = _get_seq_by_tm(templ[:start_pos], melt_temp, False,
+                                     terminii=['C', 'G'])
     post_seq, post_tm = _get_seq_by_tm(templ[end_pos:], melt_temp,
                                        terminii=['C', 'G'])
 
