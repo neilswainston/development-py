@@ -17,14 +17,17 @@ from synbiochem.utils import seq_utils
 _DEFAULT_CODONS = {am_ac: 'NNK' for am_ac in seq_utils.AA_CODES.values()}
 
 
-def get_oligos(templ, set_len=1, melt_temp=60, codons=None):
+def get_oligos(templ, pre_seq='', post_seq='', set_len=1, melt_temp=60,
+               codons=None):
     '''Gets oligos.'''
     oligos = []
     def_codons = _get_codons(codons)
+    seq = ''.join([pre_seq, templ, post_seq])
+    offset = len(pre_seq)
 
     for set_idx, _ in enumerate(xrange(0, len(templ), 3 * set_len)):
-        oligos.extend(_get_set(templ, set_idx, set_len, melt_temp,
-                               def_codons))
+        oligos.extend(_get_set(seq, offset, offset + len(templ), set_idx,
+                               set_len, melt_temp, def_codons))
 
     return oligos
 
@@ -39,20 +42,20 @@ def _get_codons(codons):
     return def_codons
 
 
-def _get_set(templ, set_idx, set_len, melt_temp, def_codons):
+def _get_set(seq, offset, templ_end, set_idx, set_len, melt_temp, def_codons):
     '''Gets a set.'''
     oligos = []
 
-    start_pos = set_idx * set_len * 3
+    start_pos = offset + (set_idx * set_len * 3)
     end_pos = start_pos + 3 * set_len
-    pre_seq, pre_tm = _get_seq_by_tm(templ[:start_pos], melt_temp, False,
+    pre_seq, pre_tm = _get_seq_by_tm(seq[:start_pos], melt_temp, False,
                                      terminii=['C', 'G'])
-    post_seq, post_tm = _get_seq_by_tm(templ[end_pos:], melt_temp,
+    post_seq, post_tm = _get_seq_by_tm(seq[end_pos:], melt_temp,
                                        terminii=['C', 'G'])
 
-    for set_member in range(min(set_len, len(templ[start_pos:]) / 3)):
-        oligo = _get_oligo(templ, set_idx, set_member, set_len, pre_seq,
-                           post_seq, def_codons)
+    for set_member in range(min(set_len, len(seq[start_pos:templ_end]) / 3)):
+        oligo = _get_oligo(seq, offset, set_idx, set_member, set_len,
+                           pre_seq, post_seq, def_codons)
 
         oligo.extend([pre_tm, post_tm,
                       str(datetime.date.today()) +
@@ -63,19 +66,19 @@ def _get_set(templ, set_idx, set_len, melt_temp, def_codons):
     return oligos
 
 
-def _get_oligo(templ, set_idx, set_member, set_len, pre_seq, post_seq,
+def _get_oligo(seq, offset, set_idx, set_member, set_len, pre_seq, post_seq,
                def_codons):
     '''Gets oligo.'''
-    start_pos = set_idx * set_len * 3
+    start_pos = offset + (set_idx * set_len * 3)
     end_pos = start_pos + 3 * set_len
 
     pos = start_pos + 3 * set_member
-    codon = Seq(templ[pos:pos + 3])
+    codon = Seq(seq[pos:pos + 3])
 
     seq = pre_seq + \
-        templ[start_pos:pos] + \
+        seq[start_pos:pos] + \
         def_codons[str(codon.translate())] + \
-        templ[pos + 3: end_pos] + \
+        seq[pos + 3: end_pos] + \
         post_seq
 
     return [set_idx + 1,
@@ -110,9 +113,11 @@ def main(args):
                      '5\' Tm',
                      '3\' Tm',
                      'id'])
-    for idx, oligo in enumerate(get_oligos(args[0],
-                                           set_len=int(args[1]),
-                                           melt_temp=float(args[2]),
+    for idx, oligo in enumerate(get_oligos(args[0].upper(),
+                                           args[1].upper(),
+                                           args[2].upper(),
+                                           set_len=int(args[3]),
+                                           melt_temp=float(args[4]),
                                            codons={'S': 'NNK'})):
         print '\t'.join(str(val) for val in [idx + 1] + oligo)
 
