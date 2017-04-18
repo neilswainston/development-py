@@ -96,7 +96,7 @@ def _get_seq_by_tm(seq, melt_temp, forward=True, terminii=None):
 
     try:
         seq, t_m = seq_utils.get_seq_by_melt_temp(seq, melt_temp, forward,
-                                                  terminii)
+                                                  terminii, tol=0.075)
     except ValueError:
         pass
 
