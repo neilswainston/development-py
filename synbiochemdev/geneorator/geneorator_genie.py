@@ -7,6 +7,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+# pylint: disable=too-many-arguments
+# pylint: disable=too-many-locals
 import datetime
 import sys
 
@@ -17,13 +19,15 @@ from synbiochem.utils import seq_utils
 _DEFAULT_CODONS = {am_ac: 'NNK' for am_ac in seq_utils.AA_CODES.values()}
 
 
-def get_oligos(templ, pre_seq='', post_seq='', set_len=1, melt_temp=60,
-               codons=None):
+def get_oligos(templ, flank_seqs=None, set_len=1, melt_temp=60, codons=None):
     '''Gets oligos.'''
+    if flank_seqs is None:
+        flank_seqs = {'pre': '', 'post': ''}
+
     oligos = []
     def_codons = _get_codons(codons)
-    seq = ''.join([pre_seq, templ, post_seq])
-    offset = len(pre_seq)
+    seq = ''.join([flank_seqs['pre'], templ, flank_seqs['post']])
+    offset = len(flank_seqs['pre'])
 
     for set_idx, _ in enumerate(xrange(0, len(templ), 3 * set_len)):
         oligos.extend(_get_set(seq, offset, offset + len(templ), set_idx,
@@ -114,8 +118,8 @@ def main(args):
                      '3\' Tm',
                      'id'])
     for idx, oligo in enumerate(get_oligos(args[0].upper(),
-                                           args[1].upper(),
-                                           args[2].upper(),
+                                           {'pre': args[1].upper(),
+                                            'post': args[2].upper()},
                                            set_len=int(args[3]),
                                            melt_temp=float(args[4]),
                                            codons={'S': 'NNK'})):
