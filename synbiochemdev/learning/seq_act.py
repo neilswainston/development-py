@@ -8,20 +8,21 @@ from synbiochem.utils import seq_utils
 import matplotlib.pyplot
 import numpy
 
-import holygrail.theanets_utils as theanets_utils
+from sbclearn import theanets
+import sbclearn
 
 
 def _learn(sequences, activities):
     '''Attempt to learn sequence / activity relationship.'''
     # Convert sequences to inputs, based on amino acid properties:
     x_data = seq_utils.get_aa_props(sequences)
-    x_data, y_data = theanets_utils.randomise_order(x_data, activities)
+    x_data, y_data = sbclearn.randomise_order((x_data, activities))
 
     # Split data into training and classifying:
     ind = int(0.8 * len(x_data))
 
     y_train = [[y] for y in y_data[:ind]]
-    regressor = theanets_utils.Regressor(x_data[:ind], y_train)
+    regressor = theanets.theanets_utils.Regressor(x_data[:ind], y_train)
 
     regressor.train(hidden_layers=[1024, 1024])
     y_pred = regressor.predict(x_data[ind:])
