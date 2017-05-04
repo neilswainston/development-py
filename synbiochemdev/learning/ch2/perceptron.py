@@ -10,7 +10,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 # pylint: disable=invalid-name
 # pylint: disable=no-member
 import sys
-from synbiochemdev.ml.ch2 import get_iris_data, plot_epoch_progress, Classifier
+from synbiochemdev.learning.ch2 import get_iris_data, plot_epoch_progress, \
+    Classifier
 import numpy as np
 
 
