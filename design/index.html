@@ -21,15 +21,90 @@
     <script src="nested.js"></script>
 
 </head>
-<body ng-app="demo">
-
-
+<body ng-app="demo" ng-controller="NestedListsDemoController">
     <div class="container">
+        <div class="nestedDemo row">
+			<!-- Markup for lists inside the dropzone. It's inside a seperate template
+		     because it will be used recursively. The dnd-list directive enables
+		     to drop elements into the referenced array. The dnd-draggable directive
+		     makes an element draggable and will transfer the object that was
+		     assigned to it. If an element was dragged away, you have to remove
+		     it from the original list yourself using the dnd-moved attribute -->
+			<script type="text/ng-template" id="list.html">
+    <ul dnd-list="list">
+        <li ng-repeat="item in list"
+            dnd-draggable="item"
+            dnd-effect-allowed="move"
+            dnd-moved="list.splice($index, 1)"
+            dnd-selected="models.selected = item"
+            ng-class="{selected: models.selected === item}"
+            ng-include="item.type + '.html'">
+        </li>
+    </ul>
+	</script>
+		
+			<!-- This template is responsible for rendering a container element. It uses
+		     the above list template to render each container column -->
+			<script type="text/ng-template" id="container.html">
+    <div class="container-element box box-blue">
+        <h3>Design {{item.id}}</h3>
+        <div class="column" ng-repeat="list in item.columns" ng-include="'list.html'">
 
-
-        <div ng-view></div>
-
+		</div>
+        <div class="clearfix"></div>
     </div>
-
+	</script>
+		
+			<!-- Template for a normal list item -->
+			<script type="text/ng-template" id="item.html">
+    <div class="item">Component {{item.id}}</div>
+	</script>
+		
+			<!-- Sidebar -->
+			<div class="col-md-2">
+				<div class="toolbox box box-grey box-padding">
+					<h3>New elements</h3>
+					<ul>
+						<!-- The toolbox only allows to copy objects, not move it. After a new
+		                 element was created, dnd-copied is invoked and we generate the next id -->
+						<li ng-repeat="item in models.templates" dnd-draggable="item"
+							dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
+							<button type="button" class="btn btn-default btn-lg">{{item.typeName}}</button>
+						</li>
+					</ul>
+				</div>
+				<div ng-if="models.selected" class="box box-grey box-padding">
+					<h3>Selected</h3>
+					<strong>Type: </strong> {{models.selected.type}}<br> <input
+						type="text" ng-model="models.selected.id" class="form-control"
+						style="margin-top: 5px" />
+				</div>
+				<div class="trashcan box box-grey box-padding">
+					<!-- If you use [] as referenced list, the dropped elements will be lost -->
+					<h3>Trashcan</h3>
+					<ul dnd-list="[]">
+						<li><img src="trashcan.jpg"></li>
+					</ul>
+				</div>
+			</div>
+		
+			<!-- Main area with dropzone and source code -->
+			<div class="col-md-10">
+				<div class="row dropzone box box-yellow">
+					<!-- The dropzone also uses the list template -->
+					<h3>Designs</h3>
+					<ul dnd-list="models.dropzone">
+						<li ng-repeat="item in models.dropzone" dnd-draggable="item"
+							dnd-effect-allowed="move" dnd-moved="list.splice($index, 1)"
+							dnd-selected="models.selected = item"
+							ng-class="{selected: models.selected === item}"
+							ng-include="item.type + '.html'"></li>
+					</ul>
+				</div>
+		
+				<h2>Generated Model</h2>
+				<pre>{{modelAsJson}}</pre>
+			</div>
+		</div>
+    </div>
 </body>
-
