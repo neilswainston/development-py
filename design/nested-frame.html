@@ -30,7 +30,7 @@
 
 <!-- Template for a normal list item -->
 <script type="text/ng-template" id="item.html">
-    <div class="item">Item {{item.id}}</div>
+    <div class="item">Component {{item.id}}</div>
 </script>
 
 <!-- Sidebar -->
@@ -46,7 +46,7 @@
                 dnd-effect-allowed="copy"
                 dnd-copied="item.id = item.id + 1"
                 >
-                <button type="button" class="btn btn-default btn-lg">{{item.type}}</button>
+                <button type="button" class="btn btn-default btn-lg">{{item.typeName}}</button>
             </li>
         </ul>
     </div>

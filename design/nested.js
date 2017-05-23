@@ -6,8 +6,8 @@ angular.module("demo").controller("NestedListsDemoController", function($scope) 
     $scope.models = {
         selected: null,
         templates: [
-            {type: "item", id: 2},
-            {type: "container", id: 1, columns: [[]]}
+            {type: "item", typeName: "Component", id: 2},
+            {type: "container", typeName: "Design", id: 1, columns: [[]]}
         ],
         dropzones: {
             "A": [
