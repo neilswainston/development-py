@@ -9,22 +9,16 @@ angular.module("demo").controller("NestedListsDemoController", function($scope) 
             {type: "item", typeName: "Component", id: 2},
             {type: "container", typeName: "Design", id: 1, columns: [[]]}
         ],
-        dropzones: {
-            "A": [
-                {
-                    "type": "container",
-                    "id": 1,
-                    "columns": [
-                        [
-                            
-                        ]
-                    ]
-                },
-            ],
-        }
+        dropzone: [
+            {
+                "type": "container",
+                "id": 1,
+                "columns": [[]]
+            },
+        ]
     };
 
-    $scope.$watch('models.dropzones', function(model) {
+    $scope.$watch('models.dropzone', function(model) {
         $scope.modelAsJson = angular.toJson(model, true);
     }, true);
 
