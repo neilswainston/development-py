@@ -7,7 +7,7 @@ angular.module("demo").controller("NestedListsDemoController", function($scope) 
         selected: null,
         templates: [
             {type: "item", id: 2},
-            {type: "container", id: 1, columns: [[], []]}
+            {type: "container", id: 1, columns: [[]]}
         ],
         dropzones: {
             "A": [
@@ -16,35 +16,10 @@ angular.module("demo").controller("NestedListsDemoController", function($scope) 
                     "id": 1,
                     "columns": [
                         [
-                            {
-                                "type": "item",
-                                "id": "1"
-                            },
-                            {
-                                "type": "item",
-                                "id": "2"
-                            }
-                        ],
-                        [
-                            {
-                                "type": "item",
-                                "id": "3"
-                            }
+                            
                         ]
                     ]
                 },
-                {
-                    "type": "item",
-                    "id": "4"
-                },
-                {
-                    "type": "item",
-                    "id": "5"
-                },
-                {
-                    "type": "item",
-                    "id": "6"
-                }
             ],
         }
     };

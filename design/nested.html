@@ -32,27 +32,11 @@
     <div class="item">Item {{item.id}}</div>
 </script>
 
-<!-- Main area with dropzones and source code -->
-<div class="col-md-10">
-    <div class="row">
-        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-6">
-            <div class="dropzone box box-yellow">
-                <!-- The dropzone also uses the list template -->
-                <h3>Dropzone {{zone}}</h3>
-                <div ng-include="'list.html'"></div>
-            </div>
-        </div>
-    </div>
-
-    <h2>Generated Model</h2>
-    <pre>{{modelAsJson}}</pre>
-</div>
-
 <!-- Sidebar -->
 <div class="col-md-2">
 
     <div class="toolbox box box-grey box-padding">
-        <h3>New Elements</h3>
+        <h3>New elements</h3>
         <ul>
             <!-- The toolbox only allows to copy objects, not move it. After a new
                  element was created, dnd-copied is invoked and we generate the next id -->
@@ -80,4 +64,20 @@
         </ul>
     </div>
 
+</div>
+
+<!-- Main area with dropzones and source code -->
+<div class="col-md-10">
+    <div class="row">
+        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-6">
+            <div class="dropzone box box-yellow">
+                <!-- The dropzone also uses the list template -->
+                <h3>Designs</h3>
+                <div ng-include="'list.html'"></div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Generated Model</h2>
+    <pre>{{modelAsJson}}</pre>
 </div>
