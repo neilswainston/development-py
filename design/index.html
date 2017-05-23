@@ -30,8 +30,14 @@
 		     makes an element draggable and will transfer the object that was
 		     assigned to it. If an element was dragged away, you have to remove
 		     it from the original list yourself using the dnd-moved attribute -->
-			<script type="text/ng-template" id="list.html">
-    <ul dnd-list="list">
+		
+			<!-- This template is responsible for rendering a container element. It uses
+		     the above list template to render each container column -->
+			<script type="text/ng-template" id="container.html">
+    <div class="container-element box box-blue">
+        <h3>Design {{item.id}}</h3>
+        <div class="column" ng-repeat="list in item.columns">
+<ul dnd-list="list">
         <li ng-repeat="item in list"
             dnd-draggable="item"
             dnd-effect-allowed="move"
@@ -41,15 +47,6 @@
             ng-include="item.type + '.html'">
         </li>
     </ul>
-	</script>
-		
-			<!-- This template is responsible for rendering a container element. It uses
-		     the above list template to render each container column -->
-			<script type="text/ng-template" id="container.html">
-    <div class="container-element box box-blue">
-        <h3>Design {{item.id}}</h3>
-        <div class="column" ng-repeat="list in item.columns" ng-include="'list.html'">
-
 		</div>
         <div class="clearfix"></div>
     </div>
@@ -79,13 +76,6 @@
 						type="text" ng-model="models.selected.id" class="form-control"
 						style="margin-top: 5px" />
 				</div>
-				<div class="trashcan box box-grey box-padding">
-					<!-- If you use [] as referenced list, the dropped elements will be lost -->
-					<h3>Trashcan</h3>
-					<ul dnd-list="[]">
-						<li><img src="trashcan.jpg"></li>
-					</ul>
-				</div>
 			</div>
 		
 			<!-- Main area with dropzone and source code -->
@@ -102,7 +92,6 @@
 					</ul>
 				</div>
 		
-				<h2>Generated Model</h2>
 				<pre>{{modelAsJson}}</pre>
 			</div>
 		</div>
