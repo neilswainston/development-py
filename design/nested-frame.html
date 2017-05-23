@@ -22,7 +22,7 @@
      the above list template to render each container column -->
 <script type="text/ng-template" id="container.html">
     <div class="container-element box box-blue">
-        <h3>Container {{item.id}}</h3>
+        <h3>Design {{item.id}}</h3>
         <div class="column" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
         <div class="clearfix"></div>
     </div>
@@ -32,22 +32,6 @@
 <script type="text/ng-template" id="item.html">
     <div class="item">Item {{item.id}}</div>
 </script>
-
-<!-- Main area with dropzones and source code -->
-<div class="col-md-10">
-    <div class="row">
-        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-6">
-            <div class="dropzone box box-yellow">
-                <!-- The dropzone also uses the list template -->
-                <h3>Designs</h3>
-                <div ng-include="'list.html'"></div>
-            </div>
-        </div>
-    </div>
-
-    <h2>Generated Model</h2>
-    <pre>{{modelAsJson}}</pre>
-</div>
 
 <!-- Sidebar -->
 <div class="col-md-2">
@@ -82,4 +66,21 @@
     </div>
 
 </div>
+
+<!-- Main area with dropzones and source code -->
+<div class="col-md-10">
+    <div class="row">
+        <div ng-repeat="(zone, list) in models.dropzones" class="col-md-6">
+            <div class="dropzone box box-yellow">
+                <!-- The dropzone also uses the list template -->
+                <h3>Designs</h3>
+                <div ng-include="'list.html'"></div>
+            </div>
+        </div>
+    </div>
+
+    <h2>Generated Model</h2>
+    <pre>{{modelAsJson}}</pre>
+</div>
+
 </div>
