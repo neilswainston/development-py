@@ -3,15 +3,15 @@ designApp.controller("designCtrl", function($scope) {
     $scope.models = {
         selected: null,
         templates: [
-            {type: "item", typeName: "Feature", id: 1},
-            {type: "container", typeName: "Design", id: 2, "features": []}
+        	{type: "design", typeName: "Design", id: 2, "features": []},
+            {type: "feature", typeName: "Feature", id: 1}
         ],
         designs: [
-            {
-                "type": "container",
-                "id": 1,
-                "features": []
-            },
+        	{
+        		type: "design",
+        		typeName: "Design",
+        		id: 1, "features": []
+        	}
         ]
     };
 
