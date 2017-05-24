@@ -152,6 +152,10 @@
  	background-image: url("../sbolv/user-defined.svg");
 }
 
+.horizontal {
+    float: left;
+}
+
 /***************************** Toolbox *****************************/
 
 .design .toolbox ul {
