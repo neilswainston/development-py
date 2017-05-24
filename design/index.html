@@ -17,47 +17,11 @@
 <body data-ng-app="design" data-ng-controller="designCtrl">
     <div class="container">
         <div class="design row">
-			<!-- Markup for lists inside the designs. It's inside a seperate template
-		     because it will be used recursively. The dnd-list directive enables
-		     to drop elements into the referenced array. The dnd-draggable directive
-		     makes an element draggable and will transfer the object that was
-		     assigned to it. If an element was dragged away, you have to remove
-		     it from the original list yourself using the dnd-moved attribute -->
-		
-			<!-- This template is responsible for rendering a container element. It uses
-		     the above list template to render each container column -->
-			<script type="text/ng-template" id="design.html">
-    			<div class="container-element box box-blue">
-        			<h3>Design {{design.id}}</h3>
-        			<div class="column">
-						<ul dnd-list="design.features" dnd-allowed-types="['feature']">
-        					<li data-ng-repeat="feature in design.features"
-								dnd-type="'feature'"
-            					dnd-draggable="feature"
-            					dnd-effect-allowed="move"
-            					dnd-moved="design.features.splice($index, 1)"
-            					dnd-selected="models.selected = feature"
-            					data-ng-class="{selected: models.selected === feature}"
-            					data-ng-include="feature.type + '.html'">
-        					</li>
-    					</ul>
-					</div>
-        			<div class="clearfix"></div>
-    			</div>
-			</script>
-		
-			<!-- Template for a normal list item -->
-			<script type="text/ng-template" id="feature.html">
-				<div class="feature">{{feature.id}}</div>
-			</script>
-		
 			<!-- Sidebar -->
 			<div class="col-md-2">
 				<div class="toolbox box box-grey box-padding">
 					<h3>New elements</h3>
 					<ul>
-						<!-- The toolbox only allows to copy objects, not move it. After a new
-		                 element was created, dnd-copied is invoked and we generate the next id -->
 						<li data-ng-repeat="item in models.templates"
 							dnd-type="item.type"
 							dnd-draggable="item"
@@ -77,20 +41,39 @@
 				</div>
 			</div>
 		
-			<!-- Main area with designs and source code -->
+			<!-- Main area with designs -->
 			<div class="col-md-10">
 				<div class="row designs box box-yellow">
 					<!-- The designs also uses the list template -->
 					<h3>Designs</h3>
-					<ul dnd-list="models.designs" dnd-allowed-types="['design']">
+					<ul dnd-list="models.designs"
+						dnd-allowed-types="['design']">
 						<li data-ng-repeat="design in models.designs"
 							dnd-type="'design'"
 							dnd-draggable="design"
 							dnd-effect-allowed="move"
 							dnd-moved="models.designs.splice($index, 1)"
 							dnd-selected="models.selected = design"
-							data-ng-class="{selected: models.selected === design}"
-							data-ng-include="design.type + '.html'"></li>
+							data-ng-class="{selected: models.selected === design}">
+							<div class="container-element box box-blue">
+			        			<h3>Design {{design.id}}</h3>
+			        			<div class="column">
+									<ul dnd-list="design.features"
+										dnd-allowed-types="['feature']">
+			        					<li data-ng-repeat="feature in design.features"
+											dnd-type="'feature'"
+			            					dnd-draggable="feature"
+			            					dnd-effect-allowed="move"
+			            					dnd-moved="design.features.splice($index, 1)"
+			            					dnd-selected="models.selected = feature"
+			            					data-ng-class="{selected: models.selected === feature}">
+											<div class="feature">{{feature.id}}</div>
+			        					</li>
+			    					</ul>
+								</div>
+			        			<div class="clearfix"></div>
+			    			</div>
+						</li>
 					</ul>
 				</div>
 		
