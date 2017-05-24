@@ -76,13 +76,13 @@ body {
  * The dnd-list should always have a min-height,
  * otherwise you can't drop to it once it's empty
  */
-.nestedDemo .dropzone ul[dnd-list] {
+.nestedDemo .designs ul[dnd-list] {
     margin: 0px;
     min-height: 42px;
     padding-left: 0px;
 }
 
-.nestedDemo .dropzone li {
+.nestedDemo .designs li {
     background-color: #fff;
     border: 1px solid #ddd;
     display: block;
@@ -94,7 +94,7 @@ body {
  * to see where he is dropping his element, even if the element is huge. The
  * .dndDragging class is automatically set during the drag operation.
  */
-.nestedDemo .dropzone .dndDragging {
+.nestedDemo .designs .dndDragging {
     opacity: 0.7;
 }
 
@@ -103,7 +103,7 @@ body {
  * operation. It makes sense to hide it to give the user the feeling that he's
  * actually moving it. Note that the source element has also .dndDragging class.
  */
-.nestedDemo .dropzone .dndDraggingSource {
+.nestedDemo .designs .dndDraggingSource {
     display: none;
 }
 
@@ -111,7 +111,7 @@ body {
  * An element with .dndPlaceholder class will be added as child of the dnd-list
  * while the user is dragging over it.
  */
-.nestedDemo .dropzone .dndPlaceholder {
+.nestedDemo .designs .dndPlaceholder {
     background-color: #ddd;
     display: block;
     min-height: 42px;
@@ -119,16 +119,16 @@ body {
 
 /***************************** Element Selection *****************************/
 
-.nestedDemo .dropzone .selected .item {
+.nestedDemo .designs .selected .item {
     color: #3c763d;
     background-color: #dff0d8;
 }
 
-.nestedDemo .dropzone .selected .box {
+.nestedDemo .designs .selected .box {
     border-color: #d6e9c6;
 }
 
-.nestedDemo .dropzone .selected .box > h3 {
+.nestedDemo .designs .selected .box > h3 {
     background-color: #dff0d8;
     background-image: linear-gradient(to bottom,#dff0d8 0,#d0e9c6 100%);
     border-color: #d6e9c6;
@@ -137,15 +137,15 @@ body {
 
 /***************************** Element type specific styles *****************************/
 
-.nestedDemo .dropzone .item {
+.nestedDemo .designs .item {
     padding: 10px 15px;
 }
 
-.nestedDemo .dropzone .container-element {
+.nestedDemo .designs .container-element {
     margin: 10px;
 }
 
-.nestedDemo .dropzone .container-element .column {
+.nestedDemo .designs .container-element .column {
     float: left;
     width: 100%;
 }

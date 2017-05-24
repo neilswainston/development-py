@@ -21,7 +21,7 @@
 <body ng-app="demo" ng-controller="NestedListsDemoController">
     <div class="container">
         <div class="nestedDemo row">
-			<!-- Markup for lists inside the dropzone. It's inside a seperate template
+			<!-- Markup for lists inside the designs. It's inside a seperate template
 		     because it will be used recursively. The dnd-list directive enables
 		     to drop elements into the referenced array. The dnd-draggable directive
 		     makes an element draggable and will transfer the object that was
@@ -75,13 +75,13 @@
 				</div>
 			</div>
 		
-			<!-- Main area with dropzone and source code -->
+			<!-- Main area with designs and source code -->
 			<div class="col-md-10">
-				<div class="row dropzone box box-yellow">
-					<!-- The dropzone also uses the list template -->
+				<div class="row designs box box-yellow">
+					<!-- The designs also uses the list template -->
 					<h3>Designs</h3>
-					<ul dnd-list="models.dropzone">
-						<li ng-repeat="item in models.dropzone" dnd-draggable="item"
+					<ul dnd-list="models.designs">
+						<li ng-repeat="item in models.designs" dnd-draggable="item"
 							dnd-effect-allowed="move" dnd-moved="list.splice($index, 1)"
 							dnd-selected="models.selected = item"
 							ng-class="{selected: models.selected === item}"
