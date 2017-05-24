@@ -65,7 +65,7 @@ designApp.controller("designCtrl", function($scope) {
 	self.modelAsJson = angular.toJson(self.models, true)
 
 	$scope.$watch(function() {
-		return self.models.designs;
+		return self.models;
 	},               
 	function(values) {
 		self.modelAsJson = angular.toJson(self.models, true)
