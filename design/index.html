@@ -29,12 +29,12 @@
 			<script type="text/ng-template" id="container.html">
     			<div class="container-element box box-blue">
         			<h3>Design {{item.id}}</h3>
-        			<div class="column" data-ng-repeat="list in item.columns">
-						<ul dnd-list="list">
-        					<li data-ng-repeat="item in list"
+        			<div class="column">
+						<ul dnd-list="item.features">
+        					<li data-ng-repeat="item in item.features"
             					dnd-draggable="item"
             					dnd-effect-allowed="move"
-            					dnd-moved="list.splice($index, 1)"
+            					dnd-moved="item.features.splice($index, 1)"
             					dnd-selected="models.selected = item"
             					data-ng-class="{selected: models.selected === item}"
             					data-ng-include="item.type + '.html'">

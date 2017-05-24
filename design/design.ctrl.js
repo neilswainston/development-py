@@ -4,13 +4,13 @@ designApp.controller("designCtrl", function($scope) {
         selected: null,
         templates: [
             {type: "item", typeName: "Component", id: 1},
-            {type: "container", typeName: "Design", id: 2, columns: [[]]}
+            {type: "container", typeName: "Design", id: 2, "features": []}
         ],
         designs: [
             {
                 "type": "container",
                 "id": 1,
-                "columns": [[]]
+                "features": []
             },
         ]
     };
