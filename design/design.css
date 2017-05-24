@@ -114,7 +114,7 @@
 
 /***************************** Element Selection *****************************/
 
-.design .designs .selected .item {
+.design .designs .selected .feature {
     color: #3c763d;
     background-color: #dff0d8;
 }
@@ -132,7 +132,7 @@
 
 /***************************** Element type specific styles *****************************/
 
-.design .designs .item {
+.design .designs {
     padding: 10px 15px;
 }
 

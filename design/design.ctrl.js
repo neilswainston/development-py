@@ -3,7 +3,7 @@ designApp.controller("designCtrl", function($scope) {
     $scope.models = {
         selected: null,
         templates: [
-            {type: "item", typeName: "Component", id: 1},
+            {type: "item", typeName: "Feature", id: 1},
             {type: "container", typeName: "Design", id: 2, "features": []}
         ],
         designs: [
