@@ -1,4 +1,4 @@
-angular.module("demo").controller("NestedListsDemoController", function($scope) {
+designApp.controller("designCtrl", function($scope) {
 
     $scope.models = {
         selected: null,

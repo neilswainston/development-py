@@ -1,1 +1,1 @@
-angular.module("demo", ["ngRoute", "dndLists"]);
+var designApp = angular.module("design", ["ngRoute", "dndLists"]);

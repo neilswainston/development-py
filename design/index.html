@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Drag &amp; Drop Lists for angular.js</title>
+    <title>Design</title>
 
     <!-- angular is the only dependency! -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
@@ -12,13 +12,13 @@
     <!-- Stuff that is only required in this demo (no need to copy) -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="nested.css" />
+    <link rel="stylesheet" href="design.css" />
 
     <script src="demo-framework.js"></script>
     <script src="nested.js"></script>
 
 </head>
-<body ng-app="demo" ng-controller="NestedListsDemoController">
+<body data-ng-app="design" data-ng-controller="designCtrl">
     <div class="container">
         <div class="nestedDemo row">
 			<!-- Markup for lists inside the designs. It's inside a seperate template
@@ -61,16 +61,20 @@
 					<ul>
 						<!-- The toolbox only allows to copy objects, not move it. After a new
 		                 element was created, dnd-copied is invoked and we generate the next id -->
-						<li ng-repeat="item in models.templates" dnd-draggable="item"
-							dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
+						<li data-ng-repeat="item in models.templates"
+							dnd-draggable="item"
+							dnd-effect-allowed="copy"
+							dnd-copied="item.id = item.id + 1">
 							<button type="button" class="btn btn-default btn-lg">{{item.typeName}}</button>
 						</li>
 					</ul>
 				</div>
 				<div ng-if="models.selected" class="box box-grey box-padding">
 					<h3>Selected</h3>
-					<strong>Type: </strong> {{models.selected.type}}<br> <input
-						type="text" ng-model="models.selected.id" class="form-control"
+					<strong>Type: </strong> {{models.selected.type}}
+					<br><input type="text"
+						data-ng-model="models.selected.id"
+						class="form-control"
 						style="margin-top: 5px" />
 				</div>
 			</div>
@@ -81,11 +85,13 @@
 					<!-- The designs also uses the list template -->
 					<h3>Designs</h3>
 					<ul dnd-list="models.designs">
-						<li ng-repeat="item in models.designs" dnd-draggable="item"
-							dnd-effect-allowed="move" dnd-moved="list.splice($index, 1)"
+						<li data-ng-repeat="item in models.designs"
+							dnd-draggable="item"
+							dnd-effect-allowed="move"
+							dnd-moved="list.splice($index, 1)"
 							dnd-selected="models.selected = item"
-							ng-class="{selected: models.selected === item}"
-							ng-include="item.type + '.html'"></li>
+							data-ng-class="{selected: models.selected === item}"
+							data-ng-include="item.type + '.html'"></li>
 					</ul>
 				</div>
 		
