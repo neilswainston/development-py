@@ -16,7 +16,7 @@
 </head>
 <body data-ng-app="design" data-ng-controller="designCtrl">
     <div class="container">
-        <div class="nestedDemo row">
+        <div class="design row">
 			<!-- Markup for lists inside the designs. It's inside a seperate template
 		     because it will be used recursively. The dnd-list directive enables
 		     to drop elements into the referenced array. The dnd-draggable directive
@@ -29,15 +29,15 @@
 			<script type="text/ng-template" id="container.html">
     			<div class="container-element box box-blue">
         			<h3>Design {{item.id}}</h3>
-        			<div class="column" ng-repeat="list in item.columns">
+        			<div class="column" data-ng-repeat="list in item.columns">
 						<ul dnd-list="list">
-        					<li ng-repeat="item in list"
+        					<li data-ng-repeat="item in list"
             					dnd-draggable="item"
             					dnd-effect-allowed="move"
             					dnd-moved="list.splice($index, 1)"
             					dnd-selected="models.selected = item"
-            					ng-class="{selected: models.selected === item}"
-            					ng-include="item.type + '.html'">
+            					data-ng-class="{selected: models.selected === item}"
+            					data-ng-include="item.type + '.html'">
         					</li>
     					</ul>
 					</div>
@@ -65,7 +65,7 @@
 						</li>
 					</ul>
 				</div>
-				<div ng-if="models.selected" class="box box-grey box-padding">
+				<div data-ng-if="models.selected" class="box box-grey box-padding">
 					<h3>Selected</h3>
 					<strong>Type: </strong> {{models.selected.type}}
 					<br><input type="text"
