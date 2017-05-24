@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="design.css" />
 </head>
-<body data-ng-app="design" data-ng-controller="designCtrl">
+<body data-ng-app="design" data-ng-controller="designCtrl as ctrl">
     <div class="container">
         <div class="row">
 			<!-- Sidebar -->
@@ -22,7 +22,7 @@
 				<div class="toolbox box box-grey box-padding">
 					<h3>New elements</h3>
 					<ul>
-						<li data-ng-repeat="item in models.templates"
+						<li data-ng-repeat="item in ctrl.models.templates"
 							dnd-type="item.type"
 							dnd-draggable="item"
 							dnd-effect-allowed="copy"
@@ -31,11 +31,11 @@
 						</li>
 					</ul>
 				</div>
-				<div data-ng-if="models.selected" class="box box-grey box-padding">
+				<div data-ng-if="ctrl.models.selected" class="box box-grey box-padding">
 					<h3>Selected</h3>
-					<strong>Type: </strong> {{models.selected.type}}
+					<strong>Type: </strong> {{ctrl.models.selected.type}}
 					<br><input type="text"
-						data-ng-model="models.selected.id"
+						data-ng-model="ctrl.models.selected.id"
 						class="form-control"
 						style="margin-top: 5px" />
 				</div>
@@ -46,15 +46,15 @@
 				<div class="row designs box box-yellow">
 					<!-- The designs also uses the list template -->
 					<h3>Designs</h3>
-					<ul dnd-list="models.designs"
+					<ul dnd-list="ctrl.models.designs"
 						dnd-allowed-types="['design']">
-						<li data-ng-repeat="design in models.designs"
+						<li data-ng-repeat="design in ctrl.models.designs"
 							dnd-type="'design'"
 							dnd-draggable="design"
 							dnd-effect-allowed="move"
-							dnd-moved="models.designs.splice($index, 1)"
-							dnd-selected="models.selected = design"
-							data-ng-class="{selected: models.selected === design}">
+							dnd-moved="ctrl.models.designs.splice($index, 1)"
+							dnd-selected="ctrl.models.selected = design"
+							data-ng-class="{selected: ctrl.models.selected === design}">
 							<div class="container-element box box-blue">
 			        			<h3>Design {{design.id}}</h3>
 			        			<div class="feature-panel">
@@ -65,8 +65,8 @@
 			            					dnd-draggable="feature"
 			            					dnd-effect-allowed="move"
 			            					dnd-moved="design.features.splice($index, 1)"
-			            					dnd-selected="models.selected = feature"
-			            					data-ng-class="{selected: models.selected === feature}"
+			            					dnd-selected="ctrl.models.selected = feature"
+			            					data-ng-class="{selected: ctrl.models.selected === feature}"
 			            					class="horizontal">
 											<div class="feature">{{feature.id}}</div>
 			        					</li>
@@ -78,7 +78,7 @@
 					</ul>
 				</div>
 		
-				<pre>{{modelAsJson}}</pre>
+				<pre>{{ctrl.modelAsJson}}</pre>
 			</div>
 		</div>
     </div>
