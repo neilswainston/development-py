@@ -71,17 +71,21 @@
  * The dnd-list should always have a min-height,
  * otherwise you can't drop to it once it's empty
  */
-.design .designs ul[dnd-list] {
+.designs ul[dnd-list] {
     margin: 0px;
     min-height: 100px;
     padding-left: 0px;
 }
 
-.design .designs li {
+.designs li {
     background-color: #fff;
     border: 1px solid #ddd;
     display: block;
     padding: 0px;
+}
+
+.designs .feature-panel li {
+    border: 0px;
 }
 
 /**
@@ -89,7 +93,7 @@
  * to see where he is dropping his element, even if the element is huge. The
  * .dndDragging class is automatically set during the drag operation.
  */
-.design .designs .dndDragging {
+.designs .dndDragging {
     opacity: 0.7;
 }
 
@@ -98,7 +102,7 @@
  * operation. It makes sense to hide it to give the user the feeling that he's
  * actually moving it. Note that the source element has also .dndDragging class.
  */
-.design .designs .dndDraggingSource {
+.designs .dndDraggingSource {
     display: none;
 }
 
@@ -106,7 +110,7 @@
  * An element with .dndPlaceholder class will be added as child of the dnd-list
  * while the user is dragging over it.
  */
-.design .designs .dndPlaceholder {
+.designs .dndPlaceholder {
     background-color: #ddd;
     display: block;
     min-height: 100px;
@@ -114,16 +118,16 @@
 
 /***************************** Element Selection *****************************/
 
-.design .designs .selected .feature {
+.designs .selected .feature {
     color: #3c763d;
     background-color: #dff0d8;
 }
 
-.design .designs .selected .box {
+.designs .selected .box {
     border-color: #d6e9c6;
 }
 
-.design .designs .selected .box > h3 {
+.designs .selected .box > h3 {
     background-color: #dff0d8;
     background-image: linear-gradient(to bottom,#dff0d8 0,#d0e9c6 100%);
     border-color: #d6e9c6;
@@ -132,15 +136,15 @@
 
 /***************************** Element type specific styles *****************************/
 
-.design .designs {
+.designs {
     padding: 10px 15px;
 }
 
-.design .designs .container-element {
+.designs .container-element {
     margin: 10px;
 }
 
-.design .designs .container-element .column {
+.designs .container-element .feature-panel {
     float: left;
     width: 100%;
 }
@@ -158,22 +162,22 @@
 
 /***************************** Toolbox *****************************/
 
-.design .toolbox ul {
+.toolbox ul {
     cursor: move;
     list-style: none;
     padding-left: 0px;
 }
 
-.design .toolbox button {
+.toolbox button {
     margin: 5px;
     opacity: 1.0;
     width: 123px;
 }
 
-.design .toolbox .dndDragging {
+.toolbox .dndDragging {
     opacity: 0.5;
 }
 
-.design .toolbox .dndDraggingSource {
+.toolbox .dndDraggingSource {
     opacity: 1.0;
 }
