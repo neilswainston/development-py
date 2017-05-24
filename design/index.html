@@ -20,14 +20,15 @@
 			<!-- Sidebar -->
 			<div class="col-md-2">
 				<div class="toolbox box box-grey box-padding">
-					<h3>New elements</h3>
+					<h3>Palette</h3>
 					<ul>
-						<li data-ng-repeat="item in ctrl.models.templates"
-							dnd-type="item.type"
-							dnd-draggable="item"
+						<li data-ng-repeat="feature in ctrl.models.templates"
+							dnd-type="'feature'"
+							dnd-draggable="feature"
 							dnd-effect-allowed="copy"
-							dnd-copied="item.id = item.id + 1">
-							<button type="button" class="btn btn-default btn-lg">{{item.type}}</button>
+							dnd-copied="feature.id = feature.id + 1">
+							<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
+							</div>
 						</li>
 					</ul>
 				</div>
@@ -51,7 +52,7 @@
 						<li data-ng-repeat="design in ctrl.models.designs"
 							dnd-type="'design'"
 							dnd-draggable="design"
-							dnd-effect-allowed="move"
+							dnd-effect-allowed="copy"
 							dnd-moved="ctrl.models.designs.splice($index, 1)"
 							dnd-selected="ctrl.models.selected = design"
 							data-ng-class="{selected: ctrl.models.selected === design}">
@@ -68,7 +69,7 @@
 			            					dnd-selected="ctrl.models.selected = feature"
 			            					data-ng-class="{selected: ctrl.models.selected === feature}"
 			            					class="horizontal">
-											<div class="feature">{{feature.id}}</div>
+											<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
 			        					</li>
 			    					</ul>
 								</div>
