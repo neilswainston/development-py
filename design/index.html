@@ -19,17 +19,17 @@
 		<div class="panel-heading">Designs</div>
 		<div class="panel-body">
 			<div class="palette">
-				<ul>
-					<li data-ng-repeat="feature in ctrl.models.templates"
+				<div class="btn-toolbar">
+					<button type="button"
+						data-ng-repeat="feature in ctrl.models.templates"
 						dnd-type="'feature'"
 						dnd-draggable="feature"
 						dnd-effect-allowed="copy"
 						dnd-copied="feature.id = feature.id + 1"
-						class="horizontal">
-						<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
-						</div>
-					</li>
-				</ul>
+						class="btn btn-default">
+						<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}"/>						
+					</button>
+				</div>
 			</div>
 			<div class="designs">
 				<ul dnd-list="ctrl.models.designs"
