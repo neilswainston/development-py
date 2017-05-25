@@ -6,6 +6,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.min.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
     <script src="angular-drag-and-drop-lists.js"></script>
 	<script src="design.module.js"></script>
     <script src="design.ctrl.js"></script>
@@ -18,18 +19,18 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Designs</div>
 		<div class="panel-body">
-			<div class="palette">
-				<div class="btn-toolbar">
-					<button type="button"
-						data-ng-repeat="feature in ctrl.models.templates"
-						dnd-type="'feature'"
-						dnd-draggable="feature"
-						dnd-effect-allowed="copy"
-						dnd-copied="feature.id = feature.id + 1"
-						class="btn btn-default">
-						<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}"/>						
-					</button>
-				</div>
+			<div class="btn-toolbar palette">
+				<button data-ng-repeat="feature in ctrl.models.templates"
+					type="button"
+					class="btn btn-default"
+					dnd-type="'feature'"
+					dnd-draggable="feature"
+					dnd-effect-allowed="copy"
+					dnd-copied="feature.id = feature.id + 1"
+					uib-tooltip="{{feature.name}}">
+					<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
+					</div>						
+				</button>
 			</div>
 			<div class="designs panel-group">
 				<ul dnd-list="ctrl.models.designs"
@@ -41,18 +42,20 @@
 						dnd-moved="ctrl.models.designs.splice($index, 1)"
 						data-ng-class="{selected: ctrl.models.selected === design}">
 						<div class="design panel panel-default">
-		        			<div class="panel-heading">Design {{design.id}}</div>
+		        			<div class="panel-heading">{{design.name}}</div>
 		        			<div class="panel-body">
 								<ul dnd-list="design.features"
 									dnd-allowed-types="['feature']">
 		        					<li data-ng-repeat="feature in design.features"
+		        						data-ng-class="{selected: ctrl.models.selected === feature}"
 										dnd-type="'feature'"
 		            					dnd-draggable="feature"
 		            					dnd-effect-allowed="move"
 		            					dnd-moved="design.features.splice($index, 1)"
 		            					dnd-selected="ctrl.models.selected = feature"
-		            					data-ng-class="{selected: ctrl.models.selected === feature}">
+		            					uib-tooltip="{{feature.name}}">
 										<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
+										</div>
 		        					</li>
 		    					</ul>
 		        			</div>
