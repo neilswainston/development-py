@@ -18,34 +18,29 @@
 				</div>
 			</button>
 		</div>
-		<div class="designs panel-group">
-			<ul dnd-list="models.designs" dnd-allowed-types="['design']">
-				<li data-ng-repeat="design in models.designs"
-					dnd-type="'design'"
-					dnd-draggable="design"
-					dnd-effect-allowed="move"
-					dnd-moved="models.designs.splice($index, 1)"
-					data-ng-class="{selected: models.selected === design}">
-					<div class="design panel panel-default">
-						<div class="panel-heading">{{design.name}}</div>
-						<div class="panel-body">
-							<ul dnd-list="design.features" dnd-allowed-types="['feature']">
-								<li data-ng-repeat="feature in design.features"
-									data-ng-class="{selected: models.selected === feature}"
-									dnd-type="'feature'"
-									dnd-draggable="feature"
-									dnd-effect-allowed="move"
-									dnd-moved="design.features.splice($index, 1)"
-									dnd-selected="models.selected = feature"
-									uib-tooltip="{{feature.name}}">
-									<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
-									</div>
-								</li>
-							</ul>
+		<div class="panel-group designs" dnd-list="models.designs" dnd-allowed-types="['design']">
+			<div data-ng-repeat="design in models.designs"
+				class="panel panel-default"
+				data-ng-class="{selected: models.selected === design}"
+				dnd-type="'design'"
+				dnd-draggable="design"
+				dnd-effect-allowed="move"
+				dnd-moved="models.designs.splice($index, 1)">
+				<div class="panel-heading">{{design.name}}</div>
+				<div class="panel-body">
+					<div class="design" dnd-list="design.features" dnd-allowed-types="['feature']">
+						<div data-ng-repeat="feature in design.features"
+							class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}"
+							data-ng-class="{selected: models.selected === feature}"
+							dnd-type="'feature'"
+							dnd-draggable="feature"
+							dnd-effect-allowed="move"
+							dnd-moved="design.features.splice($index, 1)"
+							dnd-selected="models.selected = feature">
 						</div>
 					</div>
-				</li>
-			</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
