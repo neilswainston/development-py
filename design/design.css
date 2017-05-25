@@ -1,99 +1,3 @@
-.box {
-    margin-bottom: 20px;
-    background-color: #fff;
-    border: 1px solid transparent;
-    border-color: #bce8f1;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,.05);
-}
-
-.box > h3 {
-    color: #31708f;
-    border-color: #bce8f1;
-    border-bottom: 1px solid transparent;
-    border-top-right-radius: 3px;
-    border-top-left-radius: 3px;
-    background-repeat: repeat-x;
-    display: block;
-    font-size: 16px;
-    padding: 10px 15px;
-    margin-top: 0;
-    margin-bottom: 0;
-    background-color: #d9edf7;
-    background-image: -webkit-linear-gradient(top,#d9edf7 0,#c4e3f3 100%);
-    background-image: linear-gradient(to bottom,#d9edf7 0,#c4e3f3 100%);
-}
-
-
-/***************************** Dropzone Styling *****************************/
-
-/**
- * The dnd-list should always have a min-height,
- * otherwise you can't drop to it once it's empty
- */
-.designs ul[dnd-list] {
-    margin: 0px;
-    min-height: 100px;
-    padding-left: 0px;
-}
-
-.designs li {
-    display: block;
-}
-
-.designs .feature-panel li {
-    border: 0px;
-}
-
-/**
- * Reduce opacity of elements during the drag operation. This allows the user
- * to see where he is dropping his element, even if the element is huge. The
- * .dndDragging class is automatically set during the drag operation.
- */
-.designs .dndDragging {
-    opacity: 0.7;
-}
-
-/**
- * The dndDraggingSource class will be applied to the source element of a drag
- * operation. It makes sense to hide it to give the user the feeling that he's
- * actually moving it. Note that the source element has also .dndDragging class.
- */
-.designs .dndDraggingSource {
-    display: none;
-}
-
-/**
- * An element with .dndPlaceholder class will be added as child of the dnd-list
- * while the user is dragging over it.
- */
-.designs .dndPlaceholder {
-    background-color: #ddd;
-    display: block;
-    width: 50px;
-    height: 100px;
-    float: left;
-}
-
-/***************************** Element Selection *****************************/
-
-.designs .selected .feature {
-    color: #3c763d;
-    background-color: #dff0d8;
-}
-
-.designs .selected .box {
-    border-color: #d6e9c6;
-}
-
-.designs .selected .box > h3 {
-    background-color: #dff0d8;
-    background-image: linear-gradient(to bottom,#dff0d8 0,#d0e9c6 100%);
-    border-color: #d6e9c6;
-    color: #3c763d;
-}
-
 /***************************** Palette *****************************/
 
 .palette {
@@ -124,39 +28,74 @@
  	background-image: url("../sbolv/user-defined.svg");
 }
 
-.feature.SO0000139
-{
+.selected .feature {
+    background-color: #B4D5FE;
+}
+
+.feature.SO0000139 {
 	background-image: url("../sbolv/ribosome-entry-site.svg");
 }
 
-.feature.SO0000141
-{
+.feature.SO0000141 {
 	background-image: url("../sbolv/terminator.svg");
 }
 
-.feature.SO0000167
-{
+.feature.SO0000167 {
 	background-image: url("../sbolv/promoter.svg");
 }
 
-.feature.SO0000316
-{
+.feature.SO0000316 {
 	background-image: url("../sbolv/cds.svg");
-}
-
-.horizontal {
-    float: left;
 }
 
 /***************************** Designs *****************************/
 
-.designs {
-	float: left;
-	clear: both;
-	width: 100%;
+/**
+ * The dnd-list should always have a min-height,
+ * otherwise you can't drop to it once it's empty
+ */
+.designs ul[dnd-list] {
+    margin: 0px;
+    min-height: 100px;
+    padding-left: 0px;
 }
 
-.designs .feature-panel {
+.designs li {
+    display: block;
     float: left;
     width: 100%;
+}
+
+.designs .design li {
+    width: auto;
+}
+
+/**
+ * Reduce opacity of elements during the drag operation. This allows the user
+ * to see where he is dropping his element, even if the element is huge. The
+ * .dndDragging class is automatically set during the drag operation.
+ */
+.designs .dndDragging {
+    opacity: 0.7;
+}
+
+/**
+ * The dndDraggingSource class will be applied to the source element of a drag
+ * operation. It makes sense to hide it to give the user the feeling that he's
+ * actually moving it. Note that the source element has also .dndDragging class.
+ */
+.designs .dndDraggingSource {
+    display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be added as child of the dnd-list
+ * while the user is dragging over it.
+ */
+.designs .design .dndPlaceholder {
+    background-color: #ddd;
+    display: block;
+    width: 50px;
+    height: 100px;
+    float: left;
 }
