@@ -15,67 +15,55 @@
     <link rel="stylesheet" href="design.css" />
 </head>
 <body data-ng-app="design" data-ng-controller="designCtrl as ctrl">
-    <div class="container">
-        <div class="row">
-			<!-- Sidebar -->
-			<div class="col-md-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">Palette</div>
-					<div class="panel-body palette">
-						<ul>
-							<li data-ng-repeat="feature in ctrl.models.templates"
-								dnd-type="'feature'"
-								dnd-draggable="feature"
-								dnd-effect-allowed="copy"
-								dnd-copied="feature.id = feature.id + 1"
-								class="horizontal">
-								<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">Designs</div>
+		<div class="panel-body">
+			<div class="palette">
+				<ul>
+					<li data-ng-repeat="feature in ctrl.models.templates"
+						dnd-type="'feature'"
+						dnd-draggable="feature"
+						dnd-effect-allowed="copy"
+						dnd-copied="feature.id = feature.id + 1"
+						class="horizontal">
+						<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
+						</div>
+					</li>
+				</ul>
 			</div>
-		
-			<!-- Main area with designs -->
-			<div class="col-md-10">
-				<div class="panel panel-default">
-					<div class="panel-heading">Designs</div>
-					<div class="panel-body designs">
-						<ul dnd-list="ctrl.models.designs"
-							dnd-allowed-types="['design']">
-							<li data-ng-repeat="design in ctrl.models.designs"
-								dnd-type="'design'"
-								dnd-draggable="design"
-								dnd-effect-allowed="move"
-								dnd-moved="ctrl.models.designs.splice($index, 1)"
-								dnd-selected="ctrl.models.selected = design"
-								data-ng-class="{selected: ctrl.models.selected === design}">
-								<div class="container-element box box-blue">
-				        			<h3>Design {{design.id}}</h3>
-				        			<div class="feature-panel">
-										<ul dnd-list="design.features"
-											dnd-allowed-types="['feature']">
-				        					<li data-ng-repeat="feature in design.features"
-												dnd-type="'feature'"
-				            					dnd-draggable="feature"
-				            					dnd-effect-allowed="move"
-				            					dnd-moved="design.features.splice($index, 1)"
-				            					dnd-selected="ctrl.models.selected = feature"
-				            					data-ng-class="{selected: ctrl.models.selected === feature}"
-				            					class="horizontal">
-												<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
-				        					</li>
-				    					</ul>
-									</div>
-				        			<div class="clearfix"></div>
-				    			</div>
-							</li>
-						</ul>
-					</div>
-				</div>
+			<div class="designs">
+				<ul dnd-list="ctrl.models.designs"
+					dnd-allowed-types="['design']">
+					<li data-ng-repeat="design in ctrl.models.designs"
+						dnd-type="'design'"
+						dnd-draggable="design"
+						dnd-effect-allowed="move"
+						dnd-moved="ctrl.models.designs.splice($index, 1)"
+						dnd-selected="ctrl.models.selected = design"
+						data-ng-class="{selected: ctrl.models.selected === design}">
+						<div class="box">
+		        			<h3>Design {{design.id}}</h3>
+		        			<div class="feature-panel">
+								<ul dnd-list="design.features"
+									dnd-allowed-types="['feature']">
+		        					<li data-ng-repeat="feature in design.features"
+										dnd-type="'feature'"
+		            					dnd-draggable="feature"
+		            					dnd-effect-allowed="move"
+		            					dnd-moved="design.features.splice($index, 1)"
+		            					dnd-selected="ctrl.models.selected = feature"
+		            					data-ng-class="{selected: ctrl.models.selected === feature}"
+		            					class="horizontal">
+										<div class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}">
+		        					</li>
+		    					</ul>
+							</div>
+		        			<div class="clearfix"></div>
+		    			</div>
+					</li>
+				</ul>
 			</div>
 		</div>
-    </div>
+	</div>
     <pre>{{ctrl.modelAsJson}}</pre>
 </body>

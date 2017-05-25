@@ -39,10 +39,7 @@
 }
 
 .designs li {
-    background-color: #fff;
-    border: 1px solid #ddd;
     display: block;
-    padding: 0px;
 }
 
 .designs .feature-panel li {
@@ -97,19 +94,6 @@
 
 /***************************** Element type specific styles *****************************/
 
-.designs {
-    padding: 10px 15px;
-}
-
-.designs .container-element {
-    margin: 10px;
-}
-
-.designs .container-element .feature-panel {
-    float: left;
-    width: 100%;
-}
-
 .feature {
 	display: inline-block;
 	width: 50px;
@@ -143,10 +127,22 @@
 
 /***************************** Palette *****************************/
 
+.palette {
+	float: left;
+	clear: both;
+	width: 100%;
+}
+
 .palette ul {
     cursor: move;
     list-style: none;
     padding-left: 0px;
+}
+
+.palette li {
+	background-color: #e6e6e6;
+	border: 1px solid transparent;
+    border-color: #fff;
 }
 
 .palette .dndDragging {
@@ -155,4 +151,17 @@
 
 .palette .dndDraggingSource {
     opacity: 1.0;
+}
+
+/***************************** Designs *****************************/
+
+.designs {
+	float: left;
+	clear: both;
+	width: 100%;
+}
+
+.designs .feature-panel {
+    float: left;
+    width: 100%;
 }
