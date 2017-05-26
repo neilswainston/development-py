@@ -9,6 +9,7 @@
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-2.5.0.js"></script>
     <script src="angular-drag-and-drop-lists.js"></script>
 	<script src="design.module.js"></script>
+	<script src="design.service.js"></script>
     <script src="design.ctrl.js"></script>
     <script src="design.directive.js"></script>
     
@@ -17,13 +18,16 @@
 	<div class="container">
 		<div class="col-md-6">
 			<design-panel
+				templates="ctrl.templates"
+				query="ctrl.query()"
+				selected="ctrl.selected()"
+				set-selected="ctrl.setSelected(args)"
 				add-design="ctrl.addDesign()"
-				remove-design="ctrl.removeDesign(args)"
-				models="ctrl.models">
+				remove-design="ctrl.removeDesign(args)">
 			</design-panel>
     	</div>
     	<div class="col-md-12">
-    		<pre>{{ctrl.modelAsJson}}</pre>
+    		<pre>{{ctrl.queryJson}}</pre>
     	</div>
     </div>
 </body>

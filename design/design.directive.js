@@ -1,9 +1,12 @@
 designApp.directive("designPanel", function() {
     return {
     	scope: {
-    		"addDesign": "&",
-    		"removeDesign": "&",
-    		"models": "="
+    		templates: "=",
+    		query: "&",
+    		selected: "&",
+    		setSelected: "&",
+    		addDesign: "&",
+    		removeDesign: "&",
     	},
         templateUrl: "design.html"
     };
