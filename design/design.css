@@ -60,7 +60,6 @@
 .features .dndPlaceholder {
 	width: 50px;
 	height: 100px;
- 	float: left;
 }
 
 .feature .dndDraggingSource {
