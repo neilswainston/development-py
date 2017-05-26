@@ -80,16 +80,18 @@ designApp.controller("designCtrl", function($scope) {
 					}
 				}
 				],
-				designs: [
-					{
+				designs: []
+	};
+	
+	self.addDesign = function() {
+		self.models.designs.push({
 						type: "design",
 						id: 1,
 						name: "Design",
 						desc: "Design",
 						features: []
-					}
-					]
-	};
+					})
+	}
 
 	self.modelAsJson = angular.toJson(self.models, true)
 

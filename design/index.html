@@ -14,7 +14,7 @@
     
 </head>
 <body data-ng-app="design" data-ng-controller="designCtrl as ctrl">
-	<design-panel models="ctrl.models">
+	<design-panel add-design="ctrl.addDesign()" models="ctrl.models">
 	</design-panel>
     <pre>{{ctrl.modelAsJson}}</pre>
 </body>

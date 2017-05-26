@@ -21,17 +21,16 @@
 		<div class="panel-group designs" dnd-list="models.designs" dnd-allowed-types="['design']">
 			<div data-ng-repeat="design in models.designs"
 				class="panel panel-default"
-				data-ng-class="{selected: models.selected === design}"
 				dnd-type="'design'"
 				dnd-draggable="design"
 				dnd-effect-allowed="move"
 				dnd-moved="models.designs.splice($index, 1)">
 				<div class="panel-heading">{{design.name}}</div>
 				<div class="panel-body">
-					<div class="design" dnd-list="design.features" dnd-allowed-types="['feature']">
+					<div class="features" dnd-list="design.features" dnd-allowed-types="['feature']">
 						<div data-ng-repeat="feature in design.features"
-							class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}"
 							data-ng-class="{selected: models.selected === feature}"
+							class="feature SO{{feature.typ.replace('http://purl.obolibrary.org/obo/SO_', '')}}"
 							dnd-type="'feature'"
 							dnd-draggable="feature"
 							dnd-effect-allowed="move"
@@ -41,6 +40,8 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="glyphicon glyphicon-plus pull-right add-design" data-ng-click="addDesign()">
 		</div>
 	</div>
 </div>
