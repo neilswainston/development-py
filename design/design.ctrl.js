@@ -90,7 +90,12 @@ designApp.controller("designCtrl", function($scope) {
 						name: "Design",
 						desc: "Design",
 						features: []
-					})
+					});
+	}
+	
+	
+	self.removeDesign = function(index) {
+		self.models.designs.splice(index, 1);
 	}
 
 	self.modelAsJson = angular.toJson(self.models, true)

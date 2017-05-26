@@ -28,10 +28,6 @@
  	background-image: url("../sbolv/user-defined.svg");
 }
 
-.selected .feature {
-    background-color: #B4D5FE;
-}
-
 .feature.SO0000139 {
 	background-image: url("../sbolv/ribosome-entry-site.svg");
 }
@@ -54,6 +50,8 @@
 	margin-bottom: 10px;
 }
 
+/***************************** Features *****************************/
+
 /**
  * The dnd-list should always have a min-height,
  * otherwise you can't drop to it once it's empty
@@ -67,7 +65,7 @@
  * to see where he is dropping his element, even if the element is huge. The
  * .dndDragging class is automatically set during the drag operation.
  */
-.designs .dndDragging {
+.features .dndDragging {
     opacity: 0.7;
 }
 
@@ -76,7 +74,7 @@
  * operation. It makes sense to hide it to give the user the feeling that he's
  * actually moving it. Note that the source element has also .dndDragging class.
  */
-.designs .dndDraggingSource {
+.features .dndDraggingSource {
     display: none;
 }
 
@@ -84,7 +82,7 @@
  * An element with .dndPlaceholder class will be added as child of the dnd-list
  * while the user is dragging over it.
  */
-.designs .features .dndPlaceholder {
+.features .dndPlaceholder {
 	display: inline-block;
 	width: 50px;
 	height: 100px;
@@ -94,10 +92,14 @@
 
 /***************************** General *****************************/
 
-.add-design {
+.selected {
+    background-color: #B4D5FE;
+}
+
+.glyphicon-grey {
     opacity: 0.33;
 }
 
-.add-design:hover {
+.glyphicon-grey:hover {
     opacity: 0.66;
 }
