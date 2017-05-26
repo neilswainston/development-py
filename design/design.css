@@ -42,12 +42,15 @@
 	margin-bottom: 10px;
 }
 
+.designs .dndDraggingSource {
+    display: none;
+}
+
 .designs .dndPlaceholder {
 	display: inline-block;
 	width: 100%;
 	height: 50px;
  	background-color: #ddd;
-    float: left;
 }
 
 /***************************** Features *****************************/
