@@ -55,6 +55,9 @@
 
 .features {
     height: 100px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 
 .features .dndPlaceholder {
