@@ -13,6 +13,10 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 		{
 			typ: "http://purl.obolibrary.org/obo/SO_0000143",
 			name: "assembly component",
+			seq: "",
+			parameters: {
+				"Tm target": 70
+			},
 			temp_params: {
 				fixed: true
 			}
@@ -106,7 +110,7 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 	
 	self.removeDesign = function(index) {
 		self.query().designs.splice(index, 1);
-		self.setSelected(null);
+		self.toggleSelected(null);
 	};
 
 	self.queryJson = angular.toJson({selected: self.selected(), query: self.query()}, true);
