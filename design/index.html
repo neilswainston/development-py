@@ -12,7 +12,7 @@
 	<script src="design.service.js"></script>
     <script src="design.ctrl.js"></script>
     <script src="design.directive.js"></script>
-    
+    <script src="feature.directive.js"></script>
 </head>
 <body data-ng-app="design" data-ng-controller="designCtrl as ctrl" style="margin-top: 15px">
 	<div class="container">
@@ -25,6 +25,11 @@
 				add-design="ctrl.addDesign()"
 				remove-design="ctrl.removeDesign(args)">
 			</design-panel>
+    	</div>
+   		<div class="col-md-6">
+			<feature-panel
+				selected="ctrl.selected()">
+			</feature-panel>
     	</div>
     	<div class="col-md-12">
     		<pre>{{ctrl.queryJson}}</pre>

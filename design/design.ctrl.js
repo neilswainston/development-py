@@ -19,7 +19,6 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 		{
 			type: "feature",
 			typ: "http://purl.obolibrary.org/obo/SO_0000167",
-			id: 1,
 			name: "promoter",
 			temp_params: {
 				fixed: true
@@ -28,7 +27,6 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 		{
 			type: "feature",
 			typ: "http://purl.obolibrary.org/obo/SO_0000139",
-			id: 2,
 			name:"ribosome entry site",
 			end: 60,
 			parameters: {
@@ -41,7 +39,6 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 		{
 			type: "feature",
 			typ: "http://purl.obolibrary.org/obo/SO_0000316",
-			id: 3,
 			name: "coding sequence",
 			options: [
 				{
@@ -56,7 +53,6 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 		{
 			type: "feature",
 			typ: "http://purl.obolibrary.org/obo/SO_0000141",
-			id: 4,
 			name: "terminator",
 			temp_params: {
 				fixed: true
@@ -94,7 +90,6 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 	self.addDesign = function() {
 		self.query().designs.push({
 			type: "design",
-			id: 1,
 			name: "Design",
 			desc: "Design",
 			features: []
@@ -120,4 +115,7 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 	function(values) {
 		self.queryJson = angular.toJson({selected: self.selected(), query: self.query()}, true)
 	}, true);
+	
+	// Initialise UI:
+	self.addDesign();
 }]);
