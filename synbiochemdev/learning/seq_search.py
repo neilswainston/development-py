@@ -19,6 +19,7 @@ from synbiochem.utils import seq_utils
 import matplotlib.pyplot
 import numpy
 
+import sbclearn
 import sbclearn.theanets.theanets_utils as theanets_utils
 
 
@@ -79,7 +80,7 @@ def _mutate(seq, max_mut_prob=0.1):
 
 def _get_random_seqs(length, num_seqs):
     '''Gets random sequences.'''
-    seq = seq_utils.get_random_aa(length)
+    seq = _get_random_aa(length)
     seqs = set([seq])
 
     while len(seqs) < num_seqs:
@@ -87,6 +88,13 @@ def _get_random_seqs(length, num_seqs):
         seqs.add(mut)
 
     return seq, seqs
+
+
+def _get_random_aa(length, insertions=False):
+    '''Returns a random amino acid sequence of the supplied length.'''
+    dictionary = list(seq_utils.AA_CODES.values()) + \
+        (['.'] if insertions else [])
+    return ''.join(random.choice(dictionary) for _ in range(length))
 
 
 def _calc_dissimilarities(ref_seq, seqs, matrix=None):
@@ -132,8 +140,8 @@ def _plot_seq_acts(seq_acts):
 def _learn(sequences, activities):
     '''Attempt to learn sequence / activity relationship.'''
     # Convert sequences to inputs, based on amino acid properties:
-    x_data = seq_utils.get_aa_props(sequences)
-    x_data, y_data = theanets_utils.randomise_order(x_data, activities)
+    x_data = sbclearn.get_aa_props(sequences)
+    x_data, y_data = sbclearn.randomise_order((x_data, activities))
 
     # Split data into training and classifying:
     ind = int(0.8 * len(x_data))

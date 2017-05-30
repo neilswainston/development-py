@@ -5,12 +5,13 @@ Created on 8 Aug 2016
 '''
 import string
 
+from Bio.Seq import Seq
 from synbiochem.utils import seq_utils
 
 
 def _unacceptable(seq, rand_rnge, max_melt_temp=20):
     '''Checks whether seq is acceptable.'''
-    id_seqs = {'For': seq, 'Rev': seq_utils.get_rev_comp(seq)}
+    id_seqs = {'For': seq, 'Rev': str(Seq(seq).reverse_complement())}
     results = seq_utils.do_blast(id_seqs, id_seqs, evalue=10, word_size=4)
 
     for result in results:
@@ -23,7 +24,7 @@ def _unacceptable(seq, rand_rnge, max_melt_temp=20):
                         len(set(rand_rnge).intersection(qu_rnge)) > 0 and \
                         len(set(rand_rnge).intersection(sb_rnge)) > 0:
                     melt_temp = _get_melting_temp(
-                        hsp.query, seq_utils.get_comp(hsp.sbjct))
+                        hsp.query, str(Seq(hsp.sbjct).complement()))
 
                     if melt_temp > max_melt_temp:
                         print hsp
@@ -40,12 +41,12 @@ def _get_melting_temp(query, subject):
 
     for nucs in zip(query, subject):
         if nucs[0] == '-':
-            dna1 = dna1 + seq_utils.get_comp(nucs[1])
+            dna1 = dna1 + str(Seq(nucs[1]).complement())
         else:
             dna1 = dna1 + nucs[0]
 
         if nucs[1] == '-':
-            dna2 = dna2 + seq_utils.get_comp(nucs[0])
+            dna2 = dna2 + str(Seq(nucs[0]).complement())
         else:
             dna2 = dna2 + nucs[1]
 

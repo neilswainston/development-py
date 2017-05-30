@@ -15,7 +15,7 @@ import sbclearn
 def _learn(sequences, activities):
     '''Attempt to learn sequence / activity relationship.'''
     # Convert sequences to inputs, based on amino acid properties:
-    x_data = seq_utils.get_aa_props(sequences)
+    x_data = sbclearn.get_aa_props(sequences)
     x_data, y_data = sbclearn.randomise_order((x_data, activities))
 
     # Split data into training and classifying:
