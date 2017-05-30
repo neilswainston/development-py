@@ -5,6 +5,7 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 		{
 			typ: "http://purl.obolibrary.org/obo/SO_0001416",
 			name: "5' flanking region",
+			seq: "",
 			temp_params: {
 				fixed: true
 			}
@@ -20,6 +21,7 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 			type: "feature",
 			typ: "http://purl.obolibrary.org/obo/SO_0000167",
 			name: "promoter",
+			seq: "",
 			temp_params: {
 				fixed: true
 			}
@@ -33,7 +35,9 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 				"TIR target": 15000
 			},
 			temp_params: {
-				fixed: false
+				fixed: false,
+				min_end: 35,
+				max_end: 10000,
 			}
 		},
 		{
@@ -48,12 +52,13 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 						fixed: false
 					}
 				}
-				]
+			]
 		},
 		{
 			type: "feature",
 			typ: "http://purl.obolibrary.org/obo/SO_0000141",
 			name: "terminator",
+			seq: "",
 			temp_params: {
 				fixed: true
 			}
@@ -63,12 +68,15 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 			end: 100,
 			name: "random region",
 			temp_params: {
-				fixed: false
+				fixed: false,
+				min_end: 1,
+				max_end: 10000
 			}
 		},
 		{
 			typ: "http://purl.obolibrary.org/obo/SO_0001417",
 			name: "3' flanking region",
+			seq: "",
 			temp_params: {
 				fixed: true
 			}
@@ -98,6 +106,7 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 	
 	self.removeDesign = function(index) {
 		self.query().designs.splice(index, 1);
+		self.setSelected(null);
 	};
 
 	self.queryJson = angular.toJson({selected: self.selected(), query: self.query()}, true);
