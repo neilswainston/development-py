@@ -91,8 +91,8 @@ designApp.controller("designCtrl", ["$scope", "DesignService", function($scope, 
 		return DesignService.selected;
 	};
 	
-	self.setSelected = function(selected) {
-		return DesignService.setSelected(selected);
+	self.toggleSelected = function(selected) {
+		return DesignService.toggleSelected(selected);
 	};
 	
 	self.addDesign = function() {

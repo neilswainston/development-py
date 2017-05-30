@@ -11,8 +11,13 @@ designApp.factory("DesignService", [function() {
 	
 	obj.selected = null;
 	
-	obj.setSelected = function(selected) {
-		obj.selected = selected;
+	obj.toggleSelected = function(selected) {
+		if(obj.selected === selected) {
+			obj.selected = null;
+		}
+		else {
+			obj.selected = selected;
+		}
 	}
 
 	return obj;

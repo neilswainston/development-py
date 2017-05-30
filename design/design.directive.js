@@ -4,7 +4,7 @@ designApp.directive("designPanel", function() {
     		templates: "=",
     		query: "&",
     		selected: "&",
-    		setSelected: "&",
+    		toggleSelected: "&",
     		addDesign: "&",
     		removeDesign: "&",
     	},
