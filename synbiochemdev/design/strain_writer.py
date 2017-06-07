@@ -3,6 +3,7 @@ Created on 29 Nov 2016
 
 @author: neilswainston
 '''
+# pylint: disable=too-many-locals
 import io
 import sys
 
@@ -55,6 +56,7 @@ def set_groups(filename, ice_url, ice_username, ice_password, group_name):
 def main(args):
     '''main method.'''
     set_groups(*args)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
