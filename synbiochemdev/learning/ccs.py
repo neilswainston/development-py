@@ -11,9 +11,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 # pylint: disable=no-member
 import sys
 
-from synbiochem.utils import chem_utils
-
 from sbclearn.theanets.theanets_utils import Regressor
+from synbiochemdev.learning import chem
 import pandas as pd
 import sbclearn
 
@@ -23,7 +22,7 @@ def main(args):
     data = pd.read_csv(args[0])
     split = float(args[1])
 
-    X = [chem_utils.get_fingerprint(smiles, radius=8).tolist()
+    X = [chem.get_fingerprint(smiles, radius=8).tolist()
          for smiles in data.SMILES.tolist()]
     y = [[val] for val in data.iloc[:, 6].values]
 
@@ -51,6 +50,7 @@ def main(args):
 
         for val, pred in zip(y[int(len(X) * split):], y_preds):
             print '\t'.join([str(val[0]), str(pred)])
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

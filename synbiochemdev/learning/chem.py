@@ -7,8 +7,20 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
+# pylint: disable=no-member
+from rdkit import Chem, DataStructs
+from rdkit.Chem import AllChem
 from sklearn.ensemble import RandomForestClassifier
-from synbiochem.utils.chem_utils import get_fingerprint
+import numpy
+
+
+def get_fingerprint(smiles, radius=2):
+    '''Gets a fingerprint from a SMILES.'''
+    mol = Chem.MolFromSmiles(smiles)
+    bit_vect = Chem.AllChem.GetMorganFingerprintAsBitVect(mol, radius)
+    fingerprint = numpy.zeros((1,))
+    DataStructs.ConvertToNumpyArray(bit_vect, fingerprint)
+    return fingerprint
 
 
 def train_rand_for(training_data, values, n_estimators=100, random_state=1123):
@@ -38,6 +50,7 @@ def main():
 
     print rand_for.predict((fingerprint,))
     print rand_for.predict_proba((fingerprint,))
+
 
 if __name__ == '__main__':
     main()
