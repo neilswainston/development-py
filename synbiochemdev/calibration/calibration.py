@@ -12,11 +12,11 @@ import numpy as np
 import pandas as pd
 
 
-def analyse(df):
+def fit_curves(df):
     '''Perform analysis.'''
     curves = []
 
-    for coeff in np.arange(0, 2, 0.5):
+    for coeff in np.arange(0, 3, 0.5):
         curve = np.poly1d(np.polyfit(df['CONC'], df['PEAK AREA'], 1,
                                      w=(1 / df['CONC'] ** coeff)))
         ae = np.abs((df['PEAK AREA'] - curve(df['CONC'])) / df['PEAK AREA'])
@@ -25,22 +25,34 @@ def analyse(df):
     return curves
 
 
-def plot(idx, max_idx, df, curves):
+def map_peak_areas(curves, peak_areas):
+    '''Map hypothetical peak area data.'''
+    concs = {}
+
+    for peak_area in peak_areas:
+
+        concs[peak_area] = [(curve[1] - peak_area).roots[0]
+                            for curve in curves]
+
+    return concs
+
+
+def plot(idx, max_idx, df, curves, concs):
     '''Plot data.'''
     x_plot_range = sorted(set(df['CONC'].tolist()))[1] * 1.2
 
     plt.subplot(max_idx, 2, idx * 2 + 1)
-    _subplot(df, curves)
+    _subplot(df, curves, concs)
 
     plt.subplot(max_idx, 2, idx * 2 + 2)
-    _subplot(df, curves)
+    _subplot(df, curves, concs)
 
     axes = plt.gca()
     axes.set_xlim([-x_plot_range, x_plot_range])
     axes.set_ylim([-0.025, 0.25])
 
 
-def _subplot(df, curves):
+def _subplot(df, curves, concs):
     '''Make subplot.'''
     x_plot_range = sorted(set(df['CONC'].tolist()))[1] * 1.2
     x_range = range(-int(math.ceil(x_plot_range)), int(max(df['CONC'])))
@@ -48,13 +60,17 @@ def _subplot(df, curves):
     plt.xlabel(df.columns[0])
     plt.ylabel(df.columns[1])
 
-    plt.scatter(df['CONC'], df['PEAK AREA'])
+    plt.scatter(df['CONC'], df['PEAK AREA'], marker='x', color='k')
+
+    # plt.errorbar([np.mean(val) for val in concs.values()],
+    #              concs.keys(),
+    #              xerr=[np.std(val) for val in concs.values()])
 
     handles = []
 
     for curve in curves:
-        label = '(1/x^%d): mae=%.3f' % (curve[0], curve[2])
-        ret = plt.plot(x_range, curve[1](x_range), label=label)
+        label = '(1/x^%.1f): mae=%.3f' % (curve[0], curve[2])
+        ret = plt.plot(x_range, curve[1](x_range), label=label, linestyle=':')
         handles.append(ret[0])
 
     plt.legend(handles=handles)
@@ -72,8 +88,9 @@ def main(args):
 
     for idx, filename in enumerate(args):
         df = pd.read_table(filename)
-        curves = analyse(df)
-        plot(idx, len(args), df, curves)
+        curves = fit_curves(df)
+        concs = map_peak_areas(curves, [0.1, 25])
+        plot(idx, len(args), df, curves, concs)
 
     plt.show()
 
