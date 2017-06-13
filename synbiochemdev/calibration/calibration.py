@@ -14,8 +14,8 @@ import pandas as pd
 def main(args):
     '''main method.'''
     df = pd.read_table(args[0])
-    df['WEIGHT'] = 1 / df['CONC']**2
-    x_range = range(-1, int(max(df['CONC'])))
+    df['WEIGHT'] = 1 / df['CONC'] ** 2
+    x_range = range(-10, int(max(df['CONC'])))
 
     unweighted_fit = np.poly1d(np.polyfit(df['CONC'], df['PEAK AREA'], 1))
     weighted_fit = np.poly1d(np.polyfit(df['CONC'], df['PEAK AREA'], 1,
@@ -30,9 +30,8 @@ def main(args):
     plt.subplot(122)
     _subplot(df, x_range, unweighted_fit, weighted_fit)
     axes = plt.gca()
-    axes.set_xlim([0, 1])
-    axes.set_ylim([0, 1])
-
+    axes.set_xlim([-1, 1])
+    axes.set_ylim([-1, 1])
     plt.show()
 
 
@@ -43,12 +42,17 @@ def _subplot(df, x_range, unweighted_fit, weighted_fit):
 
     plt.scatter(df['CONC'], df['PEAK AREA'])
 
-    unweighted, = plt.plot(x_range, unweighted_fit(x_range), c='red',
-                           label='Unweighted')
-    weighted, = plt.plot(x_range, weighted_fit(x_range), c='green',
-                         label='Weighted')
+    unweighted, = plt.plot(x_range, unweighted_fit(x_range),
+                           c='red', label='Unweighted: ' + str(unweighted_fit))
+    weighted, = plt.plot(x_range, weighted_fit(x_range),
+                         c='green', label='Weighted: ' + str(weighted_fit))
 
     plt.legend(handles=[unweighted, weighted])
+
+    axes = plt.gca()
+    axes.grid(True, which='both')
+    axes.axhline(y=0, color='k')
+    axes.axvline(x=0, color='k')
 
 
 if __name__ == '__main__':
