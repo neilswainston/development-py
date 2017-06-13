@@ -4,41 +4,51 @@ Created on 13 Jun 2017
 @author: neilswainston
 '''
 # pylint: disable=invalid-name
+import math
 import sys
-
-from scipy import stats
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 
+def analyse(idx, max_idx, filename):
+    '''Perform analysis.'''
+    df = pd.read_table(filename)
+    x_plot_range = sorted(set(df['CONC'].tolist()))[1] * 1.2
+    x_range = range(-int(math.ceil(x_plot_range)), int(max(df['CONC'])))
+
+    weightings = [
+        ['Unweight', np.polyfit(df['CONC'], df['PEAK AREA'], 1)],
+        ['Weight (1/x^0.5)', np.polyfit(df['CONC'], df['PEAK AREA'], 1,
+                                        w=(1 / df['CONC'] ** 0.5))],
+        ['Weight (1/x)', np.polyfit(df['CONC'], df['PEAK AREA'], 1,
+                                    w=(1 / df['CONC']))],
+        ['Weight (1/x^2)', np.polyfit(df['CONC'], df['PEAK AREA'], 1,
+                                      w=(1 / df['CONC'] ** 2))]
+    ]
+
+    plt.subplot(max_idx, 2, idx * 2 + 1)
+    plt.title = filename
+    _subplot(df, x_range, weightings)
+
+    plt.subplot(max_idx, 2, idx * 2 + 2)
+    plt.title = filename
+    _subplot(df, x_range, weightings)
+
+    axes = plt.gca()
+    axes.set_xlim([-x_plot_range, x_plot_range])
+    axes.set_ylim([-0.025, 0.25])
+
+
 def main(args):
     '''main method.'''
-    df = pd.read_table(args[0])
-    x_range = range(-10, int(max(df['CONC'])))
-
-    weightings = {
-        'Unweighted': np.polyfit(df['CONC'], df['PEAK AREA'], 1),
-        'Weighted (1/x^0.5)': np.polyfit(df['CONC'], df['PEAK AREA'], 1,
-                                         w=(1 / df['CONC'] ** 0.5)),
-        'Weighted (1/x)': np.polyfit(df['CONC'], df['PEAK AREA'], 1,
-                                     w=(1 / df['CONC'])),
-        'Weighted (1/x^2)': np.polyfit(df['CONC'], df['PEAK AREA'], 1,
-                                       w=(1 / df['CONC'] ** 2)),
-    }
-
     plt.figure(1)
     plt.suptitle('Calibration curves')
 
-    plt.subplot(121)
-    _subplot(df, x_range, weightings)
+    for idx, filename in enumerate(args):
+        analyse(idx, len(args), filename)
 
-    plt.subplot(122)
-    _subplot(df, x_range, weightings)
-    axes = plt.gca()
-    axes.set_xlim([-1, 12])
-    axes.set_ylim([-0.025, 0.25])
     plt.show()
 
 
@@ -51,12 +61,11 @@ def _subplot(df, x_range, weightings):
 
     handles = []
 
-    for label, weight in weightings.iteritems():
-        weight = np.poly1d(weight)
-        _, _, r_value, _, _ = \
-            stats.linregress(df['PEAK AREA'], weight(df['CONC']))
-        # label += ': R2=%.3f' % r_value
-        ret = plt.plot(x_range, weight(x_range), label=label)
+    for weight in weightings:
+        wgt = np.poly1d(weight[1])
+        ae = np.abs((df['PEAK AREA'] - wgt(df['CONC'])) / df['PEAK AREA'])
+        label = weight[0] + ': mae=%.3f' % np.mean(ae)
+        ret = plt.plot(x_range, wgt(x_range), label=label)
 
         handles.append(ret[0])
 
