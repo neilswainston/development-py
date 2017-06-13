@@ -6,6 +6,8 @@ Created on 13 Jun 2017
 # pylint: disable=invalid-name
 import sys
 
+from scipy import stats
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -36,7 +38,7 @@ def main(args):
     _subplot(df, x_range, weightings)
     axes = plt.gca()
     axes.set_xlim([-1, 12])
-    axes.set_ylim([-0.25, 0.25])
+    axes.set_ylim([-0.025, 0.25])
     plt.show()
 
 
@@ -48,9 +50,13 @@ def _subplot(df, x_range, weightings):
     plt.scatter(df['CONC'], df['PEAK AREA'])
 
     handles = []
-    for title, weight in weightings.iteritems():
+
+    for label, weight in weightings.iteritems():
         weight = np.poly1d(weight)
-        ret = plt.plot(x_range, weight(x_range), label=title + str(weight))
+        _, _, r_value, _, _ = \
+            stats.linregress(df['PEAK AREA'], weight(df['CONC']))
+        # label += ': R2=%.3f' % r_value
+        ret = plt.plot(x_range, weight(x_range), label=label)
 
         handles.append(ret[0])
 
