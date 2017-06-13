@@ -18,15 +18,10 @@ def analyse(idx, max_idx, filename):
     x_plot_range = sorted(set(df['CONC'].tolist()))[1] * 1.2
     x_range = range(-int(math.ceil(x_plot_range)), int(max(df['CONC'])))
 
-    weightings = [
-        ['Unweight', np.polyfit(df['CONC'], df['PEAK AREA'], 1)],
-        ['Weight (1/x^0.5)', np.polyfit(df['CONC'], df['PEAK AREA'], 1,
-                                        w=(1 / df['CONC'] ** 0.5))],
-        ['Weight (1/x)', np.polyfit(df['CONC'], df['PEAK AREA'], 1,
-                                    w=(1 / df['CONC']))],
-        ['Weight (1/x^2)', np.polyfit(df['CONC'], df['PEAK AREA'], 1,
-                                      w=(1 / df['CONC'] ** 2))]
-    ]
+    weightings = [['(1/x^%d)' % coeff,
+                   np.polyfit(df['CONC'], df['PEAK AREA'], 1,
+                              w=(1 / df['CONC'] ** coeff))]
+                  for coeff in np.arange(0, 2, 0.5)]
 
     plt.subplot(max_idx, 2, idx * 2 + 1)
     plt.title = filename
@@ -61,13 +56,16 @@ def _subplot(df, x_range, weightings):
 
     handles = []
 
+    peak_area = 0
+
     for weight in weightings:
         wgt = np.poly1d(weight[1])
         ae = np.abs((df['PEAK AREA'] - wgt(df['CONC'])) / df['PEAK AREA'])
         label = weight[0] + ': mae=%.3f' % np.mean(ae)
         ret = plt.plot(x_range, wgt(x_range), label=label)
-
         handles.append(ret[0])
+
+        print (wgt - peak_area).roots
 
     plt.legend(handles=handles)
 
