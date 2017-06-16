@@ -16,7 +16,7 @@ def fit_curves(df):
     '''Perform analysis.'''
     curves = []
 
-    for coeff in np.arange(0, 3, 0.5):
+    for coeff in np.arange(0, 3, 1):
         curve = np.poly1d(np.polyfit(df['CONC'], df['PEAK AREA'], 1,
                                      w=(1 / df['CONC'] ** coeff)))
         ae = np.abs((df['PEAK AREA'] - curve(df['CONC'])) / df['PEAK AREA'])
@@ -34,6 +34,8 @@ def map_peak_areas(curves, peak_areas):
         concs[peak_area] = [(curve[1] - peak_area).roots[0]
                             for curve in curves]
 
+        print '%f\t%s' % (peak_area, str(concs[peak_area]))
+
     return concs
 
 
@@ -49,7 +51,7 @@ def plot(idx, max_idx, df, curves, concs):
 
     axes = plt.gca()
     axes.set_xlim([-x_plot_range, x_plot_range])
-    axes.set_ylim([-0.025, 0.25])
+    axes.set_ylim([-1000, 1000])
 
 
 def _subplot(df, curves, concs):
@@ -69,7 +71,8 @@ def _subplot(df, curves, concs):
     handles = []
 
     for curve in curves:
-        label = '(1/x^%.1f): mae=%.3f' % (curve[0], curve[2])
+        label = '(1/x^%.1f): mae=%.3f, curve: %s' % (
+            curve[0], curve[2], curve[1])
         ret = plt.plot(x_range, curve[1](x_range), label=label, linestyle=':')
         handles.append(ret[0])
 
@@ -89,7 +92,7 @@ def main(args):
     for idx, filename in enumerate(args):
         df = pd.read_table(filename)
         curves = fit_curves(df)
-        concs = map_peak_areas(curves, [0.1, 25])
+        concs = map_peak_areas(curves, df['PEAK AREA'])
         plot(idx, len(args), df, curves, concs)
 
     plt.show()
