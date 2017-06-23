@@ -46,11 +46,13 @@ def analyse(filename):
                         fields['uniprot'] + '")'
 
                 fields['ec_number'] = \
-                    header_dict['compound']['1'].get('ec_number', '')
-                fields['journal'] = header_dict['journal']
+                    header_dict['compound']['1'].get('ec_number', None)
 
-                dois = re.findall(r'10.\d{4,9}/[-._;()/:A-Z0-9]+',
-                                  fields['journal'])
+                fields['journal'] = header_dict.get('journal', None)
+
+                if fields['journal']:
+                    dois = re.findall(r'10.\d{4,9}/[-._;()/:A-Z0-9]+',
+                                      fields['journal'])
 
                 if dois:
                     fields['doi url'] = '=HYPERLINK("' + \
