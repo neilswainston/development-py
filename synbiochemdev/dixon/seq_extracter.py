@@ -14,7 +14,7 @@ import urllib
 from Bio import Seq, SeqIO
 from Bio.Alphabet import generic_dna
 from numpy import record
-from synbiochem.utils import sequence_utils
+from synbiochem.utils import seq_utils
 
 
 def get_seqs(uniprot_data, outdir, target_len=499):
@@ -22,8 +22,8 @@ def get_seqs(uniprot_data, outdir, target_len=499):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    embl_ids = sequence_utils.get_uniprot_values(uniprot_data.keys(),
-                                                 ['database(EMBL)'])
+    embl_ids = seq_utils.get_uniprot_values(uniprot_data.keys(),
+                                            ['database(EMBL)'])
 
     for uniprot_id, embl_id in embl_ids.iteritems():
         if 'Cross-reference (EMBL)' in embl_id:
