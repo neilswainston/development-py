@@ -51,5 +51,6 @@ def _add_comp_def(doc, uri, role=None, seq=None):
 
     return comp_def, sequence
 
+
 if __name__ == '__main__':
     crispr_test()

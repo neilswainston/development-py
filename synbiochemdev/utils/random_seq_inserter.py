@@ -94,5 +94,6 @@ def main():
             fle.write('>' + seq_id + '\n')
             fle.write(seq + '\n')
 
+
 if __name__ == '__main__':
     main()

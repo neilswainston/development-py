@@ -69,5 +69,6 @@ def main():
     _, y_data, y_pred = _learn(sequences, activities)
     _plot(y_data, y_pred)
 
+
 if __name__ == '__main__':
     main()

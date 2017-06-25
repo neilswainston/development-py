@@ -129,5 +129,6 @@ def main(args):
     get_fasta(
         args[0], args[1], variants, args[3] if len(args) > 3 else None)
 
+
 if __name__ == '__main__':
     main(sys.argv[1:])

@@ -78,5 +78,6 @@ def main():
     # Writes the results to a csv file:
     write_results_to_csv(results, 'results.csv')
 
+
 if __name__ == '__main__':
     main()

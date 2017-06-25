@@ -16,5 +16,6 @@ def main(args):
     fle = urllib.urlopen(args[0])
     print fle.read()
 
+
 if __name__ == '__main__':
     main(sys.argv[1:])

@@ -323,5 +323,6 @@ def main(args):
     print
     plot_proximities(args[0])
 
+
 if __name__ == '__main__':
     main(sys.argv[1:])

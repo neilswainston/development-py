@@ -69,5 +69,6 @@ def main(argv):
     return cent_limit_theorem(int(argv[0]), int(argv[1]), int(argv[2]),
                               int(argv[3]))
 
+
 if __name__ == '__main__':
     main(sys.argv[1:])

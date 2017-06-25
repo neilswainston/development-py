@@ -49,5 +49,6 @@ def main(argv):
     '''main method'''
     extract(*argv)
 
+
 if __name__ == '__main__':
     main(sys.argv[1:])

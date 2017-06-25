@@ -38,5 +38,6 @@ def main():
     do_plot([poor, good])
     do_plot([poor, good, great])
 
+
 if __name__ == '__main__':
     main()

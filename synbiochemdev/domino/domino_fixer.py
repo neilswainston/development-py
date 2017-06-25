@@ -4,6 +4,7 @@ Created on 30 Mar 2017
 @author: neilswainston
 '''
 import sys
+
 from synbiochem.utils import seq_utils
 
 
@@ -44,6 +45,7 @@ def main(args):
                     str(result.query_length) + '\t' + str(alignment.length)
                 # print hsp
                 # print
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

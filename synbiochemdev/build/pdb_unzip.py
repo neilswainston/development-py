@@ -49,5 +49,6 @@ def main():
 
     unzip_dir(input_directory, 'pdb.*\\.ent.gz', destination)
 
+
 if __name__ == '__main__':
     main()

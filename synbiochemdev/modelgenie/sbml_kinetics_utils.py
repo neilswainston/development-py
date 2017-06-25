@@ -10,9 +10,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 from StringIO import StringIO
 import json
 
-import libsbml
-
 from synbiochemdev.modelgenie import sbml_utils
+import libsbml
 
 
 class KineticsAdder(object):

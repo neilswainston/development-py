@@ -9,7 +9,9 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 import math
 import uuid
+
 import libsbml
+
 
 KCAT = 'kcat'
 KCAT_FOR = 'kcat_for'
