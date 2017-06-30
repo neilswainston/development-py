@@ -182,6 +182,10 @@ def plot_proximities(pdb_id, groupings=None, group_len=0):
 
     for idx, proximities in enumerate(all_proximities):
         name = pdb_id + '_' + str(idx + 1)
+
+        for row in proximities[1]:
+            print ','.join([str(val) for val in row])
+
         _plot(proximities[0], proximities[1], name + '.' + plot_format,
               plot_format, name + ' proximity plot')
 
@@ -320,7 +324,6 @@ def _get_group_prox(groupings, prox_list):
 
 def main(args):
     '''main method'''
-    print
     plot_proximities(args[0])
 
 
