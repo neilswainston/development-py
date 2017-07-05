@@ -9,7 +9,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 import sys
 
-from synbiochem.utils.seq_utils import CodonOptimiser, get_minimum_free_energy
+from synbiochem.utils.seq_utils import get_all_rev_trans, \
+    get_minimum_free_energy
 
 
 def main(argv):
@@ -19,10 +20,9 @@ def main(argv):
     variant_seq = argv[3]
     downstream_seq = argv[4]
 
-    cod_opt = CodonOptimiser('9606')
     sequences = []
 
-    for rev_trans in cod_opt.get_all_rev_trans(variant_seq):
+    for rev_trans in get_all_rev_trans(variant_seq):
         sequences.extend([upstream_seq + rev_trans + downstream_seq,
                           upstream_trunc_seq + rev_trans + downstream_seq])
 
