@@ -9,8 +9,7 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 '''
 import sys
 
-from synbiochem.utils.seq_utils import get_all_rev_trans, \
-    get_minimum_free_energy
+from synbiochem.utils import seq_utils
 
 
 def main(argv):
@@ -22,11 +21,14 @@ def main(argv):
 
     sequences = []
 
-    for rev_trans in get_all_rev_trans(variant_seq):
+    print variant_seq
+    print seq_utils.get_all_rev_trans(variant_seq)
+
+    for rev_trans in seq_utils.get_all_rev_trans(variant_seq):
         sequences.extend([upstream_seq + rev_trans + downstream_seq,
                           upstream_trunc_seq + rev_trans + downstream_seq])
 
-    mfes = get_minimum_free_energy(sequences)
+    mfes = seq_utils.get_minimum_free_energy(sequences)
 
     outfile = open(argv[5], 'w')
 
