@@ -14,15 +14,12 @@ from synbiochem.utils import seq_utils
 
 def main(argv):
     '''main method'''
-    upstream_seq = argv[1]
-    upstream_trunc_seq = upstream_seq[-int(argv[2]):]
-    variant_seq = argv[3]
-    downstream_seq = argv[4]
+    upstream_seq = argv[1].strip()
+    upstream_trunc_seq = upstream_seq[-int(argv[2].strip()):]
+    variant_seq = argv[3].strip()
+    downstream_seq = argv[4].strip()
 
     sequences = []
-
-    print variant_seq
-    print seq_utils.get_all_rev_trans(variant_seq)
 
     for rev_trans in seq_utils.get_all_rev_trans(variant_seq):
         sequences.extend([upstream_seq + rev_trans + downstream_seq,
@@ -30,7 +27,7 @@ def main(argv):
 
     mfes = seq_utils.get_minimum_free_energy(sequences)
 
-    outfile = open(argv[5], 'w')
+    outfile = open(argv[5].strip(), 'w')
 
     for i in xrange(0, len(sequences), 2):
         outfile.write('\t'.join([sequences[i], sequences[i + 1],
