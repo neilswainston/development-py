@@ -21,8 +21,8 @@ def _unacceptable(seq, rand_rnge, max_melt_temp=20):
                 sb_rnge = range(hsp.sbjct_start, hsp.sbjct_end)
 
                 if hsp.align_length != len(seq) and \
-                        len(set(rand_rnge).intersection(qu_rnge)) > 0 and \
-                        len(set(rand_rnge).intersection(sb_rnge)) > 0:
+                        set(rand_rnge).intersection(qu_rnge) and \
+                        set(rand_rnge).intersection(sb_rnge):
                     melt_temp = _get_melting_temp(
                         hsp.query, str(Seq(hsp.sbjct).complement()))
 
@@ -65,8 +65,8 @@ def main():
 
     with open('promoters.txt') as fle:
         for line in fle.read().split('\r'):
-            if len(line) > 0 and line[0] == '>':
-                if len(seq) > 0:
+            if line and line[0] == '>':
+                if seq:
                     seqs[seq_id] = seq
                 seq_id = line[1:].strip()
                 seq = ''

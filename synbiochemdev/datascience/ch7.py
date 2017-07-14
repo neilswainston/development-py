@@ -70,9 +70,9 @@ def two_sided_p_value(x, mu, sigma):
     if x >= mu:
         # Tail is greater than x:
         return 2 * normal_prob_above(x, mu, sigma)
-    else:
-        # Tail is less than x:
-        return 2 * normal_prob_below(x, mu, sigma)
+
+    # Tail is less than x:
+    return 2 * normal_prob_below(x, mu, sigma)
 
 
 def main():

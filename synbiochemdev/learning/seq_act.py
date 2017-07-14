@@ -4,30 +4,27 @@ Created on 5 Aug 2016
 @author: neilswainston
 '''
 # pylint: disable=no-member
+from sklearn import model_selection
 from synbiochem.utils import seq_utils
 import matplotlib.pyplot
 import numpy
 
 from sbclearn import theanets
-import sbclearn
 
 
 def _learn(sequences, activities):
     '''Attempt to learn sequence / activity relationship.'''
     # Convert sequences to inputs, based on amino acid properties:
-    x_data = sbclearn.get_aa_props(sequences)
-    x_data, y_data = sbclearn.randomise_order((x_data, activities))
+    x_train, x_valid, y_train, y_valid = \
+        model_selection.train_test_split(sequences, activities,
+                                         test_size=0.8)
 
-    # Split data into training and classifying:
-    ind = int(0.8 * len(x_data))
-
-    y_train = [[y] for y in y_data[:ind]]
-    regressor = theanets.theanets_utils.Regressor(x_data[:ind], y_train)
+    regressor = theanets.theanets_utils.Regressor(x_train, y_train)
 
     regressor.train(hidden_layers=[1024, 1024])
-    y_pred = regressor.predict(x_data[ind:])
+    y_pred = regressor.predict(x_valid)
 
-    return regressor, y_data[ind:], y_pred
+    return regressor, y_valid, y_pred
 
 
 def _plot(y_data, y_pred):

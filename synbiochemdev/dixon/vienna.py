@@ -11,7 +11,8 @@ def write_csv_to_fasta(csv_filename, fasta_filename):
     '''Writes a csv file of name, sequence to a fasta file.'''
 
     # Open csv file in read mode, fasta file in write mode:
-    with open(csv_filename, 'r') as csv_file, open(fasta_filename, 'w') as fasta_file:
+    with open(csv_filename, 'r') as csv_file, \
+            open(fasta_filename, 'w') as fasta_file:
         # Read csv file line by line...
         for line in csv_file:
             # Split line into "tokens", separated by commas:
@@ -30,7 +31,8 @@ def run_rnafold(fasta_filename):
     # Generate raw results file:
     raw_filename = 'raw.txt'
 
-    with open(fasta_filename) as fasta_file, open(raw_filename, 'w') as raw_file:
+    with open(fasta_filename) as fasta_file, \
+            open(raw_filename, 'w') as raw_file:
 
         # This calls RNAfold (kinda like from the command line):
         process = subprocess.Popen(['RNAfold', '--noPS'],
@@ -51,7 +53,7 @@ def run_rnafold(fasta_filename):
                 # Look to see if the line contains a number:
                 numbers = re.findall(r'[+-]?\d+.\d+', line)
 
-                if len(numbers):
+                if numbers:
                     # Store name and number in results:
                     results[name] = float(numbers[0])
 

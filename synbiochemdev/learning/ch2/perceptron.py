@@ -19,10 +19,6 @@ import numpy as np
 class Perceptron(Classifier):
     '''Perceptron classifier.'''
 
-    def __init__(self, learn_rate=0.01, iters=10):
-        '''Constructor.'''
-        super(Perceptron, self).__init__(learn_rate, iters)
-
     def fit(self, X, y):
         '''Fit training data.'''
         self._model['w'] = np.zeros(1 + X.shape[1])

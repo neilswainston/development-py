@@ -39,22 +39,22 @@ def map_peak_areas(curves, peak_areas):
     return concs
 
 
-def plot(idx, max_idx, df, curves, concs):
+def plot(idx, max_idx, df, curves):
     '''Plot data.'''
     x_plot_range = sorted(set(df['CONC'].tolist()))[1] * 1.2
 
     plt.subplot(max_idx, 2, idx * 2 + 1)
-    _subplot(df, curves, concs)
+    _subplot(df, curves)
 
     plt.subplot(max_idx, 2, idx * 2 + 2)
-    _subplot(df, curves, concs)
+    _subplot(df, curves)
 
     axes = plt.gca()
     axes.set_xlim([-x_plot_range, x_plot_range])
     axes.set_ylim([-1000, 1000])
 
 
-def _subplot(df, curves, concs):
+def _subplot(df, curves):
     '''Make subplot.'''
     x_plot_range = sorted(set(df['CONC'].tolist()))[1] * 1.2
     x_range = range(-int(math.ceil(x_plot_range)), int(max(df['CONC'])))
@@ -63,10 +63,6 @@ def _subplot(df, curves, concs):
     plt.ylabel(df.columns[1])
 
     plt.scatter(df['CONC'], df['PEAK AREA'], marker='x', color='k')
-
-    # plt.errorbar([np.mean(val) for val in concs.values()],
-    #              concs.keys(),
-    #              xerr=[np.std(val) for val in concs.values()])
 
     handles = []
 
@@ -92,8 +88,7 @@ def main(args):
     for idx, filename in enumerate(args):
         df = pd.read_table(filename)
         curves = fit_curves(df)
-        concs = map_peak_areas(curves, df['PEAK AREA'])
-        plot(idx, len(args), df, curves, concs)
+        plot(idx, len(args), df, curves)
 
     plt.show()
 

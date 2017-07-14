@@ -75,7 +75,7 @@ def _get_uniprot_id(pdb_id):
 
     resp = requests.get(url)
 
-    if resp.status_code is not 200:
+    if resp.status_code != 200:
         resp.raise_for_status()
 
     for row in csv.reader(resp.text.splitlines()[1:],

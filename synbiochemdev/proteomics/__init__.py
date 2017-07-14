@@ -101,7 +101,7 @@ def draw_spectra(id_peps, types=('b', 'y'), max_charge=1):
             plt.bar([frag[0] for frag in frags],
                     [frag[2] for frag in frags],
                     width=0.1,
-                    edgecolor=['r' if frag[1] is 'y' else 'b'
+                    edgecolor=['r' if frag[1] == 'y' else 'b'
                                for frag in frags])
             plt.savefig(title + '.png')
 

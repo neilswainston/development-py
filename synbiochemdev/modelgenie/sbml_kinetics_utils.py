@@ -10,8 +10,9 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 from StringIO import StringIO
 import json
 
-from synbiochemdev.modelgenie import sbml_utils
 import libsbml
+
+from synbiochemdev.modelgenie import sbml_utils
 
 
 class KineticsAdder(object):
@@ -53,7 +54,7 @@ class KineticsAdder(object):
                    if modifier.getSboTerm() ==
                    sbml_utils.SBO_TERMS[sbml_utils.ENZYME]]
 
-        if len(enzymes) == 0:
+        if not enzymes:
             compartment = self.__model.getListOfCompartments()[0]
             enzyme = self.__add_enzyme(reaction, compartment.getId())
         else:

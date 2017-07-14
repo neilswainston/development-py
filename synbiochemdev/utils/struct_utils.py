@@ -49,7 +49,7 @@ def get_pdb_ids(max_ids=None, local_only=False):
         with open(io_utils.get_file(source_url, target_filename)) as fle:
             ids = [x for line in fle
                    for x in line.split()[1].split(';')
-                   if len(x) > 0 and x != 'Cross-reference']
+                   if x and x != 'Cross-reference']
 
     return ids if max_ids is None \
         else random.sample(ids, min(len(ids), max_ids))
