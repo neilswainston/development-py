@@ -21,9 +21,12 @@ import matplotlib.pyplot as plt
 
 def get_data():
     '''Gets data.'''
-    centers = [[random.random() * 2 - 1, random.random() * 2 - 1]
-               for _ in range(3)]
+    centers = [[random.random() * 2 - 1,
+                random.random() * 2 - 1,
+                random.random() * 2 - 1]
+               for _ in range(random.randint(2, 5))]
 
+    print len(centers)
     return make_blobs(n_samples=len(centers) * 100, centers=centers,
                       cluster_std=0.1, random_state=0)
 
