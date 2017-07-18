@@ -15,7 +15,7 @@ from sklearn.cluster import AffinityPropagation
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, \
     completeness_score, homogeneity_score, silhouette_score, v_measure_score
-
+from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
 
@@ -56,24 +56,32 @@ def cluster(x_data, labels_true):
 def plot(x_data, n_clusters, labels, cluster_centers_indices):
     '''Plot.'''
     plt.close('all')
-    plt.figure(1)
+    fig = plt.figure(1)
     plt.clf()
+    axes = fig.gca(projection='3d')
 
     colors = cycle('bgrcmyk')
 
     for k, col in zip(range(n_clusters), colors):
         class_members = labels == k
         cluster_center = x_data[cluster_centers_indices[k]]
-        plt.plot(x_data[class_members, 0], x_data[class_members, 1], col + '.')
+        axes.plot(x_data[class_members, 0],
+                  x_data[class_members, 1],
+                  x_data[class_members, 2],
+                  col + '.')
 
         for x_val in x_data[class_members]:
             plt.plot([cluster_center[0], x_val[0]],
                      [cluster_center[1], x_val[1]],
+                     [cluster_center[2], x_val[2]],
                      col)
 
-        plt.plot(cluster_center[0], cluster_center[1], 'o',
-                 markerfacecolor=col,
-                 markeredgecolor='k', markersize=10)
+        axes.plot([cluster_center[0]],
+                  [cluster_center[1]],
+                  [cluster_center[2]],
+                  'o',
+                  markerfacecolor=col,
+                  markeredgecolor='k', markersize=10)
 
     plt.title('Estimated number of clusters: %d' % n_clusters)
     plt.show()
