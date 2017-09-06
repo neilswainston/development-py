@@ -55,7 +55,7 @@ def set_groups(filename, ice_url, ice_username, ice_password, group_name):
 
 def main(args):
     '''main method.'''
-    set_groups(*args)
+    write_strain(*args)
 
 
 if __name__ == '__main__':
