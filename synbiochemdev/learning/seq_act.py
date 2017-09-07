@@ -19,7 +19,7 @@ def _learn(sequences, activities):
         model_selection.train_test_split(sequences, activities,
                                          test_size=0.8)
 
-    regressor = theanets.theanets_utils.Regressor(x_train, y_train)
+    regressor = theanets.utils.Regressor(x_train, y_train)
 
     regressor.train(hidden_layers=[1024, 1024])
     y_pred = regressor.predict(x_valid)

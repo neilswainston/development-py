@@ -20,7 +20,7 @@ from synbiochem.utils import seq_utils
 import matplotlib.pyplot
 import numpy
 
-import sbclearn.theanets.theanets_utils as theanets_utils
+import sbclearn.theanets.utils as theanets_utils
 
 
 class SequenceSearcher(object):
