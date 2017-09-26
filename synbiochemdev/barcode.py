@@ -13,37 +13,35 @@ import sys
 from synbiochem.utils import seq_utils
 
 
-def get_seqs(num_barcodes, length, max_repeat_nuc):
+def get_seqs(num_barcodes, length, max_repeat_nuc, evalue=1):
     '''Get barcodes.'''
-    seqs = [seq_utils.get_random_dna(length, max_repeat_nuc)
-            for _ in range(num_barcodes)]
+    barcodes = {}
 
-    for query_idx, seq in enumerate(seqs[:-1]):
-        id_seqs_queries = {query_idx: seq}
-        id_seqs_subjects = {'seq_' + str(idx + query_idx + 1): seq
-                            for idx, seq in enumerate(seqs[query_idx + 1:])}
+    while len(barcodes) < num_barcodes:
+        barcode = seq_utils.get_random_dna(length, max_repeat_nuc)
 
-        do_blast(id_seqs_subjects, id_seqs_queries)
+        if barcodes and not do_blast(barcodes, {'query': barcode}, evalue):
+            continue
 
-    return seqs
+        barcodes[len(barcodes)] = barcode
+        print str(len(barcodes)) + '\t' + barcode
+
+    return barcodes.values()
 
 
-def do_blast(subjects, queries, exp_threshold=1):
+def do_blast(subjects, queries, evalue):
     '''Runs BLAST, filtering results.'''
-    for result in seq_utils.do_blast(subjects, queries, word_size=4):
-        for alignment in result.alignments:
-            for hsp in alignment.hsps:
-                if hsp.expect < exp_threshold:
-                    print result.query + '\t' + alignment.hit_def + '\n' + str(hsp)
-                    print
-                    return False
+    for result in seq_utils.do_blast(subjects, queries, evalue=evalue,
+                                     word_size=4):
+        if result.alignments:
+            return False
 
     return True
 
 
 def main(args):
     '''main method.'''
-    get_seqs(int(args[0]), int(args[1]), int(args[2]))
+    get_seqs(int(args[0]), int(args[1]), int(args[2]), float(args[3]))
 
 
 if __name__ == '__main__':
