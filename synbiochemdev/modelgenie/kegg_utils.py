@@ -10,8 +10,9 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import urllib2
 import xml.sax
 
-from synbiochemdev.modelgenie import chem_utils, sbml_utils
 import libsbml
+
+from synbiochemdev.modelgenie import chem_utils, sbml_utils
 
 
 class KgmlHandler(xml.sax.ContentHandler):

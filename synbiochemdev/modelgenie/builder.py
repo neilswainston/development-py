@@ -10,9 +10,10 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import urllib2
 import xml.sax
 
+import libsbml
+
 from synbiochemdev.modelgenie import kegg_utils, sbml_utils, \
     sbml_kinetics_utils
-import libsbml
 
 
 def build(pathway_ec_numbers, species_to_ignore=None):
