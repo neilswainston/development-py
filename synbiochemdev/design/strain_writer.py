@@ -26,9 +26,17 @@ def write_strain(filename, ice_url, ice_username, ice_password,
             name = host_metadata['name'] + \
                 ' (' + plasmid_metadata['name'] + ')'
 
+            # Max name length!
+            name = name[:127]
+
             strain = ice_utils.ICEEntry(typ='STRAIN')
             strain.set_values({'name': name, 'shortDescription': name})
-            strain.set_parameter('Taxonomy', host.get_parameter('Taxonomy'))
+
+            taxonomy = host.get_parameter('Taxonomy')
+
+            if taxonomy:
+                strain.set_parameter('Taxonomy', taxonomy)
+
             ice_client.set_ice_entry(strain)
 
             ice_client.add_link(strain.get_ice_id(), host.get_ice_id())
