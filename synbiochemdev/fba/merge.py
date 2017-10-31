@@ -58,13 +58,14 @@ def _merge(doc, sub_doc, comp='c'):
 
 def _copy_species(model, sub_species, comp):
     '''Copy species.'''
-    species = model.createSpecies()
-    species.setId(sub_species.getId())
-    species.setName(sub_species.getName())
-    species.setCompartment(comp)
-    species.setConstant(False)
-    species.setBoundaryCondition(False)
-    species.setInitialConcentration(0)
+    if not model.getSpecies(sub_species.getId()):
+        species = model.createSpecies()
+        species.setId(sub_species.getId())
+        species.setName(sub_species.getName())
+        species.setCompartment(comp)
+        species.setConstant(False)
+        species.setBoundaryCondition(False)
+        species.setInitialConcentration(0)
 
 
 def _copy_reaction(model, sub_reaction):

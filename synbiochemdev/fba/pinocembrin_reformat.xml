@@ -25,10 +25,10 @@
       <compartment id="c" size="1"/>
     </listOfCompartments>
     <listOfSpecies>
-      <species metaid="_meta_CHEBI_16526" sboTerm="SBO:0000247" id="_CHEBI_16526" name="Carbon dioxide" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_co2_c" sboTerm="SBO:0000247" id="M_co2_c" name="Carbon dioxide" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_16526">
+            <rdf:Description rdf:about="#_metaM_co2_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/pubmed/23828359"/>
@@ -46,10 +46,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_57384" sboTerm="SBO:0000247" id="_CHEBI_57384" name="malonyl-CoA(5-)" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_malcoa_c" sboTerm="SBO:0000247" id="M_malcoa_c" name="malonyl-CoA(5-)" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_57384">
+            <rdf:Description rdf:about="#_metaM_malcoa_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/inchi/InChI=1S/C24H38N7O19P3S/c1-24(2,19(37)22(38)27-4-3-13(32)26-5-6-54-15(35)7-14(33)34)9-47-53(44,45)50-52(42,43)46-8-12-18(49-51(39,40)41)17(36)23(48-12)31-11-30-16-20(25)28-10-29-21(16)31/h10-12,17-19,23,36-37H,3-9H2,1-2H3,(H,26,32)(H,27,38)(H,33,34)(H,42,43)(H,44,45)(H2,25,28,29)(H2,39,40,41)/p-5/t12-,17-,18-,19+,23-/m1/s1"/>
@@ -60,10 +60,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_30616" sboTerm="SBO:0000247" id="_CHEBI_30616" name="ATP(4-)" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_atp_c" sboTerm="SBO:0000247" id="M_atp_c" name="ATP(4-)" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_30616">
+            <rdf:Description rdf:about="#_metaM_atp_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/inchi/InChI=1S/C10H16N5O13P3/c11-8-5-9(13-2-12-8)15(3-14-5)10-7(17)6(16)4(26-10)1-25-30(21,22)28-31(23,24)27-29(18,19)20/h2-4,6-7,10,16-17H,1H2,(H,21,22)(H,23,24)(H2,11,12,13)(H2,18,19,20)/p-4/t4-,6-,7-,10-/m1/s1"/>
@@ -74,10 +74,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_24636" sboTerm="SBO:0000247" id="_CHEBI_24636" name="proton" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_h_c" sboTerm="SBO:0000247" id="M_h_c" name="proton" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_24636">
+            <rdf:Description rdf:about="#_metaM_h_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/cas/12408-02-5"/>
@@ -111,10 +111,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_15377" sboTerm="SBO:0000247" id="_CHEBI_15377" name="water" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_h2o_c" sboTerm="SBO:0000247" id="M_h2o_c" name="water" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_15377">
+            <rdf:Description rdf:about="#_metaM_h2o_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/wikipedia.en/Water"/>
@@ -150,10 +150,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_456215" sboTerm="SBO:0000247" id="_CHEBI_456215" name="AMP(2-)" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_amp_c" sboTerm="SBO:0000247" id="M_amp_c" name="AMP(2-)" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_456215">
+            <rdf:Description rdf:about="#_metaM_amp_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/hmdb/HMDB00045"/>
@@ -165,10 +165,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_58095" sboTerm="SBO:0000247" id="_CHEBI_58095" name="L-phenylalanine zwitterion" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_phe__L_c" sboTerm="SBO:0000247" id="M_phe__L_c" name="L-phenylalanine zwitterion" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_58095">
+            <rdf:Description rdf:about="#_metaM_phe__L_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/pubmed/21956539"/>
@@ -180,10 +180,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_35697" sboTerm="SBO:0000247" id="_CHEBI_35697" name="trans-Cinnamic acid" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_cinnm_c" sboTerm="SBO:0000247" id="M_cinnm_c" name="trans-Cinnamic acid" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_35697">
+            <rdf:Description rdf:about="#_metaM_cinnm_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/kegg.compound/C00423"/>
@@ -202,10 +202,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_57287" sboTerm="SBO:0000247" id="_CHEBI_57287" name="coenzyme A(4-)" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_coa_c" sboTerm="SBO:0000247" id="M_coa_c" name="coenzyme A(4-)" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_57287">
+            <rdf:Description rdf:about="#_metaM_coa_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/cas/85-61-0"/>
@@ -217,10 +217,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_33019" sboTerm="SBO:0000247" id="_CHEBI_33019" name="diphosphate(3-)" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_ppi_c" sboTerm="SBO:0000247" id="M_ppi_c" name="diphosphate(3-)" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_33019">
+            <rdf:Description rdf:about="#_metaM_ppi_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/inchi/InChI=1S/H4O7P2/c1-8(2,3)7-9(4,5)6/h(H2,1,2,3)(H2,4,5,6)/p-3"/>
@@ -245,10 +245,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_28938" sboTerm="SBO:0000247" id="_CHEBI_28938" name="ammonium" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_nh4_c" sboTerm="SBO:0000247" id="M_nh4_c" name="ammonium" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_28938">
+            <rdf:Description rdf:about="#_metaM_nh4_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/cas/14798-03-9"/>
@@ -333,12 +333,12 @@
           </rdf:RDF>
         </annotation>
         <listOfReactants>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_24636" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_58095" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_h_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_phe__L_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_28938" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_35697" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_nh4_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_cinnm_c" stoichiometry="1"/>
         </listOfProducts>
         <listOfModifiers>
           <modifierSpeciesReference sboTerm="SBO:0000460" species="_P35510"/>
@@ -358,14 +358,14 @@
           </rdf:RDF>
         </annotation>
         <listOfReactants>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_15377" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_24636" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_57384" stoichiometry="3"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_h2o_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_h_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_malcoa_c" stoichiometry="3"/>
           <speciesReference sboTerm="SBO:0000011" species="_CHEBI_57252" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_16526" stoichiometry="3"/>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_57287" stoichiometry="4"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_co2_c" stoichiometry="3"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_coa_c" stoichiometry="4"/>
           <speciesReference sboTerm="SBO:0000010" species="_CHEBI_80484" stoichiometry="1"/>          
         </listOfProducts>
         <listOfModifiers>
@@ -386,11 +386,11 @@
           </rdf:RDF>
         </annotation>
         <listOfReactants>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_24636" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_h_c" stoichiometry="1"/>
           <speciesReference sboTerm="SBO:0000011" species="_CHEBI_80484" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_24636" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_h_c" stoichiometry="1"/>
           <speciesReference sboTerm="SBO:0000010" species="_CHEBI_28157" stoichiometry="1"/>
         </listOfProducts>
         <listOfModifiers>
@@ -411,14 +411,14 @@
           </rdf:RDF>
         </annotation>
         <listOfReactants>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_57287" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_30616" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_35697" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_coa_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_atp_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_cinnm_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_33019" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_24636" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_456215" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_ppi_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_h_c" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_amp_c" stoichiometry="1"/>
           <speciesReference sboTerm="SBO:0000010" species="_CHEBI_57252" stoichiometry="1"/>
         </listOfProducts>
         <listOfModifiers>
