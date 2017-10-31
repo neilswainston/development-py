@@ -128,7 +128,7 @@ def _get_upper_bound(reaction):
 
 def main(args):
     '''main method.'''
-    print merge(args)
+    print merge(args[1:], args[0])
 
 
 if __name__ == '__main__':
