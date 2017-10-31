@@ -425,7 +425,7 @@
           <modifierSpeciesReference sboTerm="SBO:0000460" species="_Q9K3W1"/>
         </listOfModifiers>
       </reaction>
-      <reaction sboTerm="SBO:0000176" id="M_EX_pinocembrin" reversible="false">
+      <reaction sboTerm="SBO:0000176" id="R_EX_pinocembrin" reversible="false">
         <listOfReactants>
           <speciesReference sboTerm="SBO:0000011" species="M_pinocembrin_c" stoichiometry="1"/>
         </listOfReactants>
