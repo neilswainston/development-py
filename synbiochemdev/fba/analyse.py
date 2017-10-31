@@ -11,6 +11,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import sys
 
 import cobra
+# from cobra.flux_analysis.double_deletion import double_gene_deletion
+from cobra.flux_analysis.single_deletion import single_gene_deletion
 from cobra.util.solver import linear_reaction_coefficients
 
 
@@ -54,6 +56,12 @@ class Analyser(object):
         fluxes['reaction'] = fluxes['index'].apply(self.__get_react_str)
 
         fluxes.sort_values(by='fluxes').to_csv('fluxes.csv', index=False)
+
+        single_del = single_gene_deletion(self.__model)
+        single_del.to_csv('single.csv')
+
+        # double_del = double_gene_deletion(self.__model, return_frame=True)
+        # double_del.to_csv('double.csv')
 
     def __get_react_str(self, react_id):
         '''Get reaction string from reaction id.'''
