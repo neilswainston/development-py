@@ -51,8 +51,7 @@ class Analyser(object):
                                  solution.objective_value / 100].to_frame()
 
         fluxes = fluxes.reset_index()
-        fluxes['reaction'] = fluxes['index'].apply(lambda x:
-                                                   self.__get_react_str(x))
+        fluxes['reaction'] = fluxes['index'].apply(self.__get_react_str)
 
         fluxes.sort_values(by='fluxes').to_csv('fluxes.csv', index=False)
 
