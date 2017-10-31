@@ -60,6 +60,8 @@ def _copy_species(model, sub_species):
 
 def _copy_reaction(model, sub_reaction):
     '''Copy reaction.'''
+    model_plugin = model.getPlugin('fbc')
+
     reaction = model.createReaction()
     reaction.setId(sub_reaction.getId())
     reaction.setName(sub_reaction.getName())
@@ -71,9 +73,9 @@ def _copy_reaction(model, sub_reaction):
                              _get_upper_bound(sub_reaction),
                              uplow='upper')
 
-    plugin = reaction.getPlugin('fbc')
-    plugin.setLowerFluxBound(lower_bound.getId())
-    plugin.setUpperFluxBound(upper_bound.getId())
+    react_plugin = reaction.getPlugin('fbc')
+    react_plugin.setLowerFluxBound(lower_bound.getId())
+    react_plugin.setUpperFluxBound(upper_bound.getId())
 
     for sub_reactant in sub_reaction.getListOfReactants():
         reactant = reaction.createReactant()
@@ -88,8 +90,14 @@ def _copy_reaction(model, sub_reaction):
         product.setConstant(True)
 
     for sub_modifier in sub_reaction.getListOfModifiers():
-        modifier = reaction.createModifier()
-        modifier.setSpecies(sub_modifier.getSpecies())
+        gene_prod = model_plugin.createGeneProduct()
+        gene_prod.setId('G_' + sub_modifier.getSpecies())
+        gene_prod.setName(sub_modifier.getSpecies())
+        gene_prod.setLabel(sub_modifier.getSpecies())
+
+        gpa = react_plugin.createGeneProductAssociation()
+        gp_ref = gpa.createGeneProductRef()
+        gp_ref.setGeneProduct(gene_prod.getId())
 
 
 def _get_bound(model, reaction, value, units='mmol_per_gDW_per_hr',
