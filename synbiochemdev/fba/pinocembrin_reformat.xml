@@ -90,10 +90,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_28157" sboTerm="SBO:0000247" id="_CHEBI_28157" name="pinocembrin" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_pinocembrin_c" sboTerm="SBO:0000247" id="M_pinocembrin_c" name="pinocembrin" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_28157">
+            <rdf:Description rdf:about="#_metaM_pinocembrin_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/cas/480-39-7"/>
@@ -132,10 +132,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_80484" sboTerm="SBO:0000247" id="_CHEBI_80484" name="pinocembrin chalcone" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_pino_chal_c" sboTerm="SBO:0000247" id="M_pino_chal_c" name="pinocembrin chalcone" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_80484">
+            <rdf:Description rdf:about="#_metaM_pino_chal_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/lipidmaps/LMPK12120243"/>
@@ -231,10 +231,10 @@
           </rdf:RDF>
         </annotation>
       </species>
-      <species metaid="_meta_CHEBI_57252" sboTerm="SBO:0000247" id="_CHEBI_57252" name="(E)-cinnamoyl-CoA(4-)" compartment="c" initialConcentration="0">
+      <species metaid="_metaM_cinn_coa_c" sboTerm="SBO:0000247" id="M_cinn_coa_c" name="(E)-cinnamoyl-CoA(4-)" compartment="c" initialConcentration="0">
         <annotation>
           <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:vCard="http://www.w3.org/2001/vcard-rdf/3.0#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:bqmodel="http://biomodels.net/model-qualifiers/">
-            <rdf:Description rdf:about="#_meta_CHEBI_57252">
+            <rdf:Description rdf:about="#_metaM_cinn_coa_c">
               <bqbiol:is>
                 <rdf:Bag>
                   <rdf:li rdf:resource="http://identifiers.org/inchi/InChI=1S/C30H42N7O17P3S/c1-30(2,25(41)28(42)33-11-10-20(38)32-12-13-58-21(39)9-8-18-6-4-3-5-7-18)15-51-57(48,49)54-56(46,47)50-14-19-24(53-55(43,44)45)23(40)29(52-19)37-17-36-22-26(31)34-16-35-27(22)37/h3-9,16-17,19,23-25,29,40-41H,10-15H2,1-2H3,(H,32,38)(H,33,42)(H,46,47)(H,48,49)(H2,31,34,35)(H2,43,44,45)/p-4/b9-8+/t19-,23-,24-,25+,29-/m1/s1"/>
@@ -361,12 +361,12 @@
           <speciesReference sboTerm="SBO:0000011" species="M_h2o_c" stoichiometry="1"/>
           <speciesReference sboTerm="SBO:0000011" species="M_h_c" stoichiometry="1"/>
           <speciesReference sboTerm="SBO:0000011" species="M_malcoa_c" stoichiometry="3"/>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_57252" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_cinn_coa_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference sboTerm="SBO:0000010" species="M_co2_c" stoichiometry="3"/>
           <speciesReference sboTerm="SBO:0000010" species="M_coa_c" stoichiometry="4"/>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_80484" stoichiometry="1"/>          
+          <speciesReference sboTerm="SBO:0000010" species="M_pino_chal_c" stoichiometry="1"/>          
         </listOfProducts>
         <listOfModifiers>
           <modifierSpeciesReference sboTerm="SBO:0000460" species="_P13114"/>
@@ -387,11 +387,11 @@
         </annotation>
         <listOfReactants>
           <speciesReference sboTerm="SBO:0000011" species="M_h_c" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000011" species="_CHEBI_80484" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000011" species="M_pino_chal_c" stoichiometry="1"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference sboTerm="SBO:0000010" species="M_h_c" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_28157" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_pinocembrin_c" stoichiometry="1"/>
         </listOfProducts>
         <listOfModifiers>
           <modifierSpeciesReference sboTerm="SBO:0000460" species="_Q9FKW3"/>
@@ -419,11 +419,16 @@
           <speciesReference sboTerm="SBO:0000010" species="M_ppi_c" stoichiometry="1"/>
           <speciesReference sboTerm="SBO:0000010" species="M_h_c" stoichiometry="1"/>
           <speciesReference sboTerm="SBO:0000010" species="M_amp_c" stoichiometry="1"/>
-          <speciesReference sboTerm="SBO:0000010" species="_CHEBI_57252" stoichiometry="1"/>
+          <speciesReference sboTerm="SBO:0000010" species="M_cinn_coa_c" stoichiometry="1"/>
         </listOfProducts>
         <listOfModifiers>
           <modifierSpeciesReference sboTerm="SBO:0000460" species="_Q9K3W1"/>
         </listOfModifiers>
+      </reaction>
+      <reaction sboTerm="SBO:0000176" id="M_EX_pinocembrin" reversible="false">
+        <listOfReactants>
+          <speciesReference sboTerm="SBO:0000011" species="M_pinocembrin_c" stoichiometry="1"/>
+        </listOfReactants>
       </reaction>
     </listOfReactions>
   </model>

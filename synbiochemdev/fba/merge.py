@@ -14,7 +14,6 @@ import libsbml
 def merge(filenames, out_filename='merge.xml'):
     '''Merge models (from SBML filenames) into a single model.'''
     doc = libsbml.readSBMLFromFile(filenames[0])
-    _fix_warnings(doc)
     _check(doc)
 
     for filename in filenames[1:]:
@@ -26,14 +25,6 @@ def merge(filenames, out_filename='merge.xml'):
     return doc
 
 
-def _fix_warnings(doc):
-    '''Fix warnings.'''
-    model = doc.getModel()
-
-    for species in model.getListOfSpecies():
-        species.setInitialConcentration(0)
-
-
 def _check(doc, recheck=False):
     '''Check SBML document validity.'''
     if recheck:
@@ -42,7 +33,7 @@ def _check(doc, recheck=False):
     doc.printErrors()
 
 
-def _merge(doc, sub_doc, comp='c'):
+def _merge(doc, sub_doc):
     '''Merge submodel into main model.'''
     _check(sub_doc)
     model = doc.getModel()
@@ -50,22 +41,21 @@ def _merge(doc, sub_doc, comp='c'):
     sub_model = sub_doc.getModel()
 
     for sub_species in sub_model.getListOfSpecies():
-        _copy_species(model, sub_species, comp)
+        _copy_species(model, sub_species)
 
     for sub_reaction in sub_model.getListOfReactions():
         _copy_reaction(model, sub_reaction)
 
 
-def _copy_species(model, sub_species, comp):
+def _copy_species(model, sub_species):
     '''Copy species.'''
     if not model.getSpecies(sub_species.getId()):
         species = model.createSpecies()
         species.setId(sub_species.getId())
         species.setName(sub_species.getName())
-        species.setCompartment(comp)
+        species.setCompartment(sub_species.getCompartment())
         species.setConstant(False)
         species.setBoundaryCondition(False)
-        species.setInitialConcentration(0)
 
 
 def _copy_reaction(model, sub_reaction):
@@ -102,14 +92,13 @@ def _copy_reaction(model, sub_reaction):
         modifier.setSpecies(sub_modifier.getSpecies())
 
 
-def _get_bound(model, reaction, value, uplow='lower'):
+def _get_bound(model, reaction, value, units='mmol_per_gDW_per_hr',
+               uplow='lower'):
     '''Gets a bound.'''
-    plugin = model.getPlugin('fbc')
-    bound = plugin.createFluxBound()
+    bound = model.createParameter()
     bound.setId('_' + uplow + '_bound' + reaction.getId())
-    bound.setReaction(reaction.getId())
-    bound.setOperation('equal')
     bound.setValue(value)
+    bound.setUnits(units)
     return bound
 
 
