@@ -14,7 +14,7 @@ def write_strain(filename, ice_url, ice_username, ice_password,
                  group_name=None):
     '''Writes strains.'''
     with io.open(filename, 'r', newline='\r') as fle:
-        pairs = [str(line).split() for line in fle]
+        pairs = [str(line).split(',') for line in fle]
 
         ice_client = ice_utils.ICEClient(ice_url, ice_username, ice_password)
 
