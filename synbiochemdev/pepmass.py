@@ -32,12 +32,18 @@ def simulate(codon_templates, lngth, samples):
     df.to_csv('out.csv')
 
     df.dropna(inplace=True)
-    print len(df)
+
+    print 'Peptides:\t%d' % samples
+    print 'Valid peptides (no stop codons):\t%d' % len(df)
 
     counter = Counter([tuple(sorted(vals))
                        for vals in df.loc[:, (slice(None), 'mass')].values])
 
-    print len([val for val in counter.values() if val == 1])
+    unique_peps = len([val for val in counter.values() if val == 1])
+
+    print 'Unique peptide masses:\t%d (%f)' % (unique_peps,
+                                               float(unique_peps) / samples)
+
     plot_hist(counter.values())
 
 
@@ -46,7 +52,7 @@ def _get_data(codon_templates, lngth, samples):
     data = defaultdict(list)
 
     for idx, codon_template in enumerate(codon_templates):
-        for _ in range(samples):
+        while len(data[idx]) < samples:
             codons = [get_codon(codon_template) for _ in range(lngth)]
             nucl_seq = ''.join([nucl for codon in codons for nucl in codon])
             prot_seq = str(Seq(nucl_seq).translate())
