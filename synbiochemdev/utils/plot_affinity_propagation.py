@@ -11,12 +11,12 @@ Between Data Points', Science Feb. 2007
 from itertools import cycle
 import random
 
+from mpl_toolkits.mplot3d import Axes3D
 from sklearn.cluster import AffinityPropagation
 from sklearn.datasets.samples_generator import make_blobs
 from sklearn.metrics import adjusted_mutual_info_score, adjusted_rand_score, \
     completeness_score, homogeneity_score, silhouette_score, v_measure_score
 
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 
 

@@ -1,6 +1,7 @@
 import feedparser
 import markovify
 
+
 d = feedparser.parse('feed://www.dailymail.co.uk/articles.rss')
 text = []
 

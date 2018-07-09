@@ -11,8 +11,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 # pylint: disable=too-many-locals
 import math
 
-from synbiochemdev.datascience.ch6 import inverse_normal_cdf, normal_cdf
 import matplotlib.pyplot as plt
+from synbiochemdev.datascience.ch6 import inverse_normal_cdf, normal_cdf
 
 
 # Normal cdf is the prob that teh variable is below a threshold:

@@ -4,10 +4,10 @@ Created on 5 Aug 2016
 @author: neilswainston
 '''
 # pylint: disable=no-member
-from sklearn import model_selection
-from synbiochem.utils import seq_utils
 import matplotlib.pyplot
 import numpy
+from sklearn import model_selection
+from synbiochem.utils import seq_utils
 
 from sbclearn import theanets
 

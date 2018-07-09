@@ -11,9 +11,9 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 # pylint: disable=no-member
 import sys
 
+import numpy as np
 from synbiochemdev.learning.ch2 import get_iris_data, plot_epoch_progress, \
     Classifier
-import numpy as np
 
 
 class Perceptron(Classifier):

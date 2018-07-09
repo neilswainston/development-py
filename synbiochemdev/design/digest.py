@@ -11,7 +11,6 @@ import sys
 
 from Bio.Restriction.Restriction import RestrictionBatch
 from Bio.Seq import Seq
-
 from synbiochem.utils import ice_utils
 
 

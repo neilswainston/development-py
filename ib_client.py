@@ -4,6 +4,7 @@ IBClient class for accessing Interactive Broker data.
 @author:  neilswainston
 '''
 import sys
+
 import Queue as queue
 import ib.ext.Contract
 import ib.opt

@@ -11,11 +11,12 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 import sys
 
 import cobra
-# from cobra.flux_analysis.double_deletion import double_gene_deletion
-from cobra.flux_analysis.single_deletion import single_gene_deletion
 from cobra.util.solver import linear_reaction_coefficients
 
+from cobra.flux_analysis.single_deletion import single_gene_deletion
 
+
+# from cobra.flux_analysis.double_deletion import double_gene_deletion
 class Analyser(object):
     '''Class to analyse a metabolic model.'''
 

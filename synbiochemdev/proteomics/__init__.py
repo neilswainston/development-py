@@ -7,19 +7,19 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 
 @author:  neilswainston
 '''
-from collections import OrderedDict, defaultdict
-from urllib import urlretrieve
 import ast
+from collections import OrderedDict, defaultdict
 import copy
 import os
 import re
 import sys
+from urllib import urlretrieve
 
 from Bio.SeqUtils.ProtParam import ProteinAnalysis
 from synbiochem.utils import seq_utils
 
-from pyteomics import mass
 import matplotlib.pyplot as plt
+from pyteomics import mass
 
 
 def get_fasta(uniprot_id, filename, variants, digest=None):

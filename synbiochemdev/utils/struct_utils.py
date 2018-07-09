@@ -8,8 +8,8 @@ To view a copy of this license, visit <http://opensource.org/licenses/MIT/>.
 @author:  neilswainston
 '''
 # pylint: disable=too-many-arguments
-from itertools import izip_longest, product
 import collections
+from itertools import izip_longest, product
 import os
 import random
 import re

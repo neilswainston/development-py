@@ -15,10 +15,10 @@ import sys
 
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
-from sklearn import model_selection
-from synbiochem.utils import seq_utils
 import matplotlib.pyplot
 import numpy
+from sklearn import model_selection
+from synbiochem.utils import seq_utils
 
 import sbclearn.theanets.utils as theanets_utils
 
