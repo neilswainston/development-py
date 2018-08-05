@@ -17,7 +17,7 @@ import urllib
 from sklearn.metrics import classification_report, confusion_matrix
 
 import numpy as np
-from sbclearn import utils
+from sbclearn.utils.validator import k_fold_cross_valid
 
 
 def get_data(project_id):
@@ -40,8 +40,8 @@ def main(args):
     for row in data[0]:
         np.nan_to_num(row)
 
-    results = utils.k_fold_cross_valid(data, regression=False,
-                                       tests=5)
+    results = k_fold_cross_valid(data, regression=False,
+                                 tests=5)
 
     results = zip(*results)
     labels = [False, True]

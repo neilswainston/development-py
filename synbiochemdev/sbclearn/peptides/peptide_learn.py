@@ -16,8 +16,7 @@ from sklearn import preprocessing
 
 import numpy as np
 import pandas as pd
-from sbclearn import utils
-import sbclearn
+from sbclearn.utils.validator import k_fold_cross_valid
 
 
 def get_data(filename):
@@ -58,7 +57,7 @@ def get_data(filename):
 def main(args):
     '''main method.'''
     x_data, y_data = get_data(args[0])
-    results = utils.k_fold_cross_valid((x_data, y_data))
+    results = k_fold_cross_valid((x_data, y_data))
     sbclearn.plot(results, 'Prediction of peptide fitness')
 
 
