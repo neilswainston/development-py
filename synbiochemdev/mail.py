@@ -1,15 +1,12 @@
-import feedparser
-import markovify
+import feedparser as f
+import markovify as m
 
-
-d = feedparser.parse('feed://www.dailymail.co.uk/articles.rss')
 text = []
 
-for post in d.entries:
-    text.append(post.title)
-    text.append(post.summary)
+for ent in f.parse('feed://www.dailymail.co.uk/articles.rss').entries:
+    text.extend([ent.title, ent.summary])
 
-text_model = markovify.Text(text)
+text_model = m.Text(text)
 
-for i in range(100):
+for _ in range(100):
     print(text_model.make_short_sentence(140))
